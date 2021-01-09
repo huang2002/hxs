@@ -3,30 +3,24 @@ import { evalAST, evalList } from '../eval';
 import { RuleHandler } from '../rules/rule';
 
 // for (cursorName, start, end, step?) {...}
-export const builtinFor: RuleHandler = (rawArgs, context, fileName, line): RuleHandler => {
+export const builtinFor: RuleHandler = (rawArgs, context, env): RuleHandler => {
 
-    const args = evalList(rawArgs, context, fileName);
-    Common.checkArgs(args, fileName, line, 'for', 3, 4);
+    const args = evalList(rawArgs, context, env.fileName);
+    Common.checkArgs(args, env, 'for', 3, 4);
 
-    const cursorName = args[0];
+    const cursorName = args[0] as string;
     if (typeof cursorName !== 'string') {
-        throw new TypeError(
-            `expect a string as cursor name (file ${fileName} line ${line})`
-        );
+        Common.raise(TypeError, `expect a string as cursor name`, env);
     }
 
     const start = args[1] as number;
     if (!Number.isFinite(start)) {
-        throw new TypeError(
-            `expect a finite number as start value (file ${fileName} line ${line})`
-        );
+        Common.raise(TypeError, `expect a finite number as start value`, env);
     }
 
     const end = args[2] as number;
     if (!Number.isFinite(end)) {
-        throw new TypeError(
-            `expect a finite number as end value (file ${fileName} line ${line})`
-        );
+        Common.raise(TypeError, `expect a finite number as end value`, env);
     }
 
     const defaultStep = start <= end ? 1 : -1;
@@ -34,22 +28,16 @@ export const builtinFor: RuleHandler = (rawArgs, context, fileName, line): RuleH
         ? args[3] as number
         : defaultStep;
     if (!Number.isFinite(end)) {
-        throw new TypeError(
-            `expect a finite number as step (file ${fileName} line ${line})`
-        );
+        Common.raise(TypeError, `expect a finite number as step`, env);
     }
     if (start !== end && Math.sign(defaultStep) !== Math.sign(step)) {
-        throw new RangeError(
-            `invalid step (file ${fileName} line ${line})`
-        );
+        Common.raise(RangeError, `invalid step`, env);
     }
 
-    return (rawBlock, ctx, fileName, line) => {
-        const blocks = evalList(rawBlock, ctx, fileName);
+    return (rawBlock, ctx, _env) => {
+        const blocks = evalList(rawBlock, ctx, _env.fileName) as [RuleHandler];
         if (blocks.length !== 1 || typeof blocks[0] !== 'function') {
-            throw new TypeError(
-                `expect exactly one code block (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect exactly one code block`, env);
         }
         const oldBreak = ctx.get('break');
         const breakFlag = Symbol('breakFlag');
@@ -61,7 +49,7 @@ export const builtinFor: RuleHandler = (rawArgs, context, fileName, line): RuleH
             for (let i = start; i < end; i += step) {
                 ctx.set(cursorName, i);
                 try {
-                    blocks[0]([], ctx, fileName, line);
+                    blocks[0]([], ctx, _env);
                 } catch (err) {
                     if (err !== continueFlag) {
                         throw err;
@@ -89,12 +77,10 @@ export const builtinFor: RuleHandler = (rawArgs, context, fileName, line): RuleH
 
 // while (condition) {...}
 export const builtinWhile: RuleHandler = (rawArgs): RuleHandler => (
-    (rawBlock, ctx, fileName, line) => {
-        const blocks = evalList(rawBlock, ctx, fileName);
+    (rawBlock, ctx, env) => {
+        const blocks = evalList(rawBlock, ctx, env.fileName) as [RuleHandler];
         if (blocks.length !== 1 || typeof blocks[0] !== 'function') {
-            throw new TypeError(
-                `expect exactly one code block (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect exactly one code block`, env);
         }
         const oldBreak = ctx.get('break');
         const breakFlag = Symbol('breakFlag');
@@ -104,17 +90,15 @@ export const builtinWhile: RuleHandler = (rawArgs): RuleHandler => (
         ctx.set('continue', () => { throw continueFlag; });
         try {
             while (true) {
-                const condition = evalAST(rawArgs, ctx, fileName);
+                const condition = evalAST(rawArgs, ctx, env.fileName);
                 if (typeof condition !== 'boolean') {
-                    throw new TypeError(
-                        `expect a boolean as condition (file ${fileName} line ${line})`
-                    );
+                    Common.raise(TypeError, `expect a boolean as condition`, env);
                 }
                 if (!condition) {
                     break;
                 }
                 try {
-                    blocks[0]([], ctx, fileName, line);
+                    blocks[0]([], ctx, env);
                 } catch (err) {
                     if (err !== continueFlag) {
                         throw err;

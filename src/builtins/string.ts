@@ -4,76 +4,60 @@ import { evalList } from '../eval';
 export const BuiltinString = Common.createDict({
 
     // String.join(strings, separator='')
-    join(rawArgs, context, fileName, line) {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'String.join', 1, 2);
-        const strings = args[0];
+    join(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'String.join', 1, 2);
+        const strings = args[0] as string[];
         if (!Array.isArray(strings)) {
-            throw new TypeError(
-                `expect a string array as the first argument (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a string array as the first argument`, env);
         }
         for (let i = 0; i < strings.length; i++) {
             if (typeof strings[i] !== 'string') {
-                throw new TypeError(
-                    `expect only strings (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect only strings`, env);
             }
         }
-        const separator = args.length === 2 ? args[1] : '';
+        const separator = args.length === 2 ? args[1] as string : '';
         if (typeof separator !== 'string') {
-            throw new TypeError(
-                `expect a string as separator (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a string as separator`, env);
         }
         return strings.join(separator);
     },
 
     // String.toLowerCase(string)
-    toLowerCase(rawArgs, context, fileName, line) {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'String.toLowerCase', 1, 1);
+    toLowerCase(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'String.toLowerCase', 1, 1);
         if (typeof args[0] !== 'string') {
-            throw new TypeError(
-                `expect a string as the first argument (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a string as the first argument`, env);
         }
-        return args[0].toLowerCase();
+        return (args[0] as string).toLowerCase();
     },
 
     // String.toUpperCase(string)
-    toUpperCase(rawArgs, context, fileName, line) {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'String.toUpperCase', 1, 1);
+    toUpperCase(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'String.toUpperCase', 1, 1);
         if (typeof args[0] !== 'string') {
-            throw new TypeError(
-                `expect a string as the first argument (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a string as the first argument`, env);
         }
-        return args[0].toUpperCase();
+        return (args[0] as string).toUpperCase();
     },
 
     // String.slice(string, start?, end?)
-    slice(rawArgs, context, fileName, line) {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'String.slice', 1, 3);
-        const string = args[0];
+    slice(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'String.slice', 1, 3);
+        const string = args[0] as string;
         if (typeof string !== 'string') {
-            throw new TypeError(
-                `expect a string as the first argument (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a string as the first argument`, env);
         }
         if (args.length > 1) {
             if (typeof args[1] !== 'number') {
-                throw new TypeError(
-                    `expect a number as start index (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect a number as start index`, env);
             }
             if (args.length > 2) {
                 if (typeof args[2] !== 'number') {
-                    throw new TypeError(
-                        `expect a number as end index (file ${fileName} line ${line})`
-                    );
+                    Common.raise(TypeError, `expect a number as end index`, env);
                 }
             }
         }

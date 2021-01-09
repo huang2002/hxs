@@ -17,8 +17,8 @@ export const createFunction = (
             );
         }
     }
-    return (rawArgs, ctx, _fileName) => {
-        const args = evalList(rawArgs, ctx, _fileName);
+    return (rawArgs, ctx, env) => {
+        const args = evalList(rawArgs, ctx, env.fileName);
         const scopedContext = new Map(context);
         scopedContext.set('arguments', args);
         for (let i = 0; i < argList.length; i++) {
@@ -31,7 +31,7 @@ export const createFunction = (
         let returnValue = null;
         scopedContext.set('return', (rawValue, _ctx) => {
             if (rawValue.length) {
-                const value = evalList(rawValue, _ctx, _fileName);
+                const value = evalList(rawValue, _ctx, env.fileName);
                 returnValue = value[value.length - 1];
             }
             throw returnFlag;

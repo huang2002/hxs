@@ -18,12 +18,10 @@ export const rules: Rule[] = [{
      * <word>
      */
     pattern: [RuleUtils.WORD],
-    handler(parts, context, fileName, line) {
+    handler(parts, context, env) {
         const word = (parts[0] as WordNode).value;
         if (!context.has(word)) {
-            throw new ReferenceError(
-                `variable "${word}" is not defined (file ${fileName} line ${parts[0].line})`
-            );
+            Common.raise(ReferenceError, `variable "${word}" is not defined`, env);
         }
         return context.get(word);
     },
@@ -55,18 +53,14 @@ export const rules: Rule[] = [{
      * <value>.<word>
      */
     pattern: [RuleUtils.VALUE, RuleUtils.DOT, RuleUtils.WORD],
-    handler(parts, context, fileName) {
+    handler(parts, context, env) {
         const object = (parts[0] as InternalValue).value;
         if (!Common.isDict(object)) {
-            throw new TypeError(
-                `invalid index access (file ${fileName} line ${parts[0].line})`
-            );
+            Common.raise(TypeError, `invalid index access`, env);
         }
         const index = (parts[2] as WordNode).value;
         if (!(index in (object as any))) {
-            throw new ReferenceError(
-                `unknown index "${index}" (file ${fileName} line ${parts[2].line})`
-            );
+            Common.raise(ReferenceError, `unknown index "${index}"`, env);
         }
         return (object as any)[index];
     },
@@ -76,18 +70,15 @@ export const rules: Rule[] = [{
      * <function>(<args...>)
      */
     pattern: [RuleUtils.VALUE, RuleUtils.SPAN_PARATHESIS],
-    handler(parts, context, fileName, line) {
+    handler(parts, context, env) {
         const f = (parts[0] as InternalValue).value;
         if (typeof f !== 'function') {
-            throw new TypeError(
-                `invalid function call (file ${fileName} line ${parts[0].line})`
-            );
+            Common.raise(TypeError, `invalid function call`, env);
         }
         return (f as RuleHandler)(
             (parts[1] as SpanNode).body,
             context,
-            fileName,
-            line,
+            env,
         );
     },
 }, {
@@ -96,25 +87,23 @@ export const rules: Rule[] = [{
      * <function>{...}
      */
     pattern: [RuleUtils.VALUE, RuleUtils.SPAN_BRACKET],
-    handler(parts, context, fileName, line) {
+    handler(parts, context, env) {
         const f = (parts[0] as InternalValue).value;
         if (typeof f !== 'function') {
-            throw new TypeError(
-                `invalid function call (file ${fileName} line ${parts[0].line})`
-            );
+            Common.raise(TypeError, `invalid function call`, env);
         }
         const block = (parts[1] as SpanNode).body;
-        const callback: RuleHandler = (_, ctx) => evalAST(block, ctx, fileName);
+        const callback: RuleHandler = (_, ctx) => evalAST(block, ctx, env.fileName);
         return (f as RuleHandler)(
             [{
                 type: 'value',
                 value: callback,
                 offset: parts[0].offset,
                 line: parts[0].line,
+                column: parts[0].column,
             } as InternalValue],
             context,
-            fileName,
-            line,
+            env,
         );
     },
 }, {
@@ -123,7 +112,7 @@ export const rules: Rule[] = [{
      * #<word>
      */
     pattern: [RuleUtils.HASH, RuleUtils.WORD],
-    handler(parts, context, fileName, line) {
+    handler(parts, context, env) {
         return (parts[1] as WordNode).value;
     },
 }, {
@@ -132,12 +121,12 @@ export const rules: Rule[] = [{
      * @<word>(...){...}
      */
     pattern: [RuleUtils.AT, RuleUtils.WORD, RuleUtils.SPAN_PARATHESIS, RuleUtils.SPAN_BRACKET],
-    handler(parts, context, fileName, line) {
+    handler(parts, context, env) {
         const f = createFunction(
             (parts[2] as SpanNode).body,
             (parts[3] as SpanNode).body,
             context,
-            fileName,
+            env.fileName,
         );
         context.set((parts[1] as WordNode).value, f);
         return f;
@@ -148,12 +137,12 @@ export const rules: Rule[] = [{
      * @(...){...}
      */
     pattern: [RuleUtils.AT, RuleUtils.SPAN_PARATHESIS, RuleUtils.SPAN_BRACKET],
-    handler(parts, context, fileName, line) {
+    handler(parts, context, env) {
         return createFunction(
             (parts[1] as SpanNode).body,
             (parts[2] as SpanNode).body,
             context,
-            fileName,
+            env.fileName,
         );
     },
 }, {
@@ -162,8 +151,8 @@ export const rules: Rule[] = [{
      * -<number>
      */
     pattern: [RuleUtils.MINUS, RuleUtils.NUMBER],
-    handler(parts, context, fileName, line) {
-        return -(numberHandler([parts[1]], context, fileName, line) as number);
+    handler(parts, context, env) {
+        return -(numberHandler([parts[1]], context, env) as number);
     },
 }, {
     /**
@@ -171,20 +160,24 @@ export const rules: Rule[] = [{
      * -<word>
      */
     pattern: [RuleUtils.MINUS, RuleUtils.WORD],
-    handler(parts, context, fileName) {
+    handler(parts, context, env) {
         const word = (parts[1] as WordNode).value;
         if (!context.has(word)) {
-            throw new ReferenceError(
-                `"${word}" is not defined (file ${fileName} line ${parts[1].line})`
+            Common.raise(
+                ReferenceError,
+                `"${word}" is not defined`,
+                env
             );
         }
         const value = context.get(word);
         if (typeof value !== 'number') {
-            throw new TypeError(
-                `"${word}" is not a number (file ${fileName} line ${parts[1].line})`
+            Common.raise(
+                TypeError,
+                `"${word}" is not a number`,
+                env
             );
         }
-        return -value;
+        return -value!;
     },
 }, {
     /**
@@ -192,15 +185,17 @@ export const rules: Rule[] = [{
      * -(<..., number>)
      */
     pattern: [RuleUtils.MINUS, RuleUtils.SPAN_PARATHESIS],
-    handler(parts, context, fileName) {
-        const values = evalList((parts[1] as SpanNode).body, context, fileName);
+    handler(parts, context, env) {
+        const values = evalList((parts[1] as SpanNode).body, context, env.fileName);
         const number = values[values.length - 1];
         if (typeof number !== 'number') {
-            throw new TypeError(
-                `invalid operator "-" (file ${fileName} line ${parts[0].line})`
+            Common.raise(
+                TypeError,
+                `invalid operator "-"`,
+                env
             );
         }
-        return -number;
+        return -number!;
     },
 }, {
     /**
@@ -208,8 +203,8 @@ export const rules: Rule[] = [{
      * +<number>
      */
     pattern: [RuleUtils.PLUS, RuleUtils.NUMBER],
-    handler(parts, context, fileName, line) {
-        return numberHandler([parts[1]], context, fileName, line);
+    handler(parts, context, env) {
+        return numberHandler([parts[1]], context, env);
     },
 }, {
     /**
@@ -217,17 +212,21 @@ export const rules: Rule[] = [{
      * +<word>
      */
     pattern: [RuleUtils.PLUS, RuleUtils.WORD],
-    handler(parts, context, fileName) {
+    handler(parts, context, env) {
         const word = (parts[1] as WordNode).value;
         if (!context.has(word)) {
-            throw new ReferenceError(
-                `"${word}" is not defined (file ${fileName} line ${parts[1].line})`
+            Common.raise(
+                ReferenceError,
+                `"${word}" is not defined`,
+                env
             );
         }
         const value = context.get(word);
         if (typeof value !== 'number') {
-            throw new TypeError(
-                `"${word}" is not a number (file ${fileName} line ${parts[1].line})`
+            Common.raise(
+                TypeError,
+                `"${word}" is not a number`,
+                env
             );
         }
         return value;
@@ -238,12 +237,14 @@ export const rules: Rule[] = [{
      * +(<..., number>)
      */
     pattern: [RuleUtils.PLUS, RuleUtils.SPAN_PARATHESIS],
-    handler(parts, context, fileName) {
-        const values = evalList((parts[1] as SpanNode).body, context, fileName);
+    handler(parts, context, env) {
+        const values = evalList((parts[1] as SpanNode).body, context, env.fileName);
         const number = values[values.length - 1];
         if (typeof number !== 'number') {
-            throw new TypeError(
-                `invalid operator "+" (file ${fileName} line ${parts[0].line})`
+            Common.raise(
+                TypeError,
+                `invalid operator "+"`,
+                env
             );
         }
         return number;
@@ -254,9 +255,9 @@ export const rules: Rule[] = [{
      * (...)
      */
     pattern: [RuleUtils.SPAN_PARATHESIS],
-    handler(parts, context, fileName) {
+    handler(parts, context, env) {
         const body = (parts[0] as SpanNode).body;
-        const results = evalList(body, context, fileName);
+        const results = evalList(body, context, env.fileName);
         return results[results.length - 1];
     },
 }, {
@@ -265,9 +266,9 @@ export const rules: Rule[] = [{
      * [...]
      */
     pattern: [RuleUtils.SPAN_BRACE],
-    handler(parts, context, fileName) {
+    handler(parts, context, env) {
         const { body } = parts[0] as SpanNode;
-        return body.length ? evalList(body, context, fileName) : [];
+        return body.length ? evalList(body, context, env.fileName) : [];
     },
 }, {
     /**
@@ -275,40 +276,30 @@ export const rules: Rule[] = [{
      * <value>[...]
      */
     pattern: [RuleUtils.VALUE, RuleUtils.SPAN_BRACE],
-    handler(parts, context, fileName) {
+    handler(parts, context, env) {
         const object = (parts[0] as InternalValue).value;
-        const values = evalList((parts[1] as SpanNode).body, context, fileName);
-        const index = values[values.length - 1];
+        const values = evalList((parts[1] as SpanNode).body, context, env.fileName);
+        const index = values[values.length - 1] as number;
         if (Array.isArray(object)) {
             if (typeof index !== 'number' || index !== index) {
-                throw new TypeError(
-                    `expect a finite number as array index (file ${fileName} line ${parts[1].line})`
-                );
+                Common.raise(TypeError, `expect a finite number as array index`, env);
             }
             const normalizedIndex = index < 0
                 ? object.length + index
                 : index;
             if (normalizedIndex >= object.length || normalizedIndex < 0) {
-                throw new RangeError(
-                    `index(${index}) out of range (file ${fileName} line ${parts[1].line})`
-                );
+                Common.raise(RangeError, `index(${index}) out of range`, env);
             }
             return object[normalizedIndex];
         } else if (Common.isDict(object)) {
             if (typeof index !== 'string') {
-                throw new TypeError(
-                    `expect a string as dict index (file ${fileName} line ${parts[1].line})`
-                );
+                Common.raise(TypeError, `expect a string as dict index`, env);
             }
             if (!(index in (object as any))) {
-                throw new RangeError(
-                    `unknown dict index "${index}" (file ${fileName} line ${parts[1].line})`
-                );
+                Common.raise(RangeError, `unknown dict index "${index}"`, env);
             }
             return (object as any)[index];
         }
-        throw new TypeError(
-            `invalid index access (file ${fileName} line ${parts[1].line})`
-        );
+        Common.raise(TypeError, `invalid index access`, env);
     },
 }];

@@ -1,29 +1,25 @@
-import { Common } from '../common';
+import { Common, Dict } from '../common';
 import { evalList } from '../eval';
 
 export const BuiltinDict = Common.createDict({
 
     // Dict.create()
-    create(rawArgs, context, fileName) {
+    create(rawArgs, context, env) {
         if (rawArgs.length) {
-            throw new TypeError(
-                `expect no arguments (file ${fileName} line ${rawArgs[0].line})`
-            );
+            Common.raise(TypeError, `expect no arguments`, env);
         }
         return Object.create(null);
     },
 
     // Dict.from(entries?)
-    from(rawArgs, context, fileName, line) {
+    from(rawArgs, context, env) {
         const dict = Object.create(null);
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'Dict.from', 0, 1);
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'Dict.from', 0, 1);
         if (args.length) {
-            const entries = args[0];
+            const entries = args[0] as unknown[];
             if (!Array.isArray(entries)) {
-                throw new TypeError(
-                    `invalid dict entries (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `invalid dict entries`, env);
             }
             for (let i = 0; i < entries.length; i++) {
                 const entry = entries[i];
@@ -32,9 +28,7 @@ export const BuiltinDict = Common.createDict({
                     || entry.length !== 2
                     || typeof entry[0] !== 'string'
                 ) {
-                    throw new TypeError(
-                        `invalid dict entry (file ${fileName} line ${line})`
-                    );
+                    Common.raise(TypeError, `invalid dict entry`, env);
                 }
                 dict[entry[0]] = entry[1];
             }
@@ -43,64 +37,50 @@ export const BuiltinDict = Common.createDict({
     },
 
     // Dict.clone(dict)
-    clone(rawArgs, context, fileName, line) {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'Dict.clone', 1, 1);
-        const dict = args[0];
+    clone(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'Dict.clone', 1, 1);
+        const dict = args[0] as Dict;
         if (!Common.isDict(dict)) {
-            throw new TypeError(
-                `expect a dict as the first argument (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a dict as the first argument`, env);
         }
         return Common.createDict(dict);
     },
 
     // Dict.set(dict, key, value)
-    set(rawArgs, context, fileName, line) {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'Dict.set', 2, 3);
-        const dict = args[0];
+    set(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'Dict.set', 2, 3);
+        const dict = args[0] as Dict;
         if (!Common.isDict(dict)) {
-            throw new TypeError(
-                `expect a dict as the first argument (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a dict as the first argument`, env);
         }
         if (typeof args[1] !== 'string') {
-            throw new TypeError(
-                `expect a string as index (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a string as index`, env);
         }
-        dict[args[1]] = args[2];
+        dict[args[1] as string] = args[2];
     },
 
     // Dict.unpack(dict, names, loose?)
-    unpack(rawArgs, context, fileName, line) {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'Dict.unpack', 2, 3);
-        const dict = args[0];
+    unpack(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'Dict.unpack', 2, 3);
+        const dict = args[0] as Dict;
         if (!Common.isDict(dict)) {
-            throw new TypeError(
-                `expect a dict as the first argument (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a dict as the first argument`, env);
         }
         const names = args[1] as readonly string[];
         if (!Array.isArray(names)) {
-            throw new TypeError(
-                `expect an dict of strings as variable names (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect an dict of strings as variable names`, env);
         }
         for (let i = 0; i < names.length; i++) {
             if (typeof names[i] !== 'string') {
-                throw new TypeError(
-                    `expect strings as variable names (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect strings as variable names`, env);
             }
         }
         const loose = args.length === 3 && args[2];
         if (typeof loose !== 'boolean') {
-            throw new TypeError(
-                `expect a boolean as loose option (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a boolean as loose option`, env);
         }
         if (loose) {
             for (let i = 0; i < names.length; i++) {
@@ -114,9 +94,7 @@ export const BuiltinDict = Common.createDict({
         } else {
             for (let i = 0; i < names.length; i++) {
                 if (!(names[i] in dict)) {
-                    throw new ReferenceError(
-                        `unknown index "${names[i]}" (file ${fileName} line ${line})`
-                    );
+                    Common.raise(ReferenceError, `unknown index "${names[i]}"`, env);
                 }
             }
             for (let i = 0; i < names.length; i++) {

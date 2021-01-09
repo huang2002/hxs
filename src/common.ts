@@ -1,4 +1,4 @@
-import { RuleHandler } from './rules/rule';
+import { RuleHandler, RuleHandlerEnvironment } from './rules/rule';
 
 export type EvalContextValue =
     | null
@@ -15,23 +15,28 @@ export type EvalContext = Map<string, EvalContextValue>;
 
 export namespace Common {
 
+    export const raise = (
+        constructor: ErrorConstructor,
+        msg: string,
+        env: RuleHandlerEnvironment,
+    ): never => {
+        throw new constructor(
+            msg + ` (${env.fileName} line ${env.line} column ${env.column})`
+        );
+    };
+
     export const checkArgs = (
         args: unknown[],
-        fileName: string,
-        line: number,
+        env: RuleHandlerEnvironment,
         functionName: string,
         minCount: number,
         maxCount: number,
     ) => {
         if (args.length < minCount) {
-            throw new TypeError(
-                `too few arguments for function "${functionName}" (file ${fileName} line ${line})`
-            );
+            raise(TypeError, `too few arguments for function "${functionName}"`, env);
         }
         if (args.length > maxCount) {
-            throw new TypeError(
-                `too many arguments for function "${functionName}" (file ${fileName} line ${line})`
-            );
+            raise(TypeError, `too many arguments for function "${functionName}"`, env);
         }
     };
 

@@ -1,7 +1,8 @@
 import { NumberNode } from '3h-ast';
+import { Common } from '../common';
 import { RuleHandler } from './rule';
 
-export const numberHandler: RuleHandler = (parts, context, fileName, line) => {
+export const numberHandler: RuleHandler = (parts, context, env) => {
     let { value, suffix } = parts[0] as NumberNode;
     if (suffix.length > 1) {
         value += suffix.slice(0, -1);
@@ -27,15 +28,11 @@ export const numberHandler: RuleHandler = (parts, context, fileName, line) => {
             break;
         }
         default: {
-            throw new SyntaxError(
-                `unrecognized number suffix "${suffix}" (file ${fileName} line ${line})`
-            );
+            Common.raise(SyntaxError, `unrecognized number suffix "${suffix}"`, env);
         }
     }
     if (result !== result) { // NaN
-        throw new SyntaxError(
-            `invalid number "${value}${suffix}" (file ${fileName} line ${line})`
-        );
+        Common.raise(SyntaxError, `invalid number "${value}${suffix}"`, env);
     }
     return result;
 };

@@ -4,20 +4,15 @@ import { libs } from '../libs/libs';
 import { RuleHandler } from '../rules/rule';
 
 // import(name)
-export const builtinImport: RuleHandler = (rawArgs, context, fileName) => {
-    const args = evalList(rawArgs, context, fileName);
-    const line = rawArgs[0].line;
-    Common.checkArgs(args, fileName, line, 'import', 1, 1);
+export const builtinImport: RuleHandler = (rawArgs, context, env) => {
+    const args = evalList(rawArgs, context, env.fileName);
+    Common.checkArgs(args, env, 'import', 1, 1);
     if (typeof args[0] !== 'string') {
-        throw new TypeError(
-            `expect a string as lib name (file ${fileName} line ${line})`
-        );
+        Common.raise(TypeError, `expect a string as lib name`, env);
     }
-    const lib = libs.get(args[0]);
+    const lib = libs.get(args[0] as string);
     if (!lib) {
-        throw new ReferenceError(
-            `lib "${args[0]}" does not exist (file ${fileName} line ${line})`
-        );
+        Common.raise(ReferenceError, `lib "${args[0]}" does not exist`, env);
     }
     return lib;
 };

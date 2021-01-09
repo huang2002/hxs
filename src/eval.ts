@@ -1,6 +1,6 @@
 import { parse } from '3h-ast';
 import { builtins } from './builtins/builtins';
-import { EvalContext, EvalContextValue } from './common';
+import { Common, EvalContext, EvalContextValue } from './common';
 import { ExpressionPart, Rule, RuleUtils } from './rules/rule';
 import { rules } from './rules/rules';
 
@@ -61,8 +61,11 @@ export const evalAST = (
             const value = candidateRules[0].handler(
                 buffer,
                 context,
-                fileName,
-                buffer[0].line,
+                {
+                    fileName,
+                    line: buffer[0].line,
+                    column: buffer[0].column,
+                },
             );
             if (semicolonFlag) {
                 buffer.length = 0;
@@ -71,8 +74,9 @@ export const evalAST = (
                 buffer[0] = {
                     type: 'value',
                     value,
-                    line: buffer[0].line,
                     offset: buffer[0].offset,
+                    line: buffer[0].line,
+                    column: buffer[0].column,
                 };
             }
 
@@ -87,15 +91,19 @@ export const evalAST = (
             const value = matchedRules[0].handler(
                 buffer,
                 context,
-                fileName,
-                buffer[0].line,
+                {
+                    fileName,
+                    line: buffer[0].line,
+                    column: buffer[0].column,
+                },
             );
             buffer.length = 1;
             buffer[0] = {
                 type: 'value',
                 value,
-                line: buffer[0].line,
                 offset: buffer[0].offset,
+                line: buffer[0].line,
+                column: buffer[0].column,
             };
             candidateRules = [];
 
@@ -111,11 +119,21 @@ export const evalAST = (
             : buffer[0];
     } else {
         if (!candidateRules.length) {
-            throw SyntaxError(
-                `unrecognized syntax (file ${fileName} line ${buffer[buffer.length - 1].line})`
-            );
+            Common.raise(SyntaxError, `unrecognized syntax`, {
+                fileName,
+                line: buffer[buffer.length - 1].line,
+                column: buffer[buffer.length - 1].column,
+            });
         }
-        const value = candidateRules[0].handler(buffer, context, fileName, buffer[0].line);
+        const value = candidateRules[0].handler(
+            buffer,
+            context,
+            {
+                fileName,
+                line: buffer[0].line,
+                column: buffer[0].column,
+            },
+        );
         return value;
     }
 

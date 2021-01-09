@@ -26,79 +26,63 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     ['while', builtinWhile],
 
     // set(name, value)
-    ['set', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'set', 2, 2);
+    ['set', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'set', 2, 2);
         if (typeof args[0] !== 'string') {
-            throw new TypeError(
-                `expect a string as variable name (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a string as variable name`, env);
         }
-        context.set(args[0], args[1] as EvalContextValue);
+        context.set(args[0] as string, args[1] as EvalContextValue);
         return args[1];
     }],
 
     // get(name)
-    ['get', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'get', 1, 1);
+    ['get', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'get', 1, 1);
         if (typeof args[0] !== 'string') {
-            throw new TypeError(
-                `expect a string as variable name (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a string as variable name`, env);
         }
-        if (!context.has(args[0])) {
-            throw new ReferenceError(
-                `"${args[0]}" is not defined (file ${fileName} line ${line})`
-            );
+        if (!context.has(args[0] as string)) {
+            Common.raise(ReferenceError, `"${args[0]}" is not defined`, env);
         }
-        return context.get(args[0]);
+        return context.get(args[0] as string);
     }],
 
     // exist(name)
-    ['exist', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'exist', 1, 1);
+    ['exist', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'exist', 1, 1);
         if (typeof args[0] !== 'string') {
-            throw new TypeError(
-                `expect a string as variable name (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a string as variable name`, env);
         }
-        return context.has(args[0]);
+        return context.has(args[0] as string);
     }],
 
     // delete(name)
-    ['delete', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'delete', 1, 1);
+    ['delete', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'delete', 1, 1);
         if (typeof args[0] !== 'string') {
-            throw new TypeError(
-                `expect a string as variable name (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a string as variable name`, env);
         }
-        if (!context.has(args[0])) {
-            throw new ReferenceError(
-                `"${args[0]}" is not defined (file ${fileName} line ${line})`
-            );
+        if (!context.has(args[0] as string)) {
+            Common.raise(ReferenceError, `"${args[0]}" is not defined`, env);
         }
-        context.delete(args[0]);
+        context.delete(args[0] as string);
     }],
 
     // invoke(f, args)
-    ['invoke', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'exist', 2, 2);
-        const f = args[0];
+    ['invoke', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'exist', 2, 2);
+        const f = args[0] as RuleHandler;
         if (typeof f !== 'function') {
-            throw new TypeError(
-                `expect a function as the first argument (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a function as the first argument`, env);
         }
-        const rawArgList = args[1];
+        const rawArgList = args[1] as unknown[];
         if (!Array.isArray(rawArgList)) {
-            throw new TypeError(
-                `expect an array as argument list (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect an array as argument list`, env);
         }
         const argList = new Array<ExpressionPart>();
         for (let i = 0; i < rawArgList.length; i++) {
@@ -107,34 +91,32 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
                     type: 'symbol',
                     value: ',',
                     offset: NaN,
-                    line,
+                    line: env.line,
+                    column: NaN,
                 });
             }
             argList.push({
                 type: 'value',
                 value: rawArgList[i],
                 offset: NaN,
-                line,
+                line: env.line,
+                column: NaN,
             });
         }
-        return f(argList, context, fileName, line);
+        return f(argList, context, env);
     }],
 
     // pipe(data, functions)
-    ['pipe', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'pipe', 2, 2);
+    ['pipe', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'pipe', 2, 2);
         const functions = args[1] as RuleHandler[];
         if (!Array.isArray(functions)) {
-            throw new TypeError(
-                `expect an array of functions as the second argument (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect an array of functions as the second argument`, env);
         }
         for (let i = 0; i < functions.length; i++) {
             if (typeof functions[i] !== 'function') {
-                throw new TypeError(
-                    `expect an array of functions as the second argument (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect an array of functions as the second argument`, env);
             }
         }
         let data = args[0] as unknown;
@@ -144,31 +126,29 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
                     type: 'value',
                     value: data,
                     offset: NaN,
-                    line,
+                    line: env.line,
+                    column: NaN,
                 }],
                 context,
-                fileName,
-                line,
+                env,
             );
         }
         return data;
     }],
 
     // print(data...)
-    ['print', (rawArgs, context, fileName) => {
-        console.log.apply(null, evalList(rawArgs, context, fileName));
+    ['print', (rawArgs, context, env) => {
+        console.log.apply(null, evalList(rawArgs, context, env.fileName));
     }],
 
     // sum(x...)
-    ['sum', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'sum', 1, Infinity);
+    ['sum', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'sum', 1, Infinity);
         let result = 0;
         for (let i = 0; i < args.length; i++) {
             if (typeof args[i] !== 'number' || args[i] !== args[i]) {
-                throw new TypeError(
-                    `expect finite numbers (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect finite numbers`, env);
             }
             result += args[i] as number;
         }
@@ -176,15 +156,13 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // substraction(x0, x1...)
-    ['substraction', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'substraction', 2, Infinity);
+    ['substraction', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'substraction', 2, Infinity);
         let result: number;
         for (let i = 0; i < args.length; i++) {
             if (!Number.isFinite(args[i])) {
-                throw new TypeError(
-                    `expect finite numbers (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect finite numbers`, env);
             }
             if (i) {
                 result! -= args[i] as number;
@@ -196,15 +174,13 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // product(x...)
-    ['product', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'product', 1, Infinity);
+    ['product', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'product', 1, Infinity);
         let result = 1;
         for (let i = 0; i < args.length; i++) {
             if (!Number.isFinite(args[i])) {
-                throw new TypeError(
-                    `expect finite numbers (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect finite numbers`, env);
             }
             result *= args[i] as number;
         }
@@ -212,15 +188,13 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // quotient(x0, x1...)
-    ['quotient', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'quotient', 2, Infinity);
+    ['quotient', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'quotient', 2, Infinity);
         let result: number;
         for (let i = 0; i < args.length; i++) {
             if (!Number.isFinite(args[i])) {
-                throw new TypeError(
-                    `expect finite numbers (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect finite numbers`, env);
             }
             if (i) {
                 result! /= args[i] as number;
@@ -232,28 +206,24 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // mod(a, b)
-    ['mod', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'mod', 2, 2);
+    ['mod', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'mod', 2, 2);
         const a = args[0] as number;
         const b = args[1] as number;
         if (!Number.isFinite(a) || !Number.isFinite(b)) {
-            throw new TypeError(
-                `expect finite numbers (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect finite numbers`, env);
         }
         return a % b;
     }],
 
     // gt(x0, x1...)
-    ['gt', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'gt', 2, Infinity);
+    ['gt', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'gt', 2, Infinity);
         for (let i = 0; i < args.length; i++) {
             if (typeof args[0] !== 'number' || args[0] !== args[0]) {
-                throw new TypeError(
-                    `expect numbers to compare (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect numbers to compare`, env);
             }
         }
         let lastNumber = args[0] as number;
@@ -267,14 +237,12 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // gte(x0, x1...)
-    ['gte', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'gte', 2, Infinity);
+    ['gte', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'gte', 2, Infinity);
         for (let i = 0; i < args.length; i++) {
             if (typeof args[0] !== 'number' || args[0] !== args[0]) {
-                throw new TypeError(
-                    `expect numbers to compare (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect numbers to compare`, env);
             }
         }
         let lastNumber = args[0] as number;
@@ -288,14 +256,12 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // lt(x0, x1...)
-    ['lt', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'lt', 2, Infinity);
+    ['lt', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'lt', 2, Infinity);
         for (let i = 0; i < args.length; i++) {
             if (typeof args[0] !== 'number' || args[0] !== args[0]) {
-                throw new TypeError(
-                    `expect numbers to compare (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect numbers to compare`, env);
             }
         }
         let lastNumber = args[0] as number;
@@ -309,14 +275,12 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // lte(x0, x1...)
-    ['lte', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'lte', 2, Infinity);
+    ['lte', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'lte', 2, Infinity);
         for (let i = 0; i < args.length; i++) {
             if (typeof args[0] !== 'number' || args[0] !== args[0]) {
-                throw new TypeError(
-                    `expect numbers to compare (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect numbers to compare`, env);
             }
         }
         let lastNumber = args[0] as number;
@@ -330,9 +294,9 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // eq(x0, x1...)
-    ['eq', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'eq', 2, Infinity);
+    ['eq', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'eq', 2, Infinity);
         let lastValue = args[0];
         for (let i = 1; i < args.length; i++) {
             if (args[i] !== lastValue) {
@@ -344,27 +308,23 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // not(bool)
-    ['not', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'not', 1, 1);
+    ['not', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'not', 1, 1);
         let bool = args[0];
         if (typeof bool !== 'boolean') {
-            throw new TypeError(
-                `expect a boolean value (file ${fileName} line ${line})`
-            );
+            Common.raise(TypeError, `expect a boolean value`, env);
         }
         return !bool;
     }],
 
     // and(b0, b1...)
-    ['and', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'and', 2, Infinity);
+    ['and', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'and', 2, Infinity);
         for (let i = 0; i < args.length; i++) {
             if (typeof args[i] !== 'boolean') {
-                throw new TypeError(
-                    `expect boolean values (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect boolean values`, env);
             }
         }
         for (let i = 0; i < args.length; i++) {
@@ -376,14 +336,12 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // or(b0, b1...)
-    ['or', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'or', 2, Infinity);
+    ['or', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'or', 2, Infinity);
         for (let i = 0; i < args.length; i++) {
             if (typeof args[i] !== 'boolean') {
-                throw new TypeError(
-                    `expect boolean values (file ${fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect boolean values`, env);
             }
         }
         for (let i = 0; i < args.length; i++) {
@@ -395,16 +353,16 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // number(value)
-    ['number', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'number', 1, 1);
+    ['number', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'number', 1, 1);
         return Number(args[0]);
     }],
 
     // string(value)
-    ['string', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'string', 1, 1);
+    ['string', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'string', 1, 1);
         if (typeof args[0] === 'function') {
             return '<function>';
         }
@@ -412,9 +370,9 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     }],
 
     // boolean(value)
-    ['boolean', (rawArgs, context, fileName, line) => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'boolean', 1, 1);
+    ['boolean', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'boolean', 1, 1);
         return Boolean(args[0]);
     }],
 

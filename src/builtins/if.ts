@@ -3,24 +3,20 @@ import { evalList } from '../eval';
 import { RuleHandler } from '../rules/rule';
 
 export const buildIf = (lastCondition: boolean): RuleHandler => (
-    (rawArgs, context, fileName, line): RuleHandler => {
-        const args = evalList(rawArgs, context, fileName);
-        Common.checkArgs(args, fileName, line, 'if', 1, 1);
-        if (typeof args[0] !== 'boolean') {
-            throw new TypeError(
-                `expect a boolean as condition (file ${fileName} line ${line})`
-            );
+    (rawArgs, context, env): RuleHandler => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'if', 1, 1);
+        const condition = args[0] as boolean;
+        if (typeof condition !== 'boolean') {
+            Common.raise(TypeError, `expect a boolean as condition`, env);
         }
-        const condition = args[0];
-        return (rawBlock, ctx, _fileName, line) => {
-            const blocks = evalList(rawBlock, ctx, _fileName);
+        return (rawBlock, ctx, _env) => {
+            const blocks = evalList(rawBlock, ctx, _env.fileName) as [RuleHandler];
             if (blocks.length !== 1 || typeof blocks[0] !== 'function') {
-                throw new TypeError(
-                    `expect exactly one code block (file ${_fileName} line ${line})`
-                );
+                Common.raise(TypeError, `expect exactly one code block`, _env);
             }
             if (!lastCondition && condition) {
-                blocks[0]([], ctx, fileName, line);
+                blocks[0]([], ctx, env);
             }
             return buildIf(condition);
         };

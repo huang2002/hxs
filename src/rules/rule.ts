@@ -1,4 +1,4 @@
-import { ASTNode, ASTNodeBase, SpanNode, SymbolNode } from '3h-ast';
+import { ASTNode, ASTNodeTemplate, SpanNode, SymbolNode } from '3h-ast';
 import { EvalContext } from '../common';
 
 export type RulePatternElement =
@@ -12,17 +12,22 @@ export type RulePatternElement =
 
 export type RulePattern = RulePatternElement[];
 
-export type InternalValue = ASTNodeBase<'value', {
+export type InternalValue = ASTNodeTemplate<'value', {
     value: unknown;
 }>;
 
 export type ExpressionPart = ASTNode | InternalValue;
 
+export interface RuleHandlerEnvironment {
+    fileName: string;
+    line: number;
+    column: number;
+}
+
 export type RuleHandler = (
     parts: readonly ExpressionPart[],
     context: EvalContext,
-    fileName: string,
-    line: number,
+    env: RuleHandlerEnvironment,
 ) => unknown;
 
 export interface Rule {
