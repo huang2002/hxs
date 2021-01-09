@@ -84,8 +84,4 @@ test(null, {
         );
     },
 
-    math(ctx) {
-
-    },
-
 });
