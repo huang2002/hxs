@@ -260,4 +260,28 @@ export const BuiltinArray = Common.createDict({
         }
     },
 
+    // Array.indexOf(array, value)
+    indexOf(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'Array.indexOf', 2, 2);
+        const array = args[0] as unknown[];
+        if (!Array.isArray(array)) {
+            Common.raise(TypeError, `expect an array of arrays as the first argument`, env);
+        }
+        return array.indexOf(args[1]);
+    },
+
+    // Array.lastIndexOf(array, value)
+    lastIndexOf(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'Array.lastIndexOf', 2, 2);
+        const array = args[0] as unknown[];
+        if (!Array.isArray(array)) {
+            Common.raise(TypeError, `expect an array of arrays as the first argument`, env);
+        }
+        return array.lastIndexOf(args[1]);
+    },
+
+    // TODO: sorted
+
 });

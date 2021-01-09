@@ -115,4 +115,14 @@ exports.arrayTests = ctx => {
     ctx.expectThrow(evalCode, TypeError, [`Array.unpack([0], 'a')`]);
     ctx.expectThrow(evalCode, TypeError, [`Array.unpack([0], ['a'], 1)`]);
 
+    ctx.assertStrictEqual(evalCode(`Array.indexOf([0, '0', 0], 0)`), 0);
+    ctx.assertStrictEqual(evalCode(`Array.indexOf([0, '0', 0], '0')`), 1);
+    ctx.assertStrictEqual(evalCode(`Array.indexOf([0, '0', 0], 'a')`), -1);
+    ctx.expectThrow(evalCode, TypeError, [`Array.indexOf('abc', 'a')`]);
+
+    ctx.assertStrictEqual(evalCode(`Array.lastIndexOf([0, '0', 0], 0)`), 2);
+    ctx.assertStrictEqual(evalCode(`Array.lastIndexOf([0, '0', 0], '0')`), 1);
+    ctx.assertStrictEqual(evalCode(`Array.lastIndexOf([0, '0', 0], 'a')`), -1);
+    ctx.expectThrow(evalCode, TypeError, [`Array.lastIndexOf('abc', 'a')`]);
+
 };
