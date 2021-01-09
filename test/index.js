@@ -64,15 +64,6 @@ test(null, {
 
     },
 
-    builtins: builtinsTest,
-    string: stringTests,
-    dict: dictTests,
-    array: arrayTests,
-
-    if: ifTests,
-    function: functionTests,
-    loop: loopTests,
-
     comment(ctx) {
         ctx.assertStrictEqual(
             evalCode(`
@@ -83,5 +74,14 @@ test(null, {
             undefined
         );
     },
+
+    builtins: builtinsTest,
+    string: stringTests,
+    dict: dictTests,
+    array: arrayTests,
+
+    if: ifTests,
+    function: functionTests,
+    loop: loopTests,
 
 });
