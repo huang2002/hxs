@@ -32,11 +32,11 @@
     "@babel/preset-env": "^7.12.11",
     "@rollup/plugin-babel": "^5.2.2",
     "dts2md": "^0.4.0",
-    "rollup": "^2.35.1",
+    "rollup": "^2.36.1",
     "terser": "^5.5.1",
     "typescript": "^4.1.3"
   },
   "dependencies": {
-    "3h-ast": "^0.3.2"
+    "3h-ast": "^0.4.0"
   }
 }
