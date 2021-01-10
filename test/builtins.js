@@ -40,6 +40,13 @@ exports.builtinsTest = ctx => { // partial
     ctx.expectThrow(evalCode, TypeError, [`mod('1', 2)`]);
     ctx.expectThrow(evalCode, TypeError, [`mod(2, '1')`]);
 
+    ctx.assertStrictEqual(evalCode('pow(1, 2)'), 1);
+    ctx.assertStrictEqual(evalCode('pow(2, 1)'), 2);
+    ctx.assertStrictEqual(evalCode('pow(2, 10)'), 1024);
+    ctx.assertStrictEqual(evalCode('pow(0, 0)'), 1);
+    ctx.expectThrow(evalCode, TypeError, [`pow('1', 2)`]);
+    ctx.expectThrow(evalCode, TypeError, [`pow(2, '1')`]);
+
     ctx.assertStrictEqual(evalCode('gt(6, 5, 4)'), true);
     ctx.assertStrictEqual(evalCode('gt(6, 4, 5)'), false);
     ctx.assertStrictEqual(evalCode('gt(6, 4, 4)'), false);

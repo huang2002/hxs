@@ -217,6 +217,25 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
         return a % b;
     }],
 
+    // pow(x,y)
+    ['pow', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName) as [number, number];
+        Common.checkArgs(args, env, 'math.pow', 2, 2);
+        if (typeof args[0] !== 'number') {
+            Common.raise(TypeError, `expect a number as base`, env);
+        }
+        if (args[0] !== args[0]) {
+            Common.raise(RangeError, `invalid base`, env);
+        }
+        if (typeof args[1] !== 'number') {
+            Common.raise(TypeError, `expect a number as exponent value`, env);
+        }
+        if (args[1] !== args[1]) {
+            Common.raise(RangeError, `invalid exponent value`, env);
+        }
+        return Math.pow(args[0], args[1]);
+    }],
+
     // gt(x0, x1...)
     ['gt', (rawArgs, context, env) => {
         const args = evalList(rawArgs, context, env.fileName);
