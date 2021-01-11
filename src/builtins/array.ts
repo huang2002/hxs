@@ -1,5 +1,6 @@
 import { Common } from '../common';
 import { evalList } from '../eval';
+import { RuleHandler } from '../rules/rule';
 
 export const BuiltinArray = Common.createDict({
 
@@ -266,7 +267,7 @@ export const BuiltinArray = Common.createDict({
         Common.checkArgs(args, env, 'Array.indexOf', 2, 2);
         const array = args[0] as unknown[];
         if (!Array.isArray(array)) {
-            Common.raise(TypeError, `expect an array of arrays as the first argument`, env);
+            Common.raise(TypeError, `expect an array as the first argument`, env);
         }
         return array.indexOf(args[1]);
     },
@@ -277,7 +278,7 @@ export const BuiltinArray = Common.createDict({
         Common.checkArgs(args, env, 'Array.lastIndexOf', 2, 2);
         const array = args[0] as unknown[];
         if (!Array.isArray(array)) {
-            Common.raise(TypeError, `expect an array of arrays as the first argument`, env);
+            Common.raise(TypeError, `expect an array as the first argument`, env);
         }
         return array.lastIndexOf(args[1]);
     },
