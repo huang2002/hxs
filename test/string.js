@@ -18,6 +18,12 @@ exports.stringTests = ctx => {
     ctx.assertStrictEqual(evalCode('``'), ``);
     ctx.assertStrictEqual(evalCode('#word'), 'word');
     ctx.assertStrictEqual(evalCode('# hello'), 'hello');
+    ctx.assertStrictEqual(evalCode(`'abc'[0]`), 'a');
+    ctx.assertStrictEqual(evalCode(`'abc'[2]`), 'c');
+    ctx.assertStrictEqual(evalCode(`'abc'[-2]`), 'b');
+    ctx.expectThrow(evalCode, TypeError, [`'abc'['a']`]);
+    ctx.expectThrow(evalCode, RangeError, [`'abc'[3]`]);
+    ctx.expectThrow(evalCode, RangeError, [`'abc'[-4]`]);
 
     ctx.assertStrictEqual(evalCode(`String.join(['a', 'b', 'c'])`), 'abc');
     ctx.assertStrictEqual(evalCode(`String.join(['a', 'b', 'c'], ',')`), 'a,b,c');

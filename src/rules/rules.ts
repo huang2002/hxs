@@ -277,28 +277,28 @@ export const rules: Rule[] = [{
      */
     pattern: [RuleUtils.VALUE, RuleUtils.SPAN_BRACE],
     handler(parts, context, env) {
-        const object = (parts[0] as InternalValue).value;
+        const target = (parts[0] as InternalValue).value;
         const values = evalList((parts[1] as SpanNode).body, context, env.fileName);
         const index = values[values.length - 1] as number;
-        if (Array.isArray(object)) {
-            if (typeof index !== 'number' || index !== index) {
-                Common.raise(TypeError, `expect a finite number as array index`, env);
+        if (Array.isArray(target) || typeof target === 'string') {
+            if (!Number.isFinite(index)) {
+                Common.raise(TypeError, `expect a finite number as array/string index`, env);
             }
             const normalizedIndex = index < 0
-                ? object.length + index
+                ? target.length + index
                 : index;
-            if (normalizedIndex >= object.length || normalizedIndex < 0) {
+            if (normalizedIndex >= target.length || normalizedIndex < 0) {
                 Common.raise(RangeError, `index(${index}) out of range`, env);
             }
-            return object[normalizedIndex];
-        } else if (Common.isDict(object)) {
+            return target[normalizedIndex];
+        } else if (Common.isDict(target)) {
             if (typeof index !== 'string') {
                 Common.raise(TypeError, `expect a string as dict index`, env);
             }
-            if (!(index in (object as any))) {
+            if (!(index in (target as any))) {
                 Common.raise(RangeError, `unknown dict index "${index}"`, env);
             }
-            return (object as any)[index];
+            return (target as any)[index];
         }
         Common.raise(TypeError, `invalid index access`, env);
     },
