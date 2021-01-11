@@ -283,6 +283,43 @@ export const BuiltinArray = Common.createDict({
         return array.lastIndexOf(args[1]);
     },
 
-    // TODO: sorted
+    // Array.sort(array, compareFn?)
+    sort(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'Array.sort', 1, 2);
+        const array = args[0] as unknown[];
+        if (!Array.isArray(array)) {
+            Common.raise(TypeError, `expect an array as the first argument`, env);
+        }
+        const compareFn = args[1] as undefined | ((...args: Parameters<RuleHandler>) => number);
+        if (compareFn !== undefined && typeof compareFn !== 'function') {
+            Common.raise(TypeError, `expect a function as the second argument`, env);
+        }
+        return array.sort(compareFn && ((a, b) => (
+            compareFn(
+                [{
+                    type: 'value',
+                    value: a,
+                    line: env.line,
+                    offset: NaN,
+                    column: NaN,
+                }, {
+                    type: 'symbol',
+                    value: ',',
+                    line: env.line,
+                    offset: NaN,
+                    column: NaN,
+                }, {
+                    type: 'value',
+                    value: b,
+                    line: env.line,
+                    offset: NaN,
+                    column: NaN,
+                }],
+                context,
+                env
+            )
+        )));
+    },
 
 });
