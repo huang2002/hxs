@@ -6,6 +6,7 @@ const { dictTests } = require('./dict.js');
 const { functionTests } = require('./function.js');
 const { ifTests } = require('./if.js');
 const { loopTests } = require('./loop.js');
+const { mathTests } = require('./math.js');
 const { stringTests } = require('./string.js');
 const HX = /** @type {import('..')} */(
     /** @type {unknown} */(require('../dist/3h-exp.umd.js'))
@@ -83,5 +84,7 @@ test(null, {
     if: ifTests,
     function: functionTests,
     loop: loopTests,
+
+    math: mathTests,
 
 });
