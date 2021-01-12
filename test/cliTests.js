@@ -1,5 +1,5 @@
 // @ts-check
-const HX = /** @type {import('..')} */(
+const HXS = /** @type {import('..')} */(
     /** @type {unknown} */(require('../dist/hxs.umd.js'))
 );
 

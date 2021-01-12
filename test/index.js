@@ -9,11 +9,11 @@ const { ifTests } = require('./if.js');
 const { loopTests } = require('./loop.js');
 const { mathTests } = require('./math.js');
 const { stringTests } = require('./string.js');
-const HX = /** @type {import('..')} */(
+const HXS = /** @type {import('..')} */(
     /** @type {unknown} */(require('../dist/hxs.umd.js'))
 );
 
-const { evalCode } = HX;
+const { evalCode } = HXS;
 
 test(null, {
 

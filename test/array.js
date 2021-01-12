@@ -1,9 +1,9 @@
 // @ts-check
-const HX = /** @type {import('..')} */(
+const HXS = /** @type {import('..')} */(
     /** @type {unknown} */(require('../dist/hxs.umd.js'))
 );
 
-const { evalCode } = HX;
+const { evalCode } = HXS;
 
 /**
  * @param {import('3h-test').TestContext} ctx
