@@ -1,6 +1,5 @@
 import { Common, EvalContext, EvalContextValue } from '../common';
 import { evalList } from '../eval';
-import { ExpressionPart, RuleHandler } from '../rules/rule';
 import { BuiltinArray } from './array';
 import { BuiltinDict } from './dict';
 import { builtinIf } from './if';
@@ -70,70 +69,6 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
             Common.raise(ReferenceError, `"${args[0]}" is not defined`, env);
         }
         context.delete(args[0] as string);
-    }],
-
-    // invoke(f, args)
-    ['invoke', (rawArgs, context, env) => {
-        const args = evalList(rawArgs, context, env.fileName);
-        Common.checkArgs(args, env, 'exist', 2, 2);
-        const f = args[0] as RuleHandler;
-        if (typeof f !== 'function') {
-            Common.raise(TypeError, `expect a function as the first argument`, env);
-        }
-        const rawArgList = args[1] as unknown[];
-        if (!Array.isArray(rawArgList)) {
-            Common.raise(TypeError, `expect an array as argument list`, env);
-        }
-        const argList = new Array<ExpressionPart>();
-        for (let i = 0; i < rawArgList.length; i++) {
-            if (i) {
-                argList.push({
-                    type: 'symbol',
-                    value: ',',
-                    offset: NaN,
-                    line: env.line,
-                    column: NaN,
-                });
-            }
-            argList.push({
-                type: 'value',
-                value: rawArgList[i],
-                offset: NaN,
-                line: env.line,
-                column: NaN,
-            });
-        }
-        return f(argList, context, env);
-    }],
-
-    // pipe(data, functions)
-    ['pipe', (rawArgs, context, env) => {
-        const args = evalList(rawArgs, context, env.fileName);
-        Common.checkArgs(args, env, 'pipe', 2, 2);
-        const functions = args[1] as RuleHandler[];
-        if (!Array.isArray(functions)) {
-            Common.raise(TypeError, `expect an array of functions as the second argument`, env);
-        }
-        for (let i = 0; i < functions.length; i++) {
-            if (typeof functions[i] !== 'function') {
-                Common.raise(TypeError, `expect an array of functions as the second argument`, env);
-            }
-        }
-        let data = args[0] as unknown;
-        for (let i = 0; i < functions.length; i++) {
-            data = functions[i](
-                [{
-                    type: 'value',
-                    value: data,
-                    offset: NaN,
-                    line: env.line,
-                    column: NaN,
-                }],
-                context,
-                env,
-            );
-        }
-        return data;
     }],
 
     // print(data...)

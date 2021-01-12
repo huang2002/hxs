@@ -110,9 +110,4 @@ exports.builtinsTest = ctx => { // partial
     ctx.assertStrictEqual(evalCode('string(print)'), '<function>');
     ctx.assertStrictEqual(evalCode('boolean(0)'), false);
 
-    ctx.assertStrictEqual(evalCode(`pipe('foo', [])`), 'foo');
-    ctx.assertStrictEqual(evalCode(`pipe('false', [boolean, number, string])`), '1');
-    ctx.expectThrow(evalCode, TypeError, ['pipe(6, string)']);
-    ctx.expectThrow(evalCode, TypeError, ['pipe(6, [string, 0])']);
-
 };

@@ -60,14 +60,4 @@ exports.functionTests = ctx => {
         1
     );
 
-    ctx.assertStrictEqual(
-        evalCode(`
-            @add() {
-                return(invoke(sum, arguments))
-            };
-            add(2, 4, 6)
-        `),
-        12
-    );
-
 };
