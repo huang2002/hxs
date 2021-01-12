@@ -4,6 +4,7 @@ const { arrayTests } = require('./array.js');
 const { builtinsTest } = require('./builtins.js');
 const { dictTests } = require('./dict.js');
 const { functionTests } = require('./function.js');
+const { cliTests } = require('./cliTests.js');
 const { ifTests } = require('./if.js');
 const { loopTests } = require('./loop.js');
 const { mathTests } = require('./math.js');
@@ -86,5 +87,7 @@ test(null, {
     loop: loopTests,
 
     math: mathTests,
+
+    cli: cliTests,
 
 });
