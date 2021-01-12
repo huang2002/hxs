@@ -10,6 +10,15 @@ const { evalCode } = HXS;
  */
 exports.builtinsTest = ctx => { // partial
 
+    ctx.assertStrictEqual(evalCode(`typeOf(1)`), 'number');
+    ctx.assertStrictEqual(evalCode(`typeOf(NaN)`), 'number');
+    ctx.assertStrictEqual(evalCode(`typeOf('number')`), 'string');
+    ctx.assertStrictEqual(evalCode(`typeOf(true)`), 'boolean');
+    ctx.assertStrictEqual(evalCode(`typeOf(typeOf)`), 'function');
+    ctx.assertStrictEqual(evalCode(`typeOf(null)`), 'null');
+    ctx.assertStrictEqual(evalCode(`typeOf([])`), 'array');
+    ctx.assertStrictEqual(evalCode(`typeOf(Array)`), 'dict');
+
     ctx.assertStrictEqual(evalCode('sum(0, 1, 2)'), 3);
     ctx.assertStrictEqual(evalCode('3 $a; 4 $b; sum(a, b, )'), 7);
     ctx.assertStrictEqual(evalCode('sum(6)'), 6);

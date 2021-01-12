@@ -71,6 +71,28 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
         context.delete(args[0] as string);
     }],
 
+    // typeOf(value)
+    ['typeOf', (rawArgs, context, env) => {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'typeOf', 1, 1);
+        switch (typeof args[0]) {
+            case 'number': return 'number';
+            case 'string': return 'string';
+            case 'boolean': return 'boolean';
+            case 'function': return 'function';
+            case 'object': {
+                if (!args[0]) {
+                    return 'null';
+                } else if (Array.isArray(args[0])) {
+                    return 'array';
+                } else if (Common.isDict(args[0])) {
+                    return 'dict';
+                }
+            }
+        }
+        Common.raise(TypeError, `unrecognized type`, env);
+    }],
+
     // print(data...)
     ['print', (rawArgs, context, env) => {
         console.log.apply(null, evalList(rawArgs, context, env.fileName));
