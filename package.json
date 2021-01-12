@@ -14,6 +14,7 @@
     "postbuild": "terser dist/hxs.js --config-file terser.json --module -o dist/hxs.min.js && terser dist/hxs.umd.js --config-file terser.json -o dist/hxs.umd.min.js && node stat",
     "test": "node ./test/index.js",
     "docs": "dts2md \"**\" \"!index.d.ts\" -i ./types -o ./docs -l -I Home.md",
+    "repl": "node cli repl",
     "help": "node cli --help"
   },
   "repository": "huang2002/hxs",
