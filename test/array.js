@@ -126,7 +126,7 @@ exports.arrayTests = ctx => {
     ctx.expectThrow(evalCode, TypeError, [`Array.lastIndexOf('abc', 'a')`]);
 
     ctx.assertShallowEqual(evalCode(`Array.sort([0, 2, 1])`), [0, 1, 2]);
-    ctx.assertShallowEqual(evalCode(`Array.sort([0, 2, 1], @(#a, #b) { print(a, b); return(substraction(b, a)) })`), [2, 1, 0]);
+    ctx.assertShallowEqual(evalCode(`Array.sort([0, 2, 1], @(#a, #b) { return(substraction(b, a)) })`), [2, 1, 0]);
     ctx.assertShallowEqual(evalCode(`Array.sort(['0', '2', '1'])`), ['0', '1', '2']);
     ctx.expectThrow(evalCode, TypeError, [`Array.sort('abc')`]);
 
