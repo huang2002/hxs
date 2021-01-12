@@ -17,7 +17,7 @@ export default [
             },
             format: 'umd',
             name: 'HX',
-            file: './dist/3h-exp.umd.js'
+            file: './dist/hxs.umd.js'
         }
     },
     {
@@ -25,7 +25,7 @@ export default [
         external: ['3h-ast'],
         output: {
             format: 'esm',
-            file: './dist/3h-exp.js'
+            file: './dist/hxs.js'
         }
     }
 ];

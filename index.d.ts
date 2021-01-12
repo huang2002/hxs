@@ -1,3 +1,3 @@
-export as namespace HX;
+export as namespace HXS;
 
 export * from "./types/index";

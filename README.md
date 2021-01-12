@@ -1,6 +1,6 @@
-# 3h-exp
+# hxs
 
-> A simple expression interpreter.
+> A simple programming language.
 
 ## Introduction
 

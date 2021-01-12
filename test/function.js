@@ -1,6 +1,6 @@
 // @ts-check
 const HX = /** @type {import('..')} */(
-    /** @type {unknown} */(require('../dist/3h-exp.umd.js'))
+    /** @type {unknown} */(require('../dist/hxs.umd.js'))
 );
 
 const { evalCode } = HX;

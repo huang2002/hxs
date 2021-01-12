@@ -1,20 +1,20 @@
 {
-  "name": "3h-exp",
+  "name": "hxs",
   "version": "0.1.0",
-  "description": "A simple expression interpreter.",
-  "module": "./dist/3h-exp.min.js",
-  "main": "./dist/3h-exp.umd.min.js",
+  "description": "A simple programming language.",
+  "module": "./dist/hxs.min.js",
+  "main": "./dist/hxs.umd.min.js",
   "types": "./index.d.ts",
   "author": "3h",
   "license": "MIT",
   "scripts": {
     "prebuild": "tsc",
     "build": "rollup -c",
-    "postbuild": "terser dist/3h-exp.js --config-file terser.json --module -o dist/3h-exp.min.js && terser dist/3h-exp.umd.js --config-file terser.json -o dist/3h-exp.umd.min.js && node stat",
+    "postbuild": "terser dist/hxs.js --config-file terser.json --module -o dist/hxs.min.js && terser dist/hxs.umd.js --config-file terser.json -o dist/hxs.umd.min.js && node stat",
     "test": "node ./test/index.js",
     "docs": "dts2md \"**\" \"!index.d.ts\" -i ./types -o ./docs -l -I Home.md"
   },
-  "repository": "huang2002/3h-exp",
+  "repository": "huang2002/hxs",
   "keywords": [
     "exp",
     "expression",
