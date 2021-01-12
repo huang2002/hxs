@@ -11,7 +11,14 @@ const { evalCode } = HX;
 exports.mathTests = ctx => {
 
     ctx.assertStrictEqual(evalCode(`import('math').PI`), Math.PI);
+
     ctx.assertStrictEqual(evalCode(`import('math').E`), Math.E);
+
+    ctx.assertStrictEqual(evalCode(`import('math').sign(+2)`), Math.sign(1));
+    ctx.assertStrictEqual(evalCode(`import('math').sign(0)`), Math.sign(0));
+    ctx.assertStrictEqual(evalCode(`import('math').sign(-0)`), Math.sign(0));
+    ctx.assertStrictEqual(evalCode(`import('math').sign(-2)`), Math.sign(-1));
+    ctx.expectThrow(evalCode, TypeError, [`import('math').sign('0')`]);
 
     ctx.assertStrictEqual(evalCode(`import('math').min([])`), Infinity);
     ctx.assertStrictEqual(evalCode(`import('math').min([6])`), 6);

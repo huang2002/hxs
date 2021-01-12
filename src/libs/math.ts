@@ -6,6 +6,16 @@ export const math = Common.createDict({
     PI: Math.PI,
     E: Math.E,
 
+    // sign(x)
+    sign(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName) as [number];
+        Common.checkArgs(args, env, 'math.sign', 1, 1);
+        if (typeof args[0] !== 'number') {
+            Common.raise(TypeError, `expect a number as argument`, env);
+        }
+        return Math.sign(args[0]);
+    },
+
     // min(numbers)
     min(rawArgs, context, env) {
         const args = evalList(rawArgs, context, env.fileName);
