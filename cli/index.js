@@ -1,5 +1,6 @@
 // @ts-check
 const { Program } = require('3h-cli');
+const { createREPL } = require("./createREPL");
 
 const program = new Program('hxs', {
     title: 'A simple programming language.',
@@ -45,14 +46,14 @@ program.parse(process.argv)
             throw new Error('no actions specified');
         }
 
-        const HXS = /** @type {import('.')} */(
-            /** @type {unknown} */(require('./dist/hxs.umd.js'))
-        );;
 
         switch (args.actions[0]) {
 
             case 'exec': {
                 const { readFileSync } = require('fs');
+                const HXS = /** @type {import('..')} */(
+                    /** @type {unknown} */(require('../dist/hxs.umd.js'))
+                );;
                 const encoding = /** @type {import('crypto').Encoding} */(
                     args.getOption('--encoding')[0] || DEFAULT_ENCODING
                 );
@@ -69,40 +70,7 @@ program.parse(process.argv)
             }
 
             case 'repl': {
-                const { createInterface } = require('readline');
-                const interface = createInterface({
-                    input: process.stdin,
-                    output: process.stdout,
-                });
-                const context = new Map(HXS.builtins);
-                context.set('__repl', HXS.Common.createDict({
-                    // __repl.setPrompt
-                    setPrompt(rawArgs, context, env) {
-                        const args = HXS.evalList(rawArgs, context, env.fileName);
-                        HXS.Common.checkArgs(args, env, '__repl.setPrompt', 1, 1);
-                        if (typeof args[0] !== 'string') {
-                            HXS.Common.raise(TypeError, 'expect a string as prompt', env);
-                        }
-                        interface.setPrompt(args[0]);
-                    },
-                    // __repl.exit()
-                    exit() {
-                        interface.close();
-                        process.exit(0);
-                    },
-                }));
-                console.log('Entering REPL mode. Invoke `__repl.exit` to exit.\n');
-                interface.prompt();
-                interface.on('line', input => {
-                    try {
-                        console.log(HXS.evalCode(input, context, '<repl>'));
-                        console.log();
-                    } catch (error) {
-                        console.error(error);
-                        console.error();
-                    }
-                    interface.prompt();
-                });
+                createREPL();
                 break;
             }
 

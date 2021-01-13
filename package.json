@@ -5,7 +5,7 @@
   "module": "./dist/hxs.min.js",
   "main": "./dist/hxs.umd.min.js",
   "types": "./index.d.ts",
-  "bin": "./cli.js",
+  "bin": "./cli/index.js",
   "author": "3h",
   "license": "MIT",
   "scripts": {
@@ -13,8 +13,8 @@
     "build": "rollup -c",
     "postbuild": "terser dist/hxs.js --config-file terser.json --module -o dist/hxs.min.js && terser dist/hxs.umd.js --config-file terser.json -o dist/hxs.umd.min.js && node stat",
     "test": "node ./test/index.js",
-    "repl": "node cli repl",
-    "help": "node cli --help"
+    "repl": "node ./cli/index.js repl",
+    "help": "node ./cli/index.js --help"
   },
   "repository": "huang2002/hxs",
   "keywords": [

@@ -6,7 +6,7 @@ const HXS = /** @type {import('..')} */(
 const { join } = require('path');
 const { execSync } = require('child_process');
 
-const cliPath = join(__dirname, '../cli.js');
+const cliPath = join(__dirname, '../cli/index.js');
 
 /**
  * @param {string} relativePath
