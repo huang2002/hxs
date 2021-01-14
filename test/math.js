@@ -14,6 +14,9 @@ exports.mathTests = ctx => {
 
     ctx.assertStrictEqual(evalCode(`import('math').E`), Math.E);
 
+    const x = evalCode(`import('math').random()`);
+    ctx.assert(x > 0 && x < 1);
+
     ctx.assertStrictEqual(evalCode(`import('math').sign(+2)`), Math.sign(1));
     ctx.assertStrictEqual(evalCode(`import('math').sign(0)`), Math.sign(0));
     ctx.assertStrictEqual(evalCode(`import('math').sign(-0)`), Math.sign(0));

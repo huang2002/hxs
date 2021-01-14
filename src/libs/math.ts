@@ -6,6 +6,13 @@ export const math = Common.createDict({
     PI: Math.PI,
     E: Math.E,
 
+    // random()
+    random(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'math.random', 0, 0);
+        return Math.random();
+    },
+
     // sign(x)
     sign(rawArgs, context, env) {
         const args = evalList(rawArgs, context, env.fileName) as [number];
