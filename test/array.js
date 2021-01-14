@@ -43,6 +43,10 @@ exports.arrayTests = ctx => {
     ctx.expectThrow(evalCode, TypeError, [`Array.clone()`]);
     ctx.expectThrow(evalCode, TypeError, [`Array.clone(2)`]);
 
+    ctx.assertShallowEqual(evalCode('Array.sizeOf([])'), 0);
+    ctx.assertShallowEqual(evalCode('Array.sizeOf([0, 1])'), 2);
+    ctx.expectThrow(evalCode, TypeError, [`Array.sizeOf('abc')`]);
+
     ctx.assertShallowEqual(evalCode('[0, 1, 2] $a; Array.set(a, 0, 5); a'), [5, 1, 2]);
     ctx.assertShallowEqual(evalCode('[0, 1, 2] $a; Array.set(a, 2, 6); a'), [0, 1, 6]);
     ctx.expectThrow(evalCode, TypeError, [`Array.set('012')`]);
@@ -95,6 +99,10 @@ exports.arrayTests = ctx => {
     ctx.expectThrow(evalCode, RangeError, [`Array.remove([0, 1], 3, 1)`]);
     ctx.expectThrow(evalCode, RangeError, [`Array.remove([0, 1], -3, 1)`]);
     ctx.expectThrow(evalCode, RangeError, [`Array.remove([0, 1], 0, -1)`]);
+
+    ctx.assertShallowEqual(evalCode('[0, 1, 2] $a; Array.clear(a); a'), []);
+    ctx.assertShallowEqual(evalCode('[] $a; Array.clear(a); a'), []);
+    ctx.expectThrow(evalCode, TypeError, [`Array.clear('abc')`]);
 
     ctx.assertShallowEqual(evalCode('Array.flat([])'), []);
     ctx.assertShallowEqual(evalCode('Array.flat([0, 1, 2])'), [0, 1, 2]);

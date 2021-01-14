@@ -37,6 +37,17 @@ export const BuiltinArray = Common.createDict({
         return (array as unknown[]).slice();
     },
 
+    // Array.sizeOf(array)
+    sizeOf(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'Array.sizeOf', 1, 1);
+        const array = args[0];
+        if (!Array.isArray(array)) {
+            Common.raise(TypeError, `expect an array as the first argument`, env);
+        }
+        return (array as unknown[]).length;
+    },
+
     // Array.set(array, index, value)
     set(rawArgs, context, env) {
         const args = evalList(rawArgs, context, env.fileName);
@@ -197,6 +208,17 @@ export const BuiltinArray = Common.createDict({
             }
             array.length -= count;
         }
+    },
+
+    // Array.clear(array)
+    clear(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'Array.clear', 1, 1);
+        const array = args[0];
+        if (!Array.isArray(array)) {
+            Common.raise(TypeError, `expect an array as the first argument`, env);
+        }
+        (array as unknown[]).length = 0;
     },
 
     // Array.flat(arrays, depth?)
