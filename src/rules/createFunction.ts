@@ -1,5 +1,5 @@
 import { ASTNode } from '3h-ast';
-import { EvalContext } from '../common';
+import { Common, EvalContext } from '../common';
 import { evalAST, evalList } from '../eval';
 import { RuleHandler } from './rule';
 
@@ -9,6 +9,7 @@ export const createFunction = (
     context: EvalContext,
     fileName: string,
 ): RuleHandler => {
+
     const argList = evalList(rawArgList, context, fileName) as string[];
     for (let i = 0; i < argList.length; i++) {
         if (typeof argList[i] !== 'string') {
@@ -17,25 +18,33 @@ export const createFunction = (
             );
         }
     }
+
     return (rawArgs, ctx, env) => {
+
         const args = evalList(rawArgs, ctx, env.fileName);
         const scopedContext = new Map(context);
+
         scopedContext.set('arguments', args);
+
         for (let i = 0; i < argList.length; i++) {
             scopedContext.set(
                 argList[i],
                 i < args.length ? args[i] : null
             );
         }
+
+        // return(value)
         const returnFlag = Symbol('returnFlag');
         let returnValue = null;
-        scopedContext.set('return', (rawValue, _ctx) => {
+        scopedContext.set('return', (rawValue, _ctx, _env) => {
             if (rawValue.length) {
-                const value = evalList(rawValue, _ctx, env.fileName);
-                returnValue = value[value.length - 1];
+                const args = evalList(rawValue, _ctx, _env.fileName);
+                Common.checkArgs(args, _env, 'return', 0, 1);
+                returnValue = args[0];
             }
             throw returnFlag;
         });
+
         try {
             evalAST(body, scopedContext, fileName);
         } catch (error) {
@@ -43,6 +52,9 @@ export const createFunction = (
                 throw error;
             }
         }
+
         return returnValue;
+
     };
+
 };
