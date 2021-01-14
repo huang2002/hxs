@@ -115,6 +115,11 @@ exports.builtinsTest = ctx => { // partial
     ctx.expectThrow(evalCode, TypeError, [`or(false, '0')`]);
 
     ctx.assertStrictEqual(evalCode('number(true)'), 1);
+    ctx.assertShallowEqual(evalCode('number(number)'), NaN);
+    ctx.assertShallowEqual(evalCode('number("201")'), 201);
+    ctx.assertShallowEqual(evalCode('number([])'), NaN);
+    ctx.assertShallowEqual(evalCode('number([0, 1])'), NaN);
+    ctx.assertShallowEqual(evalCode('number(Dict)'), NaN);
     ctx.assertStrictEqual(evalCode('string(true)'), 'true');
     ctx.assertStrictEqual(evalCode('string(print)'), '<function>');
     ctx.assertStrictEqual(evalCode('string([print])'), '<array>');

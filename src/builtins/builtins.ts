@@ -332,7 +332,12 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     ['number', (rawArgs, context, env) => {
         const args = evalList(rawArgs, context, env.fileName);
         Common.checkArgs(args, env, 'number', 1, 1);
-        return Number(args[0]);
+        const type = typeof args[0];
+        if (type === 'object' || type === 'function') {
+            return NaN;
+        } else {
+            return Number(args[0]);
+        }
     }],
 
     // string(value)
