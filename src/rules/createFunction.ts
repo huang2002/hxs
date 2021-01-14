@@ -6,11 +6,11 @@ import { RuleHandler } from './rule';
 export const createFunction = (
     rawArgList: readonly ASTNode[],
     body: readonly ASTNode[],
-    context: EvalContext,
+    creationContext: EvalContext,
     fileName: string,
 ): RuleHandler => {
 
-    const argList = evalList(rawArgList, context, fileName) as string[];
+    const argList = evalList(rawArgList, creationContext, fileName) as string[];
     for (let i = 0; i < argList.length; i++) {
         if (typeof argList[i] !== 'string') {
             throw new TypeError(
@@ -19,10 +19,10 @@ export const createFunction = (
         }
     }
 
-    return (rawArgs, ctx, env) => {
+    return (rawArgs, executionContext, env) => {
 
-        const args = evalList(rawArgs, ctx, env.fileName);
-        const scopedContext = new Map(context);
+        const args = evalList(rawArgs, executionContext, env.fileName);
+        const scopedContext = new Map(creationContext);
 
         scopedContext.set('arguments', args);
 
@@ -45,11 +45,39 @@ export const createFunction = (
             throw returnFlag;
         });
 
+        // forward(names)
+        let forwardNames = new Array<string>();
+        scopedContext.set('forward', (rawValue, _ctx, _env) => {
+            const args = evalList(rawValue, _ctx, _env.fileName);
+            Common.checkArgs(args, _env, 'forward', 1, 1);
+            const names = args[0] as string[];
+            if (!Array.isArray(names)) {
+                Common.raise(TypeError, `expect an array of strings as variable names`, _env);
+            }
+            for (let i = 0; i < names.length; i++) {
+                if (typeof names[i] !== 'string') {
+                    Common.raise(TypeError, `expect an array of strings as variable names`, _env);
+                }
+            }
+            for (let i = 0; i < names.length; i++) {
+                forwardNames.push(names[i]);
+            }
+        });
+
         try {
             evalAST(body, scopedContext, fileName);
         } catch (error) {
             if (error !== returnFlag) {
                 throw error;
+            }
+        }
+
+        for (let i = 0; i < forwardNames.length; i++) {
+            if (scopedContext.has(forwardNames[i])) {
+                creationContext.set(
+                    forwardNames[i],
+                    scopedContext.get(forwardNames[i])!
+                );
             }
         }
 

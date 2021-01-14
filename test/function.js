@@ -44,6 +44,20 @@ exports.functionTests = ctx => {
         ['foo', false]
     );
 
+    ctx.assertShallowEqual(
+        evalCode(`
+            'foo' $s;
+            @f() {
+                forward([#s, #x, #y]);
+                'bar' $s;
+                666 $x;
+            };
+            f();
+            [s, exist('x'), exist('y')]
+        `),
+        ['bar', true, false]
+    );
+
     ctx.assertStrictEqual(
         evalCode(`
             0 $x;
