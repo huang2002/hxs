@@ -117,6 +117,8 @@ exports.builtinsTest = ctx => { // partial
     ctx.assertStrictEqual(evalCode('number(true)'), 1);
     ctx.assertStrictEqual(evalCode('string(true)'), 'true');
     ctx.assertStrictEqual(evalCode('string(print)'), '<function>');
+    ctx.assertStrictEqual(evalCode('string([print])'), '<array>');
+    ctx.assertStrictEqual(evalCode('string(Dict)'), '<dict>');
     ctx.assertStrictEqual(evalCode('boolean(0)'), false);
 
 };
