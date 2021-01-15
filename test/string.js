@@ -41,15 +41,15 @@ exports.stringTests = ctx => {
     ctx.assertStrictEqual(evalCode(`String.toUpperCase('UpperCase')`), 'UPPERCASE');
     ctx.expectThrow(evalCode, TypeError, ['String.toUpperCase(456)']);
 
-    ctx.assertShallowEqual(evalCode(`String.slice('012')`), '012');
-    ctx.assertShallowEqual(evalCode(`String.slice('012', 0)`), '012');
-    ctx.assertShallowEqual(evalCode(`String.slice('012', 1)`), '12');
-    ctx.assertShallowEqual(evalCode(`String.slice('012', 2)`), '2');
-    ctx.assertShallowEqual(evalCode(`String.slice('012', 3)`), '');
-    ctx.assertShallowEqual(evalCode(`String.slice('012', 0, 1)`), '0');
-    ctx.assertShallowEqual(evalCode(`String.slice('012', 1, 3)`), '12');
-    ctx.assertShallowEqual(evalCode(`String.slice('012', 1, -1)`), '1');
-    ctx.assertShallowEqual(evalCode(`String.slice('012', 1, -2)`), '');
+    ctx.assertStrictEqual(evalCode(`String.slice('012')`), '012');
+    ctx.assertStrictEqual(evalCode(`String.slice('012', 0)`), '012');
+    ctx.assertStrictEqual(evalCode(`String.slice('012', 1)`), '12');
+    ctx.assertStrictEqual(evalCode(`String.slice('012', 2)`), '2');
+    ctx.assertStrictEqual(evalCode(`String.slice('012', 3)`), '');
+    ctx.assertStrictEqual(evalCode(`String.slice('012', 0, 1)`), '0');
+    ctx.assertStrictEqual(evalCode(`String.slice('012', 1, 3)`), '12');
+    ctx.assertStrictEqual(evalCode(`String.slice('012', 1, -1)`), '1');
+    ctx.assertStrictEqual(evalCode(`String.slice('012', 1, -2)`), '');
     ctx.expectThrow(evalCode, TypeError, [`String.slice(['2', '3', '3'])`]);
     ctx.expectThrow(evalCode, TypeError, [`String.slice('012', '0')`]);
     ctx.expectThrow(evalCode, TypeError, [`String.slice('012', 0, '1')`]);
