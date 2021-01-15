@@ -11,27 +11,25 @@ export const BuiltinDict = Common.createDict({
         return Object.create(null);
     },
 
-    // Dict.from(entries?)
+    // Dict.from(entries)
     from(rawArgs, context, env) {
-        const dict = Object.create(null);
         const args = evalList(rawArgs, context, env.fileName);
-        Common.checkArgs(args, env, 'Dict.from', 0, 1);
-        if (args.length) {
-            const entries = args[0] as unknown[];
-            if (!Array.isArray(entries)) {
-                Common.raise(TypeError, `invalid dict entries`, env);
+        Common.checkArgs(args, env, 'Dict.from', 1, 1);
+        const entries = args[0] as unknown[];
+        if (!Array.isArray(entries)) {
+            Common.raise(TypeError, `invalid dict entries`, env);
+        }
+        const dict = Object.create(null);
+        for (let i = 0; i < entries.length; i++) {
+            const entry = entries[i];
+            if (
+                !Array.isArray(entry)
+                || entry.length !== 2
+                || typeof entry[0] !== 'string'
+            ) {
+                Common.raise(TypeError, `invalid dict entry`, env);
             }
-            for (let i = 0; i < entries.length; i++) {
-                const entry = entries[i];
-                if (
-                    !Array.isArray(entry)
-                    || entry.length !== 2
-                    || typeof entry[0] !== 'string'
-                ) {
-                    Common.raise(TypeError, `invalid dict entry`, env);
-                }
-                dict[entry[0]] = entry[1];
-            }
+            dict[entry[0]] = entry[1];
         }
         return dict;
     },
