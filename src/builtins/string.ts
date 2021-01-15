@@ -67,4 +67,26 @@ export const BuiltinString = Common.createDict({
         );
     },
 
+    // String.indexOf(string, substring)
+    indexOf(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'String.indexOf', 2, 2);
+        const string = args[0] as unknown[];
+        if (typeof string !== 'string') {
+            Common.raise(TypeError, `expect a string as the first argument`, env);
+        }
+        return string.indexOf(args[1]);
+    },
+
+    // String.lastIndexOf(string, substring)
+    lastIndexOf(rawArgs, context, env) {
+        const args = evalList(rawArgs, context, env.fileName);
+        Common.checkArgs(args, env, 'String.lastIndexOf', 2, 2);
+        const string = args[0] as unknown[];
+        if (typeof string !== 'string') {
+            Common.raise(TypeError, `expect a string as the first argument`, env);
+        }
+        return string.lastIndexOf(args[1]);
+    },
+
 });
