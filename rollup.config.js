@@ -16,7 +16,7 @@ export default [
                 '3h-ast': 'HA',
             },
             format: 'umd',
-            name: 'HX',
+            name: 'HXS',
             file: './dist/hxs.umd.js'
         }
     },
