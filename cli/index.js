@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // @ts-check
 const { Program } = require('3h-cli');
 const { createREPL } = require("./createREPL");
