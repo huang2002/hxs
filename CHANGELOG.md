@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0
+
+- Add `Common.toString`
+
 ## 0.1.2
 
 - Fix missing shebang
