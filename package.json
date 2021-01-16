@@ -34,12 +34,12 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@rollup/plugin-babel": "^5.2.2",
-    "rollup": "^2.36.1",
+    "rollup": "^2.36.2",
     "terser": "^5.5.1",
     "typescript": "^4.1.3"
   },
   "dependencies": {
-    "3h-ast": "^0.4.1",
+    "3h-ast": "^0.4.2",
     "3h-cli": "^3.0.0"
   }
 }
