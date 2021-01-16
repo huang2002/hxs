@@ -13,7 +13,7 @@ exports.stringTests = ctx => {
     ctx.assertStrictEqual(evalCode('"\nabc\n"'), "\nabc\n");
     ctx.assertStrictEqual(evalCode('""'), "");
     ctx.assertStrictEqual(evalCode("'\n666\n'"), '\n666\n');
-    ctx.assertStrictEqual(evalCode("'"), '');
+    ctx.assertStrictEqual(evalCode("''"), '');
     ctx.assertStrictEqual(evalCode('`\n233\n`'), `\n233\n`);
     ctx.assertStrictEqual(evalCode('``'), ``);
     ctx.assertStrictEqual(evalCode('#word'), 'word');
