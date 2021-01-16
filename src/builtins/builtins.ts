@@ -344,14 +344,7 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     ['string', (rawArgs, context, env) => {
         const args = evalList(rawArgs, context, env.fileName);
         Common.checkArgs(args, env, 'string', 1, 1);
-        if (typeof args[0] === 'function') {
-            return '<function>';
-        } else if (Array.isArray(args[0])) {
-            return '<array>';
-        } else if (Common.isDict(args[0])) {
-            return '<dict>';
-        }
-        return String(args[0]);
+        return Common.toString(args[0]);
     }],
 
     // boolean(value)

@@ -48,4 +48,15 @@ export namespace Common {
         Object.assign(Object.create(null), dict)
     );
 
+    export const toString = (value: unknown) => {
+        if (typeof value === 'function') {
+            return '<function>';
+        } else if (Array.isArray(value)) {
+            return '<array>';
+        } else if (Common.isDict(value)) {
+            return '<dict>';
+        }
+        return String(value);
+    };
+
 }

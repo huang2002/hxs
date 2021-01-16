@@ -35,10 +35,14 @@ exports.createREPL = () => {
     interface.prompt();
     interface.on('line', input => {
         try {
-            console.log(HXS.evalCode(input, context, '<repl>'));
+            console.log(
+                HXS.Common.toString(
+                    HXS.evalCode(input, context, '<repl>')
+                )
+            );
             console.log();
         } catch (error) {
-            console.error(error);
+            console.error('Error: ' + error.message);
             console.error();
         }
         interface.prompt();
