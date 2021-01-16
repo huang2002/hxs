@@ -10,6 +10,8 @@ const { evalCode } = HXS;
  */
 exports.functionTests = ctx => {
 
+    ctx.assertStrictEqual(evalCode(`@f() {}; f()`), null);
+
     ctx.assertShallowEqual(
         evalCode(`
             set('f', @(#a, #b,) {

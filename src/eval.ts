@@ -11,11 +11,11 @@ export const evalAST = (
 ): unknown => {
 
     if (!ast.length) {
-        return /* undefined */;
+        return null;
     }
 
     if (ast.length === 1 && ast[0].type === 'value') {
-        return ast[0].value;
+        return ast[0].value !== undefined ? ast[0].value : null;
     }
 
     const buffer = new Array<ExpressionPart>();
@@ -67,13 +67,14 @@ export const evalAST = (
                     column: buffer[0].column,
                 },
             );
+
             if (semicolonFlag) {
                 buffer.length = 0;
             } else {
                 buffer.length = 1;
                 buffer[0] = {
                     type: 'value',
-                    value,
+                    value: value !== undefined ? value : null,
                     offset: buffer[0].offset,
                     line: buffer[0].line,
                     column: buffer[0].column,
@@ -100,7 +101,7 @@ export const evalAST = (
             buffer.length = 1;
             buffer[0] = {
                 type: 'value',
-                value,
+                value: value !== undefined ? value : null,
                 offset: buffer[0].offset,
                 line: buffer[0].line,
                 column: buffer[0].column,
@@ -134,7 +135,7 @@ export const evalAST = (
                 column: buffer[0].column,
             },
         );
-        return value;
+        return value !== undefined ? value : null;
     }
 
 };
@@ -151,7 +152,7 @@ export const evalList = (
         if (element.type === 'symbol' && element.value === ',') {
             if (buffer.length) {
                 const value = evalAST(buffer, context, fileName);
-                result.push(value !== undefined ? value : null);
+                result.push(value);
                 buffer.length = 0;
             } else {
                 result.push(null);
@@ -162,7 +163,7 @@ export const evalList = (
     }
     if (buffer.length) {
         const value = evalAST(buffer, context, fileName);
-        result.push(value !== undefined ? value : null); // last element
+        result.push(value); // last element
     }
     return result as EvalContextValue[];
 };
