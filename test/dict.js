@@ -22,6 +22,11 @@ exports.dictTests = ctx => {
     ctx.assertShallowEqual(evalCode("Dict.clone(Dict.from([['foo', 4]]))"), { foo: 4 });
     ctx.expectThrow(evalCode, TypeError, ['Dict.clone([])']);
 
+    ctx.assertShallowEqual(evalCode("Dict.keys(Dict.create())"), []);
+    ctx.assertShallowEqual(evalCode("Dict.keys(Dict.from([['foo', 4]]))"), ['foo']);
+    ctx.assertShallowEqual(evalCode("Dict.keys(Dict.from([[#a, 0], [#b, 1]]))"), ['a', 'b']);
+    ctx.expectThrow(evalCode, TypeError, ['Dict.keys([])']);
+
     ctx.assertShallowEqual(
         evalCode(`
             Dict.create() $o;

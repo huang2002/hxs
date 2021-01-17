@@ -51,6 +51,19 @@ export const BuiltinDict = Common.createDict({
         }
     ),
 
+    keys: Common.injectHelp(
+        'Dict.keys(dict)',
+        (rawArgs, context, env) => {
+            const args = evalList(rawArgs, context, env.fileName);
+            Common.checkArgs(args, env, 'Dict.keys', 1, 1);
+            const dict = args[0] as Dict;
+            if (!Common.isDict(dict)) {
+                Common.raise(TypeError, `expect a dict as the first argument`, env);
+            }
+            return Object.keys(dict);
+        }
+    ),
+
     set: Common.injectHelp(
         'Dict.set(dict, key, value)',
         (rawArgs, context, env) => {
