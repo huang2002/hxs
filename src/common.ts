@@ -48,11 +48,36 @@ export namespace Common {
         Object.assign(Object.create(null), dict)
     );
 
-    export const toString = (value: unknown) => {
-        if (typeof value === 'function') {
+    export const toString = (value: unknown, shallow?: boolean) => {
+        const type = typeof value;
+        if (type === 'string') {
+            if (!(value as string).includes("'")) {
+                return "'" + value + "'";
+            } else if (!(value as string).includes('"')) {
+                return '"' + value + '"';
+            } else if (!(value as string).includes('`')) {
+                return '`' + value + '`';
+            } else {
+                return "'" + (value as string).replace(/'/g, "\\'") + "'";
+            }
+        } else if (type === 'function') {
             return '<function>';
         } else if (Array.isArray(value)) {
-            return '<array>';
+            if (shallow) {
+                return '<array>';
+            }
+            let result = `(size: ${value.length}) [`;
+            if (value.length <= 10) {
+                result += value.map(v => toString(v, true))
+                    .join(', ');
+            } else {
+                result += value.slice(0, 10)
+                    .map(v => toString(v, true))
+                    .join(', ')
+                    + ', ...';
+            }
+            result += ']';
+            return result;
         } else if (Common.isDict(value)) {
             return '<dict>';
         }

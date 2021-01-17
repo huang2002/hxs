@@ -122,7 +122,13 @@ exports.builtinsTest = ctx => { // partial
     ctx.assertShallowEqual(evalCode('number(Dict)'), NaN);
     ctx.assertStrictEqual(evalCode('string(true)'), 'true');
     ctx.assertStrictEqual(evalCode('string(print)'), '<function>');
-    ctx.assertStrictEqual(evalCode('string([print])'), '<array>');
+    ctx.assertStrictEqual(evalCode(`string('abc')`), "'abc'");
+    ctx.assertStrictEqual(evalCode(`string('"')`), `'"'`);
+    ctx.assertStrictEqual(evalCode(`string("abc")`), "'abc'");
+    ctx.assertStrictEqual(evalCode(`string("isn't")`), `"isn't"`);
+    ctx.assertStrictEqual(evalCode(`string('\\'"\`')`), `'\\'"\`'`);
+    ctx.assertStrictEqual(evalCode('string([print])'), '(size: 1) [<function>]');
+    ctx.assertStrictEqual(evalCode('string([[print]])'), '(size: 1) [<array>]');
     ctx.assertStrictEqual(evalCode('string(Dict)'), '<dict>');
     ctx.assertStrictEqual(evalCode('boolean(0)'), false);
 

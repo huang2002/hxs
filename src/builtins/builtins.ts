@@ -123,7 +123,13 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
     ['print', Common.injectHelp(
         'print(data...)',
         (rawArgs, context, env) => {
-            console.log.apply(null, evalList(rawArgs, context, env.fileName));
+            const data = evalList(rawArgs, context, env.fileName);
+            for (let i = 0; i < data.length; i++) {
+                if (typeof data[i] !== 'string') {
+                    Common.raise(TypeError, `expect only strings`, env);
+                }
+            }
+            console.log.apply(null, data);
         }
     )],
 
