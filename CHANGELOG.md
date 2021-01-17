@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0
+
+- Add `help` & help information
+- Add `Dict.keys`
+
 ## 0.2.1
 
 - Fix null values
