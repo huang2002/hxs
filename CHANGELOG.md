@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+- Improve string formatting
+- Change argument types of `print` to strings
+
 ## 0.3.0
 
 - Add `help` & help information
