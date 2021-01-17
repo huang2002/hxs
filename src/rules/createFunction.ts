@@ -33,36 +33,40 @@ export const createFunction = (
             );
         }
 
-        // return(value)
         const returnFlag = Symbol('returnFlag');
         let returnValue = null;
-        scopedContext.set('return', (rawValue, _ctx, _env) => {
-            if (rawValue.length) {
-                const args = evalList(rawValue, _ctx, _env.fileName);
-                Common.checkArgs(args, _env, 'return', 0, 1);
-                returnValue = args[0];
+        scopedContext.set('return', Common.injectHelp(
+            'return(value)',
+            (rawValue, _ctx, _env) => {
+                if (rawValue.length) {
+                    const args = evalList(rawValue, _ctx, _env.fileName);
+                    Common.checkArgs(args, _env, 'return', 0, 1);
+                    returnValue = args[0];
+                }
+                throw returnFlag;
             }
-            throw returnFlag;
-        });
+        ));
 
-        // forward(names)
         let forwardNames = new Array<string>();
-        scopedContext.set('forward', (rawValue, _ctx, _env) => {
-            const args = evalList(rawValue, _ctx, _env.fileName);
-            Common.checkArgs(args, _env, 'forward', 1, 1);
-            const names = args[0] as string[];
-            if (!Array.isArray(names)) {
-                Common.raise(TypeError, `expect an array of strings as variable names`, _env);
-            }
-            for (let i = 0; i < names.length; i++) {
-                if (typeof names[i] !== 'string') {
+        scopedContext.set('forward', Common.injectHelp(
+            'forward(names)',
+            (rawValue, _ctx, _env) => {
+                const args = evalList(rawValue, _ctx, _env.fileName);
+                Common.checkArgs(args, _env, 'forward', 1, 1);
+                const names = args[0] as string[];
+                if (!Array.isArray(names)) {
                     Common.raise(TypeError, `expect an array of strings as variable names`, _env);
                 }
+                for (let i = 0; i < names.length; i++) {
+                    if (typeof names[i] !== 'string') {
+                        Common.raise(TypeError, `expect an array of strings as variable names`, _env);
+                    }
+                }
+                for (let i = 0; i < names.length; i++) {
+                    forwardNames.push(names[i]);
+                }
             }
-            for (let i = 0; i < names.length; i++) {
-                forwardNames.push(names[i]);
-            }
-        });
+        ));
 
         try {
             evalAST(body, scopedContext, fileName);

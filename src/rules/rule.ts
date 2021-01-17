@@ -1,5 +1,5 @@
 import { ASTNode, ASTNodeTemplate, SpanNode, SymbolNode } from '3h-ast';
-import { EvalContext } from '../common';
+import { Common, EvalContext } from '../common';
 
 export type RulePatternElement =
     | { type?: void; }
@@ -24,11 +24,10 @@ export interface RuleHandlerEnvironment {
     column: number;
 }
 
-export type RuleHandler = (
-    parts: readonly ExpressionPart[],
-    context: EvalContext,
-    env: RuleHandlerEnvironment,
-) => unknown;
+export interface RuleHandler {
+    (parts: readonly ExpressionPart[], context: EvalContext, env: RuleHandlerEnvironment): unknown;
+    [Common.HELP_SYMBOL]?: string;
+}
 
 export interface Rule {
     pattern: RulePattern;

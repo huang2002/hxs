@@ -23,10 +23,7 @@ export const buildIf = (lastCondition: boolean): RuleHandler => (
     }
 );
 
-// if (condition) {
-//     ...
-// } (elseCondition) {
-//     ...
-// }
-// ...
-export const builtinIf: RuleHandler = buildIf(false);
+export const builtinIf: RuleHandler = Common.injectHelp(
+    'if (condition0) { ... } (condition1) { ... }',
+    buildIf(false)
+);

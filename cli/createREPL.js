@@ -14,20 +14,23 @@ exports.createREPL = () => {
     const context = new Map(HXS.builtins);
 
     context.set('__repl', HXS.Common.createDict({
-        // __repl.setPrompt
-        setPrompt(rawArgs, context, env) {
-            const args = HXS.evalList(rawArgs, context, env.fileName);
-            HXS.Common.checkArgs(args, env, '__repl.setPrompt', 1, 1);
-            if (typeof args[0] !== 'string') {
-                HXS.Common.raise(TypeError, 'expect a string as prompt', env);
+        setPrompt: HXS.Common.injectHelp(
+            '__repl.setPrompt(str)',
+            (rawArgs, context, env) => {
+                const args = HXS.evalList(rawArgs, context, env.fileName);
+                HXS.Common.checkArgs(args, env, '__repl.setPrompt', 1, 1);
+                if (typeof args[0] !== 'string') {
+                    HXS.Common.raise(TypeError, 'expect a string as prompt', env);
+                }
+                interface.setPrompt(args[0]);
             }
-            interface.setPrompt(args[0]);
-        },
-        // __repl.exit()
-        exit() {
-            interface.close();
-            process.exit(0);
-        },
+        ),
+        exit: HXS.Common.injectHelp(
+            '__repl.exit()',
+            () => {
+                process.exit(0);
+            }
+        ),
     }));
 
     console.log('Entering REPL mode. Invoke `__repl.exit` to exit.\n');

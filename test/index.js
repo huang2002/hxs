@@ -17,6 +17,12 @@ const { evalCode } = HXS;
 
 test(null, {
 
+    help(ctx) {
+        ctx.assertStrictEqual(typeof evalCode(`help(print)`), 'string');
+        ctx.assertStrictEqual(typeof evalCode(`help(Array.of)`), 'string');
+        ctx.assertStrictEqual(typeof evalCode(`help(import('math').sin)`), 'string');
+    },
+
     constants(ctx) {
         ctx.assertStrictEqual(evalCode('true'), true);
         ctx.assertStrictEqual(evalCode('false'), false);

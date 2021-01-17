@@ -59,4 +59,11 @@ export namespace Common {
         return String(value);
     };
 
+    export const HELP_SYMBOL = Symbol('hxs-help');
+
+    export const injectHelp = (help: string, target: RuleHandler) => {
+        target[HELP_SYMBOL] = help;
+        return target;
+    };
+
 }
