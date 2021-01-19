@@ -27,6 +27,57 @@ export const math = Common.createDict({
         }
     ),
 
+    floor: Common.injectHelp(
+        'floor(x)',
+        (rawArgs, context, env) => {
+            const args = evalList(rawArgs, context, env.fileName) as [number];
+            Common.checkArgs(args, env, 'math.floor', 1, 1);
+            if (typeof args[0] !== 'number') {
+                Common.raise(TypeError, `expect a number as argument`, env);
+            }
+            return Math.floor(args[0]);
+        }
+    ),
+
+    ceil: Common.injectHelp(
+        'ceil(x)',
+        (rawArgs, context, env) => {
+            const args = evalList(rawArgs, context, env.fileName) as [number];
+            Common.checkArgs(args, env, 'math.ceil', 1, 1);
+            if (typeof args[0] !== 'number') {
+                Common.raise(TypeError, `expect a number as argument`, env);
+            }
+            return Math.ceil(args[0]);
+        }
+    ),
+
+    round: Common.injectHelp(
+        'round(x)',
+        (rawArgs, context, env) => {
+            const args = evalList(rawArgs, context, env.fileName) as [number];
+            Common.checkArgs(args, env, 'math.round', 1, 1);
+            if (typeof args[0] !== 'number') {
+                Common.raise(TypeError, `expect a number as argument`, env);
+            }
+            return Math.round(args[0]);
+        }
+    ),
+
+    sqrt: Common.injectHelp(
+        'sqrt(x)',
+        (rawArgs, context, env) => {
+            const args = evalList(rawArgs, context, env.fileName) as [number];
+            Common.checkArgs(args, env, 'math.sqrt', 1, 1);
+            if (typeof args[0] !== 'number') {
+                Common.raise(TypeError, `expect a number as argument`, env);
+            }
+            if (args[0] < 0) {
+                Common.raise(RangeError, `invalid radicant`, env);
+            }
+            return Math.sqrt(args[0]);
+        }
+    ),
+
     min: Common.injectHelp(
         'min(numbers)',
         (rawArgs, context, env) => {

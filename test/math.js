@@ -17,11 +17,41 @@ exports.mathTests = ctx => {
     const x = evalCode(`import('math').random()`);
     ctx.assert(x > 0 && x < 1);
 
-    ctx.assertStrictEqual(evalCode(`import('math').sign(+2)`), Math.sign(1));
-    ctx.assertStrictEqual(evalCode(`import('math').sign(0)`), Math.sign(0));
-    ctx.assertStrictEqual(evalCode(`import('math').sign(-0)`), Math.sign(0));
-    ctx.assertStrictEqual(evalCode(`import('math').sign(-2)`), Math.sign(-1));
+    ctx.assertStrictEqual(evalCode(`import('math').sign(+2)`), 1);
+    ctx.assertStrictEqual(evalCode(`import('math').sign(0)`), 0);
+    ctx.assertStrictEqual(evalCode(`import('math').sign(-0)`), 0);
+    ctx.assertStrictEqual(evalCode(`import('math').sign(-2)`), -1);
     ctx.expectThrow(evalCode, TypeError, [`import('math').sign('0')`]);
+
+    ctx.assertStrictEqual(evalCode(`import('math').floor(3.14)`), 3);
+    ctx.assertStrictEqual(evalCode(`import('math').floor(1)`), 1);
+    ctx.assertStrictEqual(evalCode(`import('math').floor(0)`), 0);
+    ctx.assertStrictEqual(evalCode(`import('math').floor(-1)`), -1);
+    ctx.assertStrictEqual(evalCode(`import('math').floor(-3.14)`), -4);
+    ctx.expectThrow(evalCode, TypeError, [`import('math').floor('0')`]);
+
+    ctx.assertStrictEqual(evalCode(`import('math').ceil(3.14)`), 4);
+    ctx.assertStrictEqual(evalCode(`import('math').ceil(1)`), 1);
+    ctx.assertStrictEqual(evalCode(`import('math').ceil(0)`), 0);
+    ctx.assertStrictEqual(evalCode(`import('math').ceil(-1)`), -1);
+    ctx.assertStrictEqual(evalCode(`import('math').ceil(-3.14)`), -3);
+    ctx.expectThrow(evalCode, TypeError, [`import('math').ceil('0')`]);
+
+    ctx.assertStrictEqual(evalCode(`import('math').round(3.5)`), 4);
+    ctx.assertStrictEqual(evalCode(`import('math').round(3.4)`), 3);
+    ctx.assertStrictEqual(evalCode(`import('math').round(1)`), 1);
+    ctx.assertStrictEqual(evalCode(`import('math').round(0)`), 0);
+    ctx.assertStrictEqual(evalCode(`import('math').round(-1)`), -1);
+    ctx.assertStrictEqual(evalCode(`import('math').round(-3.5)`), -3);
+    ctx.assertStrictEqual(evalCode(`import('math').round(-3.6)`), -4);
+    ctx.expectThrow(evalCode, TypeError, [`import('math').round('0')`]);
+
+    ctx.assertStrictEqual(evalCode(`import('math').sqrt(4)`), 2);
+    ctx.assertStrictEqual(evalCode(`import('math').sqrt(2)`), Math.sqrt(2));
+    ctx.assertStrictEqual(evalCode(`import('math').sqrt(1)`), 1);
+    ctx.assertStrictEqual(evalCode(`import('math').sqrt(0)`), 0);
+    ctx.expectThrow(evalCode, TypeError, [`import('math').sqrt('0')`]);
+    ctx.expectThrow(evalCode, RangeError, [`import('math').sqrt(-1)`]);
 
     ctx.assertStrictEqual(evalCode(`import('math').min([])`), Infinity);
     ctx.assertStrictEqual(evalCode(`import('math').min([6])`), 6);
