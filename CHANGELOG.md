@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+- Add `math.floor` & `math.ceil`
+- Add `math.round`
+- Add `math.sqrt`
+
 ## 0.4.0
 
 - Improve string formatting
