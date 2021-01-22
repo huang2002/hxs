@@ -84,7 +84,11 @@ export const BuiltinString = Common.createDict({
             if (typeof string !== 'string') {
                 Common.raise(TypeError, `expect a string as the first argument`, env);
             }
-            return string.indexOf(args[1]);
+            const substring = args[1] as unknown[];
+            if (typeof substring !== 'string') {
+                Common.raise(TypeError, `expect another string as the second argument`, env);
+            }
+            return string.indexOf(substring);
         }
     ),
 
@@ -97,7 +101,11 @@ export const BuiltinString = Common.createDict({
             if (typeof string !== 'string') {
                 Common.raise(TypeError, `expect a string as the first argument`, env);
             }
-            return string.lastIndexOf(args[1]);
+            const substring = args[1] as unknown[];
+            if (typeof substring !== 'string') {
+                Common.raise(TypeError, `expect another string as the second argument`, env);
+            }
+            return string.lastIndexOf(substring);
         }
     ),
 

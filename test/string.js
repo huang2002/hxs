@@ -58,10 +58,12 @@ exports.stringTests = ctx => {
     ctx.assertStrictEqual(evalCode(`String.indexOf('abcabc', 'c')`), 2);
     ctx.assertStrictEqual(evalCode(`String.indexOf('abcabc', 'bc')`), 1);
     ctx.expectThrow(evalCode, TypeError, [`String.indexOf(['a', 'b', 'c'], 'a')`]);
+    ctx.expectThrow(evalCode, TypeError, [`String.indexOf(['0', '1', '2'], 0)`]);
 
     ctx.assertStrictEqual(evalCode(`String.lastIndexOf('abcabc', 'a')`), 3);
     ctx.assertStrictEqual(evalCode(`String.lastIndexOf('abcabc', 'c')`), 5);
     ctx.assertStrictEqual(evalCode(`String.lastIndexOf('abcabc', 'bc')`), 4);
     ctx.expectThrow(evalCode, TypeError, [`String.lastIndexOf(['a', 'b', 'c'], 'a')`]);
+    ctx.expectThrow(evalCode, TypeError, [`String.lastIndexOf(['0', '1', '2'], 0)`]);
 
 };
