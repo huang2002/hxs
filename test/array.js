@@ -133,6 +133,11 @@ exports.arrayTests = ctx => {
     ctx.assertStrictEqual(evalCode(`Array.lastIndexOf([0, '0', 0], 'a')`), -1);
     ctx.expectThrow(evalCode, TypeError, [`Array.lastIndexOf('abc', 'a')`]);
 
+    ctx.assertStrictEqual(evalCode(`Array.includes([0, '0', 0], 0)`), true);
+    ctx.assertStrictEqual(evalCode(`Array.includes([0, '0', 0], '0')`), true);
+    ctx.assertStrictEqual(evalCode(`Array.includes([0, '0', 0], 'a')`), false);
+    ctx.expectThrow(evalCode, TypeError, [`Array.includes('abc', 'a')`]);
+
     ctx.assertShallowEqual(evalCode(`Array.sort([0, 2, 1])`), [0, 1, 2]);
     ctx.assertShallowEqual(evalCode(`Array.sort([0, 2, 1], @(#a, #b) { return(substraction(b, a)) })`), [2, 1, 0]);
     ctx.assertShallowEqual(evalCode(`Array.sort(['0', '2', '1'])`), ['0', '1', '2']);

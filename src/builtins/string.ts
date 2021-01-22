@@ -109,4 +109,21 @@ export const BuiltinString = Common.createDict({
         }
     ),
 
+    includes: Common.injectHelp(
+        `String.includes(string, substring)`,
+        (rawArgs, context, env) => {
+            const args = evalList(rawArgs, context, env.fileName);
+            Common.checkArgs(args, env, 'String.includes', 2, 2);
+            const string = args[0] as unknown[];
+            if (typeof string !== 'string') {
+                Common.raise(TypeError, `expect a string as the first argument`, env);
+            }
+            const substring = args[1] as unknown[];
+            if (typeof substring !== 'string') {
+                Common.raise(TypeError, `expect another string as the second argument`, env);
+            }
+            return string.includes(substring);
+        }
+    ),
+
 });

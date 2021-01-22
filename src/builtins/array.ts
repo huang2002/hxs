@@ -339,6 +339,19 @@ export const BuiltinArray = Common.createDict({
         }
     ),
 
+    includes: Common.injectHelp(
+        'Array.includes(array, value)',
+        (rawArgs, context, env) => {
+            const args = evalList(rawArgs, context, env.fileName);
+            Common.checkArgs(args, env, 'Array.includes', 2, 2);
+            const array = args[0] as unknown[];
+            if (!Array.isArray(array)) {
+                Common.raise(TypeError, `expect an array as the first argument`, env);
+            }
+            return array.includes(args[1]);
+        }
+    ),
+
     sort: Common.injectHelp(
         'Array.sort(array, compareFn?)',
         (rawArgs, context, env) => {

@@ -66,4 +66,9 @@ exports.stringTests = ctx => {
     ctx.expectThrow(evalCode, TypeError, [`String.lastIndexOf(['a', 'b', 'c'], 'a')`]);
     ctx.expectThrow(evalCode, TypeError, [`String.lastIndexOf(['0', '1', '2'], 0)`]);
 
+    ctx.assertStrictEqual(evalCode(`String.includes('abcabc', 'abc')`), true);
+    ctx.assertStrictEqual(evalCode(`String.includes('abcabc', 'bac')`), false);
+    ctx.expectThrow(evalCode, TypeError, [`String.includes(['a', 'b', 'c'], 'a')`]);
+    ctx.expectThrow(evalCode, TypeError, [`String.includes('012', 0)`]);
+
 };

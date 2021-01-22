@@ -27,6 +27,12 @@ exports.dictTests = ctx => {
     ctx.assertShallowEqual(evalCode("Dict.keys(Dict.from([[#a, 0], [#b, 1]]))"), ['a', 'b']);
     ctx.expectThrow(evalCode, TypeError, ['Dict.keys([])']);
 
+    ctx.assertStrictEqual(evalCode("Dict.has(Dict.create(), 'foo')"), false);
+    ctx.assertStrictEqual(evalCode("Dict.has(Dict.from([[#bar, 'baz']]), 'foo')"), false);
+    ctx.assertStrictEqual(evalCode("Dict.has(Dict.from([[#foo, 'bar']]), 'foo')"), true);
+    ctx.expectThrow(evalCode, TypeError, ["Dict.has([0], 0)"]);
+    ctx.expectThrow(evalCode, TypeError, ["Dict.has(Dict.from([['0', 1]]), 0)"]);
+
     ctx.assertShallowEqual(
         evalCode(`
             Dict.create() $o;
