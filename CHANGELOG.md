@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+- Add `Dict.has`
+- Add `String.includes`
+- Add `Array.includes`
+
 ## 0.5.0
 
 - Add `math.floor` & `math.ceil`
