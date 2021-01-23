@@ -8,7 +8,7 @@ export const evalAST = (
     ast: readonly ExpressionPart[],
     context: EvalContext,
     fileName: string,
-): unknown => {
+): EvalContextValue => {
 
     if (!ast.length) {
         return null;
@@ -40,6 +40,10 @@ export const evalAST = (
                     matchedRules.push(rule);
                 }
             }
+        }
+
+        if (!buffer.length) { // ignore extra semicolons
+            continue;
         }
 
         if (!matchedRules.length) {
@@ -114,29 +118,37 @@ export const evalAST = (
 
     }
 
-    if (buffer.length <= 1 && !breakFlag) {
-        return (buffer[0] && buffer[0].type === 'value')
-            ? buffer[0].value
-            : buffer[0];
-    } else {
-        if (!candidateRules.length) {
-            Common.raise(SyntaxError, `unrecognized syntax`, {
-                fileName,
-                line: buffer[buffer.length - 1].line,
-                column: buffer[buffer.length - 1].column,
-            });
-        }
-        const value = candidateRules[0].handler(
-            buffer,
-            context,
-            {
-                fileName,
-                line: buffer[0].line,
-                column: buffer[0].column,
-            },
-        );
-        return value !== undefined ? value : null;
+    if (buffer.length === 0) {
+        return null;
     }
+
+    if (
+        !breakFlag
+        && buffer.length === 1
+        && buffer[0].type === 'value'
+    ) {
+        return buffer[0].value;
+    }
+
+    if (candidateRules.length !== 1) {
+        Common.raise(SyntaxError, `unrecognized syntax`, {
+            fileName,
+            line: buffer[buffer.length - 1].line,
+            column: buffer[buffer.length - 1].column,
+        });
+    }
+
+    const value = candidateRules[0].handler(
+        buffer,
+        context,
+        {
+            fileName,
+            line: buffer[0].line,
+            column: buffer[0].column,
+        },
+    );
+
+    return value !== undefined ? value : null;
 
 };
 

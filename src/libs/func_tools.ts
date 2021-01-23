@@ -63,7 +63,7 @@ export const func_tools = Common.createDict({
                     data = functions[i](
                         [{
                             type: 'value',
-                            value: data,
+                            value: data !== undefined ? data : null,
                             offset: NaN,
                             line: env.line,
                             column: NaN,
@@ -72,7 +72,7 @@ export const func_tools = Common.createDict({
                         _env,
                     );
                 }
-                return data;
+                return data !== undefined ? data : null;
             };
         }
     ),

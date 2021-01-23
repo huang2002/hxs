@@ -17,6 +17,14 @@ const { evalCode } = HXS;
 
 test(null, {
 
+    syntax(ctx) {
+        ctx.assertStrictEqual(evalCode(''), null);
+        ctx.assertStrictEqual(evalCode(';'), null);
+        ctx.assertStrictEqual(evalCode(';;;'), null);
+        ctx.expectThrow(evalCode, SyntaxError, ['#']);
+        ctx.expectThrow(evalCode, SyntaxError, ['@']);
+    },
+
     help(ctx) {
         ctx.assertStrictEqual(typeof evalCode(`help(print)`), 'string');
         ctx.assertStrictEqual(typeof evalCode(`help(Array.of)`), 'string');
@@ -79,7 +87,7 @@ test(null, {
                 "multiline
                 comment";
             `),
-            undefined
+            null
         );
     },
 

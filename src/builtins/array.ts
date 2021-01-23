@@ -1,4 +1,4 @@
-import { Common } from '../common';
+import { Common, EvalContextValue } from '../common';
 import { evalList } from '../eval';
 import { RuleHandler } from '../rules/rule';
 
@@ -39,7 +39,7 @@ export const BuiltinArray = Common.createDict({
             if (!Array.isArray(array)) {
                 Common.raise(TypeError, `expect an array as the first argument`, env);
             }
-            return (array as unknown[]).slice();
+            return (array as EvalContextValue[]).slice();
         }
     ),
 
