@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1
+
+- Fix code evaluation
+- Improve type declaration
+
 ## 0.6.0
 
 - Add `Dict.has`
