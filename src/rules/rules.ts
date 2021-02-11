@@ -186,8 +186,7 @@ export const rules: Rule[] = [{
      */
     pattern: [RuleUtils.MINUS, RuleUtils.SPAN_PARATHESIS],
     handler(parts, context, env) {
-        const values = evalList((parts[1] as SpanNode).body, context, env.fileName);
-        const number = values[values.length - 1];
+        const number = evalAST((parts[1] as SpanNode).body, context, env.fileName);
         if (typeof number !== 'number') {
             Common.raise(
                 TypeError,
@@ -238,8 +237,7 @@ export const rules: Rule[] = [{
      */
     pattern: [RuleUtils.PLUS, RuleUtils.SPAN_PARATHESIS],
     handler(parts, context, env) {
-        const values = evalList((parts[1] as SpanNode).body, context, env.fileName);
-        const number = values[values.length - 1];
+        const number = evalAST((parts[1] as SpanNode).body, context, env.fileName);
         if (typeof number !== 'number') {
             Common.raise(
                 TypeError,
@@ -256,9 +254,7 @@ export const rules: Rule[] = [{
      */
     pattern: [RuleUtils.SPAN_PARATHESIS],
     handler(parts, context, env) {
-        const body = (parts[0] as SpanNode).body;
-        const results = evalList(body, context, env.fileName);
-        return results[results.length - 1];
+        return evalAST((parts[0] as SpanNode).body, context, env.fileName);
     },
 }, {
     /**
@@ -278,8 +274,8 @@ export const rules: Rule[] = [{
     pattern: [RuleUtils.VALUE, RuleUtils.SPAN_BRACE],
     handler(parts, context, env) {
         const target = (parts[0] as InternalValue).value;
-        const values = evalList((parts[1] as SpanNode).body, context, env.fileName);
-        const index = values[values.length - 1] as number;
+        const values = evalAST((parts[1] as SpanNode).body, context, env.fileName);
+        const index = values as number;
         if (Array.isArray(target) || typeof target === 'string') {
             if (!Number.isFinite(index)) {
                 Common.raise(TypeError, `expect a finite number as array/string index`, env);
