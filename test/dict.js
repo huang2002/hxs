@@ -38,6 +38,11 @@ exports.dictTests = ctx => {
     ctx.assertShallowEqual(evalCode("Dict.keys(Dict.from([[#a, 0], [#b, 1]]))"), ['a', 'b']);
     ctx.expectThrow(evalCode, TypeError, ['Dict.keys([])']);
 
+    ctx.assertDeepEqual(evalCode("Dict.entries(Dict.create())"), []);
+    ctx.assertDeepEqual(evalCode("Dict.entries(Dict.from([['foo', 4]]))"), [['foo', 4]]);
+    ctx.assertDeepEqual(evalCode("Dict.entries(Dict.from([[#a, 0], [#b, 1]]))"), [['a', 0], ['b', 1]]);
+    ctx.expectThrow(evalCode, TypeError, ['Dict.entries([])']);
+
     ctx.assertStrictEqual(evalCode("Dict.has(Dict.create(), 'foo')"), false);
     ctx.assertStrictEqual(evalCode("Dict.has(Dict.from([[#bar, 'baz']]), 'foo')"), false);
     ctx.assertStrictEqual(evalCode("Dict.has(Dict.from([[#foo, 'bar']]), 'foo')"), true);
@@ -97,4 +102,5 @@ exports.dictTests = ctx => {
     );
     ctx.expectThrow(evalCode, TypeError, [`Dict.unpack([], ['a'])`]);
     ctx.expectThrow(evalCode, ReferenceError, [`Dict.unpack(Dict.from([]), ['a'])`]);
+
 };
