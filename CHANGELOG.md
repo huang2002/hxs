@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+
+- Add dict creation syntax
+- Add `Dict.entries`
+- Modify parathesis evaluation
+
 ## 0.6.1
 
 - Fix code evaluation
