@@ -10,6 +10,17 @@ const { evalCode } = HXS;
  */
 exports.dictTests = ctx => {
 
+    ctx.assertShallowEqual(evalCode('{}'), {});
+    ctx.assertShallowEqual(evalCode('{ #a: 0 }'), { a: 0 });
+    ctx.assertShallowEqual(evalCode('{ #a: 0, }'), { a: 0 });
+    ctx.assertShallowEqual(evalCode('{ #a: 0, #b: 1 }'), { a: 0, b: 1 });
+    ctx.assertShallowEqual(evalCode('{ #a: 0, #b: 1, }'), { a: 0, b: 1 });
+    ctx.expectThrow(evalCode, SyntaxError, ['{,}']);
+    ctx.expectThrow(evalCode, SyntaxError, ['{ #a }']);
+    ctx.expectThrow(evalCode, SyntaxError, ['{ #a: }']);
+    ctx.expectThrow(evalCode, TypeError, ['{ : 666 }']);
+    ctx.expectThrow(evalCode, TypeError, ['{ 0: 1 }']);
+
     ctx.assertShallowEqual(evalCode('Dict.create()'), {});
     ctx.expectThrow(evalCode, TypeError, ['Dict.create([])']);
 

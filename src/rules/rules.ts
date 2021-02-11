@@ -1,4 +1,4 @@
-import { GlobNode, SpanNode, WordNode } from '3h-ast';
+import { GlobNode, SpanNode, SymbolNode, WordNode } from '3h-ast';
 import { Common, EvalContextValue } from '../common';
 import { evalAST, evalList } from '../eval';
 import { createFunction } from './createFunction';
@@ -297,5 +297,59 @@ export const rules: Rule[] = [{
             return (target as any)[index];
         }
         Common.raise(TypeError, `invalid index access`, env);
+    },
+}, {
+    /**
+     * brackets(dict)
+     * { key: value, ... }
+     */
+    pattern: [RuleUtils.SPAN_BRACKET],
+    handler(parts, context, env) {
+        const dict = Object.create(null);
+        const body = (parts[0] as SpanNode).body;
+        const endIndex = body.length - 1;
+        let lastCommaIndex = -1;
+        let colonIndex = -1;
+        for (let i = 0; i < body.length; i++) {
+            if (body[i].type !== 'symbol' && i !== endIndex) {
+                continue;
+            }
+            if ((body[i] as SymbolNode).value === ':' && i !== endIndex) {
+                colonIndex = i;
+                continue;
+            }
+            if (
+                (body[i] as SymbolNode).value === ','
+                || i === endIndex
+            ) {
+                if (colonIndex <= lastCommaIndex) {
+                    Common.raise(SyntaxError, 'expect a key:value pair as dict entry', {
+                        line: body[i].line,
+                        column: body[i].column,
+                        fileName: env.fileName,
+                    });
+                }
+                const key = evalAST(
+                    body.slice(lastCommaIndex + 1, colonIndex),
+                    context,
+                    env.fileName
+                );
+                const value = evalAST(
+                    body.slice(colonIndex + 1, body[i].type === 'symbol' ? i : i + 1),
+                    context,
+                    env.fileName
+                );
+                if (typeof key !== 'string') {
+                    Common.raise(TypeError, 'expect a string as dict key', {
+                        line: body[i].line,
+                        column: body[i].column,
+                        fileName: env.fileName,
+                    });
+                }
+                dict[key as string] = value;
+                lastCommaIndex = i;
+            }
+        }
+        return dict;
     },
 }];
