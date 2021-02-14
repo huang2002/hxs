@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.0
+
+- Refactor AST evaluation
+- Add `<word>=(...)` syntax
+
 ## 0.7.0
 
 - Add dict creation syntax
