@@ -38,10 +38,14 @@ export namespace RuleUtils {
 
     export const match = (pattern: RulePattern, parts: ExpressionPart[]) => {
 
-        for (let i = 0; i < pattern.length; i++) {
+        if (pattern.length < parts.length) {
+            return false;
+        }
 
-            const element = pattern[i];
+        for (let i = 0; i < parts.length; i++) {
+
             const part = parts[i];
+            const element = pattern[i];
 
             if (!element.type) {
                 continue;

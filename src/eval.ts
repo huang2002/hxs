@@ -1,4 +1,4 @@
-import { parse } from '3h-ast';
+import { parse, SymbolNode } from '3h-ast';
 import { builtins } from './builtins/builtins';
 import { Common, EvalContext, EvalContextValue } from './common';
 import { ExpressionPart, Rule, RuleUtils } from './rules/rule';
@@ -18,135 +18,164 @@ export const evalAST = (
         return ast[0].value !== undefined ? ast[0].value : null;
     }
 
-    const buffer = new Array<ExpressionPart>();
-    let candidateRules = new Array<Rule>();
+    let cursor = 0;
+    while (
+        ast[cursor].type === 'symbol'
+        && (ast[cursor] as SymbolNode).value === ';'
+    ) {
+        cursor++;
+        if (cursor >= ast.length) {
+            return null;
+        }
+    }
+
+    const buffer = [ast[cursor]];
+    let candidateRules = rules as readonly Rule[];
+    let matchedRules: Rule[];
     let breakFlag = false;
 
-    for (let i = 0; i < ast.length; i++) {
+    while (cursor < ast.length) {
 
-        const node = ast[i];
-        const semicolonFlag = node.type === 'symbol' && node.value === ';';
-
-        const matchedRules = [];
-        if (!semicolonFlag) {
-            buffer.push(node);
-            const candidates = candidateRules.length ? candidateRules : rules;
-            for (let j = 0; j < candidates.length; j++) {
-                const rule = candidates[j];
-                if (
-                    rule.pattern.length === buffer.length
-                    && RuleUtils.match(rule.pattern, buffer)
-                ) {
-                    matchedRules.push(rule);
-                }
+        if (
+            buffer[buffer.length - 1].type === 'symbol'
+            && (buffer[buffer.length - 1] as SymbolNode).value === ';'
+            && (
+                buffer.length === 1
+                || (buffer.length === 2 && buffer[0].type === 'value')
+            )
+        ) {
+            cursor++;
+            if (cursor < ast.length) {
+                buffer[0] = ast[cursor];
+                buffer.length = 1;
+            } else {
+                buffer.length = 0;
             }
+            continue;
         }
 
-        if (!buffer.length) { // ignore extra semicolons
-            continue;
+        matchedRules = [];
+        for (let i = 0; i < candidateRules.length; i++) {
+            if (RuleUtils.match(candidateRules[i].pattern, buffer)) {
+                matchedRules.push(candidateRules[i]);
+            }
         }
 
         if (!matchedRules.length) {
 
-            if (!candidateRules.length) {
-                if (buffer.length === 1 && buffer[0].type === 'value') {
-                    buffer.length = 0; // ignore single values
-                } else if (semicolonFlag) {
+            if (!candidateRules.length || candidateRules === rules) {
+                breakFlag = true;
+                break;
+            }
+
+            if (buffer.length > 1) {
+                let tempNode = buffer.pop()!;
+
+                let matchedIndex = -1;
+                for (let i = 0; i < candidateRules.length; i++) {
+                    if (candidateRules[i].pattern.length === buffer.length) {
+                        matchedIndex = i;
+                        break;
+                    }
+                }
+
+                if (matchedIndex === -1) {
                     breakFlag = true;
                     break;
                 }
-                continue;
-            }
 
-            if (!semicolonFlag) {
-                buffer.pop();
-            }
-
-            const value = candidateRules[0].handler(
-                buffer,
-                context,
-                {
-                    fileName,
-                    line: buffer[0].line,
-                    column: buffer[0].column,
-                },
-            );
-
-            if (semicolonFlag) {
-                buffer.length = 0;
-            } else {
-                buffer.length = 1;
+                const value = candidateRules[matchedIndex].handler(
+                    buffer,
+                    context,
+                    {
+                        line: buffer[0].line,
+                        column: buffer[0].column,
+                        fileName,
+                    }
+                );
                 buffer[0] = {
                     type: 'value',
-                    value: value !== undefined ? value : null,
-                    offset: buffer[0].offset,
                     line: buffer[0].line,
                     column: buffer[0].column,
+                    offset: buffer[0].offset,
+                    value: value === undefined ? null : value,
                 };
+                buffer.length = 1;
+                candidateRules = rules;
+
+                if (tempNode.type === 'symbol' && tempNode.value === ';') {
+                    buffer.length = 0;
+                } else {
+                    buffer.push(tempNode);
+                    continue;
+                }
+
             }
 
-            if (!semicolonFlag) {
-                buffer.push(node);
-            }
-
-            candidateRules = [];
-
-        } else if (matchedRules.length === 1 || semicolonFlag) {
-
+        } else if (
+            matchedRules.length === 1
+            && matchedRules[0].pattern.length === buffer.length
+        ) {
             const value = matchedRules[0].handler(
                 buffer,
                 context,
                 {
-                    fileName,
                     line: buffer[0].line,
                     column: buffer[0].column,
-                },
+                    fileName,
+                }
             );
             buffer.length = 1;
             buffer[0] = {
                 type: 'value',
-                value: value !== undefined ? value : null,
-                offset: buffer[0].offset,
                 line: buffer[0].line,
                 column: buffer[0].column,
+                offset: buffer[0].offset,
+                value: value === undefined ? null : value,
             };
-            candidateRules = [];
-
+            candidateRules = rules;
         } else {
             candidateRules = matchedRules;
         }
 
-    }
+        cursor++;
+        if (cursor < ast.length) {
+            buffer.push(ast[cursor]);
+        }
 
-    if (buffer.length === 0) {
+    };
+
+    if (!buffer.length) {
         return null;
     }
 
-    if (
-        !breakFlag
-        && buffer.length === 1
-        && buffer[0].type === 'value'
-    ) {
+    if (buffer.length === 1 && buffer[0].type === 'value') {
         return buffer[0].value;
     }
 
-    if (candidateRules.length !== 1) {
-        Common.raise(SyntaxError, `unrecognized syntax`, {
+    let matchedIndex = -1;
+    if (!breakFlag) {
+        for (let i = 0; i < candidateRules.length; i++) {
+            if (candidateRules[i].pattern.length === buffer.length) {
+                matchedIndex = i;
+                break;
+            }
+        }
+    }
+
+    if (matchedIndex === -1) {
+        Common.raise(SyntaxError, 'unrecognized syntax', {
+            line: buffer[0].line,
+            column: buffer[0].column,
             fileName,
-            line: buffer[buffer.length - 1].line,
-            column: buffer[buffer.length - 1].column,
         });
     }
 
-    const value = candidateRules[0].handler(
-        buffer,
-        context,
-        {
-            fileName,
-            line: buffer[0].line,
-            column: buffer[0].column,
-        },
-    );
+    const value = candidateRules[matchedIndex].handler(buffer, context, {
+        line: buffer[0].line,
+        column: buffer[0].column,
+        fileName,
+    });
 
     return value !== undefined ? value : null;
 
