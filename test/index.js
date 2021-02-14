@@ -78,6 +78,9 @@ test(null, {
         ctx.assertStrictEqual(evalCode(`set('a', print); exist('a')`), true);
         ctx.expectThrow(evalCode, ReferenceError, ['undefined']);
 
+        ctx.assertStrictEqual(evalCode(`t=(1); t`), 1);
+        ctx.assertStrictEqual(evalCode(`t=(sum(1, 2)); t`), 3);
+
     },
 
     comment(ctx) {

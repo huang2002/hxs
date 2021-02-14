@@ -36,7 +36,7 @@ export const rules: Rule[] = [{
     },
 }, {
     /**
-     * store
+     * assignment(dollar)
      * <value>$<word>
      */
     pattern: [RuleUtils.VALUE, RuleUtils.DOLLAR, RuleUtils.WORD],
@@ -46,6 +46,18 @@ export const rules: Rule[] = [{
             (parts[0] as InternalValue).value as EvalContextValue
         );
         return (parts[0] as InternalValue).value;
+    },
+}, {
+    /**
+     * assignment(equal)
+     * <word>=(...)
+     */
+    pattern: [RuleUtils.WORD, RuleUtils.EQUAL, RuleUtils.SPAN_PARATHESIS],
+    handler(parts, context, env) {
+        context.set(
+            (parts[0] as WordNode).value,
+            evalAST((parts[2] as SpanNode).body, context, env.fileName)
+        );
     },
 }, {
     /**
