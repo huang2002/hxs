@@ -407,6 +407,18 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
         }
     )],
 
+    ['xor', Common.injectHelp(
+        'xor(b0, b1)',
+        (rawArgs, context, env) => {
+            const args = evalList(rawArgs, context, env.fileName);
+            Common.checkArgs(args, env, 'xor', 2, 2);
+            if (typeof args[0] !== 'boolean' || typeof args[1] !== 'boolean') {
+                Common.raise(TypeError, `expect boolean values`, env);
+            }
+            return args[0] !== args[1];
+        }
+    )],
+
     ['number', Common.injectHelp(
         'number(value)',
         (rawArgs, context, env) => {

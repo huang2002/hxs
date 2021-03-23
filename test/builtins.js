@@ -123,6 +123,14 @@ exports.builtinsTest = ctx => { // partial
     ctx.expectThrow(evalCode, TypeError, [`or(true)`]);
     ctx.expectThrow(evalCode, TypeError, [`or(false, '0')`]);
 
+    ctx.assertStrictEqual(evalCode('xor(true, true)'), false);
+    ctx.assertStrictEqual(evalCode('xor(true, false)'), true);
+    ctx.assertStrictEqual(evalCode('xor(false, true)'), true);
+    ctx.assertStrictEqual(evalCode('xor(false, false)'), false);
+    ctx.expectThrow(evalCode, TypeError, [`xor(true)`]);
+    ctx.expectThrow(evalCode, TypeError, [`xor(false, '0')`]);
+    ctx.expectThrow(evalCode, TypeError, [`xor(false, true, false)`]);
+
     ctx.assertStrictEqual(evalCode('number(true)'), 1);
     ctx.assertShallowEqual(evalCode('number(number)'), NaN);
     ctx.assertShallowEqual(evalCode('number("201")'), 201);
