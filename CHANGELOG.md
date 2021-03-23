@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.0
+
+- Add `neq`
+- Add `xor`
+
 ## 0.8.0
 
 - Refactor AST evaluation
