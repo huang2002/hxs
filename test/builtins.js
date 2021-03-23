@@ -88,6 +88,15 @@ exports.builtinsTest = ctx => { // partial
     ctx.assertStrictEqual(evalCode(`eq(6, '6')`), false);
     ctx.expectThrow(evalCode, TypeError, ['eq(2)']);
 
+    ctx.assertStrictEqual(evalCode('neq(6, 6)'), false);
+    ctx.assertStrictEqual(evalCode('neq(6, 6, 6)'), false);
+    ctx.assertStrictEqual(evalCode('neq(2, 6)'), true);
+    ctx.assertStrictEqual(evalCode('neq(6, 6, 2)'), false);
+    ctx.assertStrictEqual(evalCode('neq(2, 6, 6)'), false);
+    ctx.assertStrictEqual(evalCode('neq(2, 4, 6)'), true);
+    ctx.assertStrictEqual(evalCode(`neq(6, '6')`), true);
+    ctx.expectThrow(evalCode, TypeError, ['neq(2)']);
+
     ctx.assertStrictEqual(evalCode('not(true)'), false);
     ctx.assertStrictEqual(evalCode('not(false)'), true);
     ctx.expectThrow(evalCode, TypeError, ['not(0)']);

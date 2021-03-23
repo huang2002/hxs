@@ -340,6 +340,22 @@ export const builtins: EvalContext = new Map<string, EvalContextValue>([
         }
     )],
 
+    ['neq', Common.injectHelp(
+        'neq(x0, x1...)',
+        (rawArgs, context, env) => {
+            const args = evalList(rawArgs, context, env.fileName);
+            Common.checkArgs(args, env, 'neq', 2, Infinity);
+            const values = new Set([args[0]]);
+            for (let i = 1; i < args.length; i++) {
+                if (values.has(args[i])) {
+                    return false;
+                }
+                values.add(args[i]);
+            }
+            return true;
+        }
+    )],
+
     ['not', Common.injectHelp(
         'not(bool)',
         (rawArgs, context, env) => {
