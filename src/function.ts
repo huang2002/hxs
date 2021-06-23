@@ -1,6 +1,6 @@
 import { SpanNode, WordNode } from '3h-ast';
 import { FunctionHandler, ScriptContext, SyntaxHandler, SyntaxNode, Utils } from './common';
-import { executeList, executeNodes } from './executors';
+import { evalList, evalNodes } from './executors';
 
 const raiseArgError = (referer: SyntaxNode, source: string) => {
     Utils.raise(SyntaxError, 'invalid argument declaration', referer, source);
@@ -71,7 +71,7 @@ export const createFunctionHandler = (
     callback: FunctionCallback,
 ): FunctionHandler => (
     (rawArgs, referer, context, source) => {
-        const args = executeList(rawArgs, context, source);
+        const args = evalList(rawArgs, context, source);
         if (args.length < minArgCount) {
             Utils.raise(TypeError, 'too few arguments', referer, source);
         } else if (args.length > maxArgCount) {
@@ -141,7 +141,7 @@ export const createInlineFunction: SyntaxHandler = (buffer, i, ctx, src) => {
         );
 
         try {
-            executeNodes(body, scope, src);
+            evalNodes(body, scope, src);
         } catch (err) {
             if (err !== RETURN_FLAG) {
                 throw err;

@@ -6,7 +6,7 @@ import { operatorHandlers, operatorPriorities } from './operators';
 /**
  * Evalute a single node.
  */
-export const executeNode = (
+export const evalNode = (
     node: SyntaxNode,
     context: ScriptContext,
     source: string,
@@ -20,7 +20,7 @@ export const executeNode = (
             return Utils.parseNumber(node, source);
         }
         case 'span': {
-            return executeExpression(node.body, context, source);
+            return evalExpression(node.body, context, source);
         }
         case 'word': {
             const name = node.value;
@@ -36,9 +36,25 @@ export const executeNode = (
 };
 /** dts2md break */
 /**
+ * Execute and replace the given node of the buffer.
+ */
+export const evalBufferNode = (
+    buffer: SyntaxNode[],
+    index: number,
+    referer: SyntaxNode,
+    context: ScriptContext,
+    source: string,
+) => {
+    if (index < 0 || index >= buffer.length) {
+        Utils.raise(SyntaxError, 'invalid operation', referer, source);
+    }
+    return evalNode(buffer[index], context, source);
+};
+/** dts2md break */
+/**
  * Evalute an expression.
  */
-export const executeExpression = (
+export const evalExpression = (
     nodes: readonly SyntaxNode[],
     context: ScriptContext,
     source: string,
@@ -99,7 +115,7 @@ export const executeExpression = (
     } else if (buffer.length === 0) {
         return null;
     } else {
-        return executeNode(buffer[0], context, source);
+        return evalNode(buffer[0], context, source);
     }
 
 };
@@ -107,7 +123,7 @@ export const executeExpression = (
 /**
  * Evaluate the given nodes.
  */
-export const executeNodes = (
+export const evalNodes = (
     nodes: readonly SyntaxNode[],
     context: ScriptContext,
     source: string,
@@ -118,12 +134,12 @@ export const executeNodes = (
     for (let right = 0; right < end; right++) {
         const node = nodes[right];
         if (node.type === 'symbol' && node.value === ';') {
-            executeExpression(nodes, context, source, left, right);
+            evalExpression(nodes, context, source, left, right);
             left = right + 1;
         }
     }
     if (left < end) { // ends without a semicolon
-        return executeExpression(nodes, context, source, left, end);
+        return evalExpression(nodes, context, source, left, end);
     } else { // ends with a semicolon
         return null;
     }
@@ -132,7 +148,7 @@ export const executeNodes = (
 /**
  * Evalute an list.
  */
-export const executeList = (
+export const evalList = (
     nodes: readonly SyntaxNode[],
     context: ScriptContext,
     source: string,
@@ -144,23 +160,23 @@ export const executeList = (
     for (let right = 0; right < end; right++) {
         const node = nodes[right];
         if (node.type === 'symbol' && node.value === ',') {
-            result.push(executeExpression(nodes, context, source, left, right));
+            result.push(evalExpression(nodes, context, source, left, right));
             left = right + 1;
         }
     }
     if (left < end) { // ends without a semicolon
-        result.push(executeExpression(nodes, context, source, left, end));
+        result.push(evalExpression(nodes, context, source, left, end));
     }
     return result;
 };
 /** dts2md break */
 /**
- * Execute the given code
+ * Execute the given code.
  */
-export const executeCode = (
+export const evalCode = (
     code: string,
     context = new Map(builtins),
     source = 'unknown',
 ) => (
-    executeNodes(parse(code).ast, context, source)
+    evalNodes(parse(code).ast, context, source)
 );

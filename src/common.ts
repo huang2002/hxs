@@ -1,5 +1,4 @@
 import { ASTNode, ASTNodeTemplate, NumberNode } from '3h-ast';
-import { executeNode } from './executors';
 
 export type ValueNode = ASTNodeTemplate<'value', {
     value: unknown;
@@ -132,43 +131,5 @@ export namespace Utils {
             removeElements(buffer, start + 1, width - 1);
         }
     };
-    /** dts2md break */
-    /**
-     * Execute and replace the given node of the buffer.
-     */
-    export const evalBufferNode = (
-        buffer: SyntaxNode[],
-        index: number,
-        referer: SyntaxNode,
-        context: ScriptContext,
-        source: string,
-    ) => {
-        if (index < 0 || index >= buffer.length) {
-            Utils.raise(SyntaxError, 'invalid operation', referer, source);
-        }
-        return executeNode(buffer[index], context, source);
-    };
-    /** dts2md break */
-    export const createBinaryOperator = <T, U>(
-        typeA: string,
-        typeB: string,
-        handler: (a: T, b: U) => unknown,
-    ): SyntaxHandler => (
-        (buffer, i, ctx, src) => {
-            const a = Utils.evalBufferNode(buffer, i - 1, buffer[i], ctx, src);
-            const b = Utils.evalBufferNode(buffer, i + 1, buffer[i], ctx, src);
-            if (typeof a !== typeA) {
-                Utils.raise(TypeError, `expect a ${typeA}`, buffer[i - 1], src);
-            }
-            if (typeof b !== typeB) {
-                Utils.raise(TypeError, `expect a ${typeB}`, buffer[i + 1], src);
-            }
-            const valueNode = Utils.createValueNode(
-                handler((a as T), (b as U)),
-                buffer[i],
-            );
-            Utils.replaceBuffer(buffer, i - 1, 3, valueNode);
-        }
-    );
 
 }
