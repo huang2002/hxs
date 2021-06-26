@@ -1,5 +1,5 @@
 export * from './common';
 export * from './operators';
-export * from './executors';
+export * from './eval';
 export * from './function';
 export * from './builtins';

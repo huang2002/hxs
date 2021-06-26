@@ -1,6 +1,6 @@
 import { SpanNode, SymbolNode, WordNode } from '3h-ast';
 import { Dict, FunctionHandler, ScriptContextValue, SyntaxHandler, Utils } from './common';
-import { evalBufferNode, evalExpression, evalList, evalNode } from './executors';
+import { evalBufferNode, evalExpression, evalList, evalNode } from './eval';
 import { createInlineFunction } from './function';
 
 export interface OperatorDefinition {
