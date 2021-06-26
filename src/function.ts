@@ -1,5 +1,5 @@
 import { SpanNode, WordNode } from '3h-ast';
-import { FunctionHandler, ScriptContext, SyntaxHandler, SyntaxNode, Utils } from './common';
+import { FunctionHandler, ScriptContext, ScriptContextValue, SyntaxHandler, SyntaxNode, Utils } from './common';
 import { evalList, evalNodes } from './executors';
 
 const raiseArgError = (referer: SyntaxNode, source: string) => {
@@ -59,11 +59,11 @@ export const parseArgList = (
 };
 /** dts2md break */
 export type FunctionCallback = (
-    args: unknown[],
+    args: ScriptContextValue[],
     referer: SyntaxNode,
     context: ScriptContext,
     source: string,
-) => unknown;
+) => ScriptContextValue;
 /** dts2md break */
 export const createFunctionHandler = (
     minArgCount: number,
@@ -106,12 +106,12 @@ export const createInlineFunction: SyntaxHandler = (buffer, i, ctx, src) => {
 
         const scope = new Map(_ctx);
         for (let i = 0; i < args.length; i++) {
-            scope.set(argList[i], args[i]);
+            scope.set(argList[i], args[i] as ScriptContextValue);
         }
 
         const RETURN_FLAG = Symbol('hxs_return_flag');
         const forwardVariables = new Set<string>();
-        let returnValue: unknown = null;
+        let returnValue: ScriptContextValue = null;
 
         scope.set(
             'return',
@@ -137,6 +137,7 @@ export const createInlineFunction: SyntaxHandler = (buffer, i, ctx, src) => {
                     }
                     forwardVariables.add(name);
                 }
+                return null;
             })
         );
 
@@ -150,7 +151,7 @@ export const createInlineFunction: SyntaxHandler = (buffer, i, ctx, src) => {
 
         forwardVariables.forEach(name => {
             if (scope.has(name)) {
-                ctx.set(name, scope.get(name));
+                ctx.set(name, scope.get(name)!);
             }
         });
 

@@ -1,5 +1,5 @@
 import { SpanNode, WordNode } from '3h-ast';
-import { FunctionHandler, SyntaxHandler, Utils } from './common';
+import { FunctionHandler, ScriptContextValue, SyntaxHandler, Utils } from './common';
 import { evalBufferNode, evalExpression, evalList, evalNode } from './executors';
 import { createInlineFunction } from './function';
 
@@ -9,10 +9,13 @@ export interface OperatorDefinition {
     handler: SyntaxHandler;
 }
 /** dts2md break */
-export const createBinaryOperator = <T, U>(
+export const createBinaryOperator = <
+    T extends ScriptContextValue,
+    U extends ScriptContextValue
+>(
     typeA: string,
     typeB: string,
-    handler: (a: T, b: U) => unknown,
+    handler: (a: T, b: U) => ScriptContextValue,
 ): SyntaxHandler => (
     (buffer, i, ctx, src) => {
         const a = evalBufferNode(buffer, i - 1, buffer[i], ctx, src);

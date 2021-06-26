@@ -1,6 +1,6 @@
-import { ScriptContext } from './common';
+import { ScriptContext, ScriptContextValue } from './common';
 
-export const builtins: ScriptContext = new Map<string, unknown>([
+export const builtins: ScriptContext = new Map<string, ScriptContextValue>([
 
     ['true', true],
     ['false', false],

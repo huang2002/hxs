@@ -1,6 +1,6 @@
 import { SymbolNode, parse, SpanNode } from '3h-ast';
 import { builtins } from './builtins';
-import { ScriptContext, SyntaxNode, Utils } from './common';
+import { ScriptContext, ScriptContextValue, SyntaxNode, Utils } from './common';
 import { operatorHandlers, operatorPriorities } from './operators';
 
 /**
@@ -10,7 +10,7 @@ export const evalNode = (
     node: SyntaxNode,
     context: ScriptContext,
     source: string,
-): unknown => {
+): ScriptContextValue => {
     switch (node.type) {
         case 'value':
         case 'glob': {
@@ -27,10 +27,11 @@ export const evalNode = (
             if (!context.has(name)) {
                 Utils.raise(ReferenceError, `"${name}" is not defined`, node, source);
             }
-            return context.get(name);
+            return context.get(name)!;
         }
         default: {
             Utils.raise(SyntaxError, 'unrecognized syntax', node, source);
+            return null; // for type checking (ts v4.3.4)
         }
     }
 };
@@ -60,7 +61,7 @@ export const evalExpression = (
     source: string,
     begin = 0,
     end = nodes.length,
-) => {
+): ScriptContextValue => {
 
     if (begin >= end) {
         return null;
@@ -112,6 +113,7 @@ export const evalExpression = (
     // check result
     if (buffer.length > 1) {
         Utils.raise(SyntaxError, 'unrecognized syntax', buffer[1], source);
+        return null; // for type checking (ts v4.3.4)
     } else if (buffer.length === 0) {
         return null;
     } else {

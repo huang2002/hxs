@@ -1,12 +1,20 @@
 import { ASTNode, ASTNodeTemplate, NumberNode } from '3h-ast';
 
+export type ScriptContextValue =
+    | null
+    | boolean
+    | number
+    | string
+    | FunctionHandler
+    | ScriptContextValue[];
+/** dts2md break */
+export type ScriptContext = Map<string, ScriptContextValue>;
+/** dts2md break */
 export type ValueNode = ASTNodeTemplate<'value', {
-    value: unknown;
+    value: ScriptContextValue;
 }>;
 /** dts2md break */
 export type SyntaxNode = ASTNode | ValueNode;
-/** dts2md break */
-export type ScriptContext = Map<string, unknown>;
 /** dts2md break */
 export type SyntaxHandler = (
     buffer: SyntaxNode[],
@@ -20,7 +28,7 @@ export type FunctionHandler = (
     referer: SyntaxNode,
     context: ScriptContext,
     source: string,
-) => void;
+) => ScriptContextValue;
 /** dts2md break */
 export namespace Utils {
     /** dts2md break */
@@ -95,7 +103,7 @@ export namespace Utils {
      * Create a value node.
      */
     export const createValueNode = (
-        value: unknown,
+        value: ScriptContextValue,
         referer: SyntaxNode,
     ): ValueNode => ({
         type: 'value',
