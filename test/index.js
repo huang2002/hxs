@@ -5,8 +5,9 @@ test(null, {
 
     variable: require('./variable.js'),
     array: require('./array.js'),
-    operators: require('./function.js'),
-    function: require('./operator.js'),
+    function: require('./function.js'),
+    operator: require('./operator.js'),
+    dict: require('./dict.js'),
 
 }).catch(
     console.error

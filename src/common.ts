@@ -5,8 +5,11 @@ export type ScriptContextValue =
     | boolean
     | number
     | string
+    | { [key: string]: ScriptContextValue; } // Dict
     | FunctionHandler
     | ScriptContextValue[];
+/** dts2md break */
+export type Dict = Record<string, ScriptContextValue>;
 /** dts2md break */
 export type ScriptContext = Map<string, ScriptContextValue>;
 /** dts2md break */
@@ -139,5 +142,13 @@ export namespace Utils {
             removeElements(buffer, start + 1, width - 1);
         }
     };
+    /** dts2md break */
+    export const isDict = (value: unknown): value is Dict => (
+        Object.prototype.toString.call(value) === '[object Object]'
+    );
+    /** dts2md break */
+    export const createDict = (dict: Dict): Dict => (
+        Object.assign(Object.create(null), dict)
+    );
 
 }

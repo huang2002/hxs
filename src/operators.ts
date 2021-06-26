@@ -1,5 +1,5 @@
-import { SpanNode, WordNode } from '3h-ast';
-import { FunctionHandler, ScriptContextValue, SyntaxHandler, Utils } from './common';
+import { SpanNode, SymbolNode, WordNode } from '3h-ast';
+import { Dict, FunctionHandler, ScriptContextValue, SyntaxHandler, Utils } from './common';
 import { evalBufferNode, evalExpression, evalList, evalNode } from './executors';
 import { createInlineFunction } from './function';
 
@@ -42,6 +42,28 @@ export const operators: readonly OperatorDefinition[] = [{
     priority: 0,
     handler: createInlineFunction,
 }, {
+    symbol: '.',
+    priority: 1,
+    handler(buffer, i, ctx, src) {
+        const target = evalBufferNode(buffer, i - 1, buffer[i], ctx, src);
+        if (!Utils.isDict(target)) {
+            Utils.raise(TypeError, 'expect a dict', buffer[i - 1], src);
+        }
+        const nameNode = buffer[i + 1];
+        if (!nameNode || nameNode.type !== 'word') {
+            Utils.raise(TypeError, 'expect a word following', buffer[i], src);
+        }
+        const name = (nameNode as WordNode).value;
+        let value: ScriptContextValue;
+        if (name in (target as Dict)) {
+            value = (target as Dict)[name];
+        } else {
+            value = null;
+        }
+        const valueNode = Utils.createValueNode(value, buffer[i]);
+        Utils.replaceBuffer(buffer, i - 1, 3, valueNode);
+    },
+}, {
     symbol: '[',
     priority: 1,
     handler(buffer, i, ctx, src) {
@@ -49,7 +71,22 @@ export const operators: readonly OperatorDefinition[] = [{
             const value = evalList((buffer[i] as SpanNode).body, ctx, src);
             buffer[i] = Utils.createValueNode(value, buffer[i]);
         } else { // index access
-            // TODO:
+            const target = evalBufferNode(buffer, i - 1, buffer[i], ctx, src);
+            if (!Utils.isDict(target)) {
+                Utils.raise(TypeError, 'expect a dict', buffer[i - 1], src);
+            }
+            const name = evalExpression((buffer[i] as SpanNode).body, ctx, src);
+            if (typeof name !== 'string') {
+                Utils.raise(TypeError, 'expect a string inside', buffer[i], src);
+            }
+            let value: ScriptContextValue;
+            if ((name as string) in (target as Dict)) {
+                value = (target as Dict)[name as string];
+            } else {
+                value = null;
+            }
+            const valueNode = Utils.createValueNode(value, buffer[i]);
+            Utils.replaceBuffer(buffer, i - 1, 2, valueNode);
         }
     },
 }, {
@@ -73,6 +110,49 @@ export const operators: readonly OperatorDefinition[] = [{
             const valueNode = Utils.createValueNode(value, buffer[i]);
             Utils.replaceBuffer(buffer, i - 1, 2, valueNode);
         }
+    },
+}, {
+    symbol: '{',
+    priority: 1,
+    handler(buffer, i, ctx, src) {
+        if (i === 0 || buffer[i - 1].type === 'symbol') { // dict creation
+            const result = Object.create(null) as Dict;
+            const nodes = (buffer[i] as SpanNode).body;
+            let left = 0;
+            for (let right = 0; right < nodes.length; right++) {
+                const node = nodes[right];
+                if (node.type !== 'symbol' || node.value !== ',') {
+                    if (right + 1 === nodes.length) {
+                        right++;
+                    } else {
+                        continue;
+                    }
+                }
+                let j;
+                for (j = left; j < right; j++) {
+                    if (
+                        nodes[j].type === 'symbol'
+                        && (nodes[j] as SymbolNode).value === ':'
+                    ) {
+                        break;
+                    }
+                }
+                if (j === right) {
+                    Utils.raise(SyntaxError, 'invalid dict creation', buffer[i], src);
+                }
+                const name = evalExpression(nodes, ctx, src, left, j);
+                const value = evalExpression(nodes, ctx, src, j + 1, right);
+                if (typeof name !== 'string') {
+                    Utils.raise(TypeError, 'expect a string', buffer[left], src);
+                }
+                result[name as string] = value;
+                left = right + 1;
+            }
+            buffer[i] = Utils.createValueNode(result, buffer[i]);
+        } else { // callback invocation
+            // TODO:
+        }
+
     },
 }, {
     symbol: '**',

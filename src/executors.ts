@@ -12,9 +12,11 @@ export const evalNode = (
     source: string,
 ): ScriptContextValue => {
     switch (node.type) {
-        case 'value':
-        case 'glob': {
+        case 'value': {
             return node.value;
+        }
+        case 'glob': {
+            return node.value.slice(1, -1);
         }
         case 'number': {
             return Utils.parseNumber(node, source);
