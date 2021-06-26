@@ -1,3 +1,4 @@
+// @ts-check
 const { evalCode } = require('../dist/hxs.umd.js');
 
 /**
