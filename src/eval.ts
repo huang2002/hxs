@@ -1,6 +1,6 @@
 import { SymbolNode, parse, SpanNode } from '3h-ast';
 import { builtins } from './builtins';
-import { ScriptContext, ScriptContextValue, SyntaxNode, Utils } from './common';
+import { ContextValue, ScriptContext, SyntaxNode, Utils } from './common';
 import { operatorHandlers, operatorPriorities } from './operators';
 
 /**
@@ -9,8 +9,7 @@ import { operatorHandlers, operatorPriorities } from './operators';
 export const evalNode = (
     node: SyntaxNode,
     context: ScriptContext,
-    source: string,
-): ScriptContextValue => {
+): ContextValue => {
     switch (node.type) {
         case 'value': {
             return node.value;
@@ -19,20 +18,21 @@ export const evalNode = (
             return node.value.slice(1, -1);
         }
         case 'number': {
-            return Utils.parseNumber(node, source);
+            return Utils.parseNumber(node, context);
         }
         case 'span': {
-            return evalExpression(node.body, context, source);
+            return evalExpression(node.body, context);
         }
         case 'word': {
             const name = node.value;
-            if (!context.has(name)) {
-                Utils.raise(ReferenceError, `"${name}" is not defined`, node, source);
+            const { store } = context;
+            if (!store.has(name)) {
+                Utils.raise(ReferenceError, `"${name}" is not defined`, node, context);
             }
-            return context.get(name)!;
+            return store.get(name)!;
         }
         default: {
-            Utils.raise(SyntaxError, 'unrecognized syntax', node, source);
+            Utils.raise(SyntaxError, 'unrecognized syntax', node, context);
             return null; // for type checking (ts v4.3.4)
         }
     }
@@ -46,12 +46,11 @@ export const evalBufferNode = (
     index: number,
     referer: SyntaxNode,
     context: ScriptContext,
-    source: string,
 ) => {
     if (index < 0 || index >= buffer.length) {
-        Utils.raise(SyntaxError, 'invalid operation', referer, source);
+        Utils.raise(SyntaxError, 'invalid operation', referer, context);
     }
-    return evalNode(buffer[index], context, source);
+    return evalNode(buffer[index], context);
 };
 /** dts2md break */
 /**
@@ -60,10 +59,9 @@ export const evalBufferNode = (
 export const evalExpression = (
     nodes: readonly SyntaxNode[],
     context: ScriptContext,
-    source: string,
     begin = 0,
     end = nodes.length,
-): ScriptContextValue => {
+): ContextValue => {
 
     if (begin >= end) {
         return null;
@@ -78,7 +76,7 @@ export const evalExpression = (
         if (node.type === 'symbol') {
             operatorNodes.push(node);
             if (!operatorPriorities.has(node.value)) {
-                Utils.raise(SyntaxError, 'unknown operator', node, source);
+                Utils.raise(SyntaxError, 'unknown operator', node, context);
             }
         } else if (node.type === 'span') {
             if (operatorPriorities.has(node.start)) {
@@ -108,18 +106,18 @@ export const evalExpression = (
                     ? operatorNode.value
                     : operatorNode.start
             )!;
-            handler(buffer, index, context, source);
+            handler(buffer, index, context);
         }
     }
 
     // check result
     if (buffer.length > 1) {
-        Utils.raise(SyntaxError, 'unrecognized syntax', buffer[1], source);
+        Utils.raise(SyntaxError, 'unrecognized syntax', buffer[1], context);
         return null; // for type checking (ts v4.3.4)
     } else if (buffer.length === 0) {
         return null;
     } else {
-        return evalNode(buffer[0], context, source);
+        return evalNode(buffer[0], context);
     }
 
 };
@@ -130,7 +128,6 @@ export const evalExpression = (
 export const evalNodes = (
     nodes: readonly SyntaxNode[],
     context: ScriptContext,
-    source: string,
     begin = 0,
     end = nodes.length,
 ) => {
@@ -138,12 +135,12 @@ export const evalNodes = (
     for (let right = 0; right < end; right++) {
         const node = nodes[right];
         if (node.type === 'symbol' && node.value === ';') {
-            evalExpression(nodes, context, source, left, right);
+            evalExpression(nodes, context, left, right);
             left = right + 1;
         }
     }
     if (left < end) { // ends without a semicolon
-        return evalExpression(nodes, context, source, left, end);
+        return evalExpression(nodes, context, left, end);
     } else { // ends with a semicolon
         return null;
     }
@@ -155,7 +152,6 @@ export const evalNodes = (
 export const evalList = (
     nodes: readonly SyntaxNode[],
     context: ScriptContext,
-    source: string,
     begin = 0,
     end = nodes.length,
 ) => {
@@ -164,12 +160,12 @@ export const evalList = (
     for (let right = 0; right < end; right++) {
         const node = nodes[right];
         if (node.type === 'symbol' && node.value === ',') {
-            result.push(evalExpression(nodes, context, source, left, right));
+            result.push(evalExpression(nodes, context, left, right));
             left = right + 1;
         }
     }
     if (left < end) { // ends without a semicolon
-        result.push(evalExpression(nodes, context, source, left, end));
+        result.push(evalExpression(nodes, context, left, end));
     }
     return result;
 };
@@ -179,8 +175,17 @@ export const evalList = (
  */
 export const evalCode = (
     code: string,
-    context = new Map(builtins),
-    source = 'unknown',
-) => (
-    evalNodes(parse(code).ast, context, source)
-);
+    context?: Partial<ScriptContext>,
+) => {
+    const _context = {} as ScriptContext;
+    if (context) {
+        Object.assign(_context, context);
+    }
+    if (!_context.store) {
+        _context.store = new Map(builtins);
+    }
+    if (!_context.source) {
+        _context.source = 'unknown';
+    }
+    return evalNodes(parse(code).ast, _context);
+};
