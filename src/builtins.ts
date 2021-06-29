@@ -7,6 +7,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['false', false],
     ['Infinity', Infinity],
     ['NaN', NaN],
+    ['null', null],
 
     ['if', builtinIf],
 
