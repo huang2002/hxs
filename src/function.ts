@@ -99,20 +99,18 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
     const argList = parseArgList((argSpan as SpanNode).body, context);
     const body = (bodySpan as SpanNode).body;
 
-    const func = createFunctionHandler(0, Infinity, (args, referer, _context) => {
+    const func = createFunctionHandler(argList.length, Infinity, (args, referer, _context) => {
 
         const scopeStore = new Map(_context.store);
         for (let i = 0; i < args.length; i++) {
             scopeStore.set(argList[i], args[i] as ContextValue);
         }
 
-        const scopeContext: ScriptContext = {
-            store: scopeStore,
-            source: context.source,
-        };
         const RETURN_FLAG = Symbol('hxs_return_flag');
         const forwardVariables = new Set<string>();
         let returnValue: ContextValue = null;
+
+        scopeStore.set('arguments', args);
 
         scopeStore.set(
             'return',
@@ -141,6 +139,11 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
                 return null;
             })
         );
+
+        const scopeContext: ScriptContext = {
+            store: scopeStore,
+            source: context.source,
+        };
 
         try {
             evalNodes(body, scopeContext);
