@@ -152,7 +152,7 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
 
         forwardVariables.forEach(name => {
             if (scopeStore.has(name)) {
-                _context.store.set(name, scopeStore.get(name)!);
+                context.store.set(name, scopeStore.get(name)!);
             }
         });
 
