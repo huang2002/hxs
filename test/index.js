@@ -8,6 +8,7 @@ test(null, {
     function: require('./function.js'),
     operator: require('./operator.js'),
     dict: require('./dict.js'),
+    if: require('./if.js'),
 
 }).catch(
     console.error

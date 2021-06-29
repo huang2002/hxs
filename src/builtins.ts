@@ -1,3 +1,4 @@
+import { builtinIf } from './builtins/if';
 import { ContextStore, ContextValue } from './common';
 
 export const builtins: ContextStore = new Map<string, ContextValue>([
@@ -6,5 +7,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['false', false],
     ['Infinity', Infinity],
     ['NaN', NaN],
+
+    ['if', builtinIf],
 
 ]);
