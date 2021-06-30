@@ -121,6 +121,14 @@ export namespace Utils {
         return result;
     };
     /** dts2md break */
+    export const isDict = (value: unknown): value is Dict => (
+        Object.prototype.toString.call(value) === '[object Object]'
+    );
+    /** dts2md break */
+    export const createDict = (dict: Dict): Dict => (
+        Object.assign(Object.create(null), dict)
+    );
+    /** dts2md break */
     /**
      * Create a value node.
      */
@@ -147,12 +155,31 @@ export namespace Utils {
         }
     };
     /** dts2md break */
-    export const isDict = (value: unknown): value is Dict => (
-        Object.prototype.toString.call(value) === '[object Object]'
-    );
-    /** dts2md break */
-    export const createDict = (dict: Dict): Dict => (
-        Object.assign(Object.create(null), dict)
-    );
+    /**
+     * Excute the callback with the temporary variables
+     * defined in context store and recover conflicting
+     * variables after execution.
+     */
+    export const injectTemp = (
+        store: ContextStore,
+        variables: Dict,
+        callback: () => void,
+    ) => {
+        const copy = Object.create(null) as Dict;
+        for (const key in variables) {
+            if (store.has(key)) {
+                copy[key] = store.get(key)!;
+            }
+            store.set(key, variables[key]);
+        }
+        callback();
+        for (const key in variables) {
+            if (key in copy) {
+                store.set(key, copy[key]);
+            } else {
+                store.delete(key);
+            }
+        }
+    };
 
 }
