@@ -9,6 +9,7 @@ test(null, {
     operator: require('./operator.js'),
     dict: require('./dict.js'),
     if: require('./if.js'),
+    loop: require('./loop.js'),
 
 }).catch(
     console.error

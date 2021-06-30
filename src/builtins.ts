@@ -1,4 +1,5 @@
 import { builtinIf } from './builtins/if';
+import { builtinFor, builtinWhile } from './builtins/loop';
 import { ContextStore, ContextValue } from './common';
 
 export const builtins: ContextStore = new Map<string, ContextValue>([
@@ -10,5 +11,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['null', null],
 
     ['if', builtinIf],
+    ['while', builtinWhile],
+    ['for', builtinFor],
 
 ]);
