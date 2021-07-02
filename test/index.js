@@ -10,6 +10,7 @@ test(null, {
     dict: require('./dict.js'),
     if: require('./if.js'),
     loop: require('./loop.js'),
+    builtins: require('./builtins.js'),
 
 }).catch(
     console.error

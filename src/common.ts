@@ -1,15 +1,20 @@
 import { ASTNode, ASTNodeTemplate, NumberNode } from '3h-ast';
 
+export const HELP_SYMBOL = Symbol('hxs_help_symbol');
+/** dts2md break */
 export type ContextValue =
     | null
     | boolean
     | number
     | string
-    | { [key: string]: ContextValue; } // Dict
+    | Dict
     | FunctionHandler
     | ContextValue[];
 /** dts2md break */
-export type Dict = Record<string, ContextValue>;
+export interface Dict {
+    [key: string]: ContextValue;
+    [HELP_SYMBOL]?: string;
+};
 /** dts2md break */
 export type ContextStore = Map<string, ContextValue>;
 /** dts2md break */
@@ -30,11 +35,10 @@ export type SyntaxHandler = (
     context: ScriptContext,
 ) => void;
 /** dts2md break */
-export type FunctionHandler = (
-    args: readonly SyntaxNode[],
-    referer: SyntaxNode,
-    context: ScriptContext,
-) => ContextValue;
+export interface FunctionHandler {
+    (args: readonly SyntaxNode[], referer: SyntaxNode, context: ScriptContext): ContextValue;
+    [HELP_SYMBOL]?: string;
+}
 /** dts2md break */
 export namespace Utils {
     /** dts2md break */
@@ -85,9 +89,6 @@ export namespace Utils {
         );
     };
     /** dts2md break */
-    /**
-     * Parse a number from node.
-     */
     export const parseNumber = (
         node: NumberNode,
         context: ScriptContext,
@@ -129,9 +130,6 @@ export namespace Utils {
         Object.assign(Object.create(null), dict)
     );
     /** dts2md break */
-    /**
-     * Create a value node.
-     */
     export const createValueNode = (
         value: ContextValue,
         referer: SyntaxNode,
@@ -180,6 +178,11 @@ export namespace Utils {
                 store.delete(key);
             }
         }
+    };
+    /** dts2md break */
+    export const injectHelp = <T>(helpInfo: string, target: T) => {
+        (target as any)[HELP_SYMBOL] = helpInfo;
+        return target;
     };
 
 }

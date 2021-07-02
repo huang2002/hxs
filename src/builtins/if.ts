@@ -1,7 +1,8 @@
 import { FunctionHandler, Utils } from '../common';
 import { createFunctionHandler } from '../function';
 
-const createIf = (ended: boolean): FunctionHandler => (
+const createIf = (ended: boolean): FunctionHandler => Utils.injectHelp(
+    'if (condition0) { ... } (condition1) { ... } ...',
     createFunctionHandler(1, 1, (args, referer, context) => {
         const condition = args[0];
         if (typeof condition !== 'boolean') {
