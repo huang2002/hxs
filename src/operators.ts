@@ -222,6 +222,17 @@ export const operators: readonly OperatorDefinition[] = [{
         Utils.replaceBuffer(buffer, index, 2, valueNode);
     },
 }, {
+    symbol: '~',
+    priority: 2,
+    handler(buffer, index, context) {
+        const operand = evalBufferNode(buffer, index + 1, buffer[index], context); 
+        if (typeof operand !== 'number') {
+            Utils.raise(TypeError, 'expect a number', buffer[index + 1], context);
+        }
+        const valueNode = Utils.createValueNode(~(operand as number), buffer[index]);
+        Utils.replaceBuffer(buffer, index, 2, valueNode);
+    },
+}, {
     symbol: '#',
     priority: 2,
     handler(buffer, index, context) {

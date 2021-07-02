@@ -22,6 +22,11 @@ module.exports = (ctx) => {
     );
 
     ctx.assertStrictEqual(
+        evalCode(`~1011B`),
+        ~0b1011
+    );
+
+    ctx.assertStrictEqual(
         evalCode(`!false`),
         true
     );
