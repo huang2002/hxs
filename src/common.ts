@@ -184,5 +184,59 @@ export namespace Utils {
         (target as any)[HELP_SYMBOL] = helpInfo;
         return target;
     };
+    /** dts2md break */
+    export const toString = (value: ContextValue, shallow = false): string => {
+
+        const type = typeof value;
+
+        if (type === 'string') {
+
+            if (!(value as string).includes("'")) {
+                return "'" + value + "'";
+            } else if (!(value as string).includes('"')) {
+                return '"' + value + '"';
+            } else if (!(value as string).includes('`')) {
+                return '`' + value + '`';
+            } else {
+                return "'" + (value as string).replace(/'/g, "\\'") + "'";
+            }
+
+        } else if (type === 'function') {
+
+            return '<function>';
+
+        } else if (Array.isArray(value)) {
+
+            if (shallow) {
+                return '<array>';
+            }
+
+            let result = `(size: ${value.length}) [`;
+
+            if (value.length <= 10) {
+                result += value.map(v => toString(v, true))
+                    .join(', ');
+            } else {
+                result += value.slice(0, 10)
+                    .map(v => toString(v, true))
+                    .join(', ')
+                    + ', ...';
+            }
+
+            result += ']';
+
+            return result;
+
+        } else if (isDict(value)) {
+
+            return '<dict>';
+
+        } else {
+
+            return String(value);
+
+        }
+
+    };
 
 }
