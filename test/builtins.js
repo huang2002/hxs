@@ -11,4 +11,15 @@ module.exports = (ctx) => {
         builtins.get('help')[HELP_SYMBOL]
     );
 
+    ctx.assertShallowEqual(
+        evalCode(`
+            dict = {
+                #foo: 'bar',
+                #baz: true,
+            };
+            dir(dict)
+        `),
+        ['foo', 'baz']
+    );
+
 };

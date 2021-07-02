@@ -32,4 +32,15 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
         })
     )],
 
+    ['dir', Utils.injectHelp(
+        'dir(dict)',
+        createFunctionHandler(1, 1, (args, referer, context) => {
+            const dict = args[0];
+            if (!Utils.isDict(dict)) {
+                Utils.raise(TypeError, 'expect a dict', referer, context);
+            }
+            return Object.keys(dict as Dict);
+        })
+    )],
+
 ]);
