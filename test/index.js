@@ -11,6 +11,7 @@ test(null, {
     if: require('./if.js'),
     loop: require('./loop.js'),
     builtins: require('./builtins.js'),
+    hello_world: require('./hello_world.js'),
 
 }).catch(
     console.error
