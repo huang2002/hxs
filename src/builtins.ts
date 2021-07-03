@@ -79,7 +79,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
 
     ['number', Utils.injectHelp(
         'number(value)',
-        createFunctionHandler(1, 1, (args, context, env) => {
+        createFunctionHandler(1, 1, (args, referer, context) => {
             const type = typeof args[0];
             if (type === 'object' || type === 'function') {
                 return NaN;
@@ -91,14 +91,14 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
 
     ['string', Utils.injectHelp(
         'string(value)',
-        createFunctionHandler(1, 1, (args, context, env) => {
+        createFunctionHandler(1, 1, (args, referer, context) => {
             return Utils.toString(args[0]);
         })
     )],
 
     ['boolean', Utils.injectHelp(
         'boolean(value)',
-        createFunctionHandler(1, 1, (args, context, env) => {
+        createFunctionHandler(1, 1, (args, referer, context) => {
             return Boolean(args[0]);
         })
     )],
