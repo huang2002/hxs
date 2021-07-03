@@ -186,57 +186,48 @@ export namespace Utils {
     };
     /** dts2md break */
     export const toString = (value: ContextValue, shallow = false): string => {
-
         const type = typeof value;
-
         if (type === 'string') {
-
-            if (!(value as string).includes("'")) {
-                return "'" + value + "'";
-            } else if (!(value as string).includes('"')) {
-                return '"' + value + '"';
-            } else if (!(value as string).includes('`')) {
-                return '`' + value + '`';
-            } else {
-                return "'" + (value as string).replace(/'/g, "\\'") + "'";
-            }
-
+            return value as string;
         } else if (type === 'function') {
-
             return '<function>';
-
         } else if (Array.isArray(value)) {
-
             if (shallow) {
                 return '<array>';
             }
-
             let result = `(size: ${value.length}) [`;
-
             if (value.length <= 10) {
-                result += value.map(v => toString(v, true))
+                result += value.map(v => toDisplay(v, true))
                     .join(', ');
             } else {
                 result += value.slice(0, 10)
-                    .map(v => toString(v, true))
+                    .map(v => toDisplay(v, true))
                     .join(', ')
                     + ', ...';
             }
-
             result += ']';
-
             return result;
-
         } else if (isDict(value)) {
-
             return '<dict>';
-
         } else {
-
             return String(value);
-
         }
 
+    };
+    /** dts2md break */
+    export const toDisplay = (value: ContextValue, shallow?: boolean): string => {
+        if (typeof value !== 'string') {
+            return toString(value, shallow);
+        }
+        if (!value.includes("'")) {
+            return "'" + value + "'";
+        } else if (!value.includes('"')) {
+            return '"' + value + '"';
+        } else if (!value.includes('`')) {
+            return '`' + value + '`';
+        } else {
+            return "'" + value.replace(/'/g, "\\'") + "'";
+        }
     };
 
 }

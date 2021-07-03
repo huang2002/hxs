@@ -41,7 +41,7 @@ exports.createREPL = () => {
     interface.on('line', input => {
         try {
             console.log(
-                Utils.toString(
+                Utils.toDisplay(
                     evalCode(input, {
                         store,
                         source: 'repl',

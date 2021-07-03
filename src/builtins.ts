@@ -118,7 +118,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['string', Utils.injectHelp(
         'string(value)',
         createFunctionHandler(1, 1, (args, referer, context) => {
-            return Utils.toString(args[0]);
+            return Utils.toDisplay(args[0]);
         })
     )],
 
