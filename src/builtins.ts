@@ -1,3 +1,4 @@
+import { builtinArray } from './builtins/array';
 import { builtinIf } from './builtins/if';
 import { builtinFor, builtinWhile } from './builtins/loop';
 import { ContextStore, ContextValue, Dict, FunctionHandler, HELP_SYMBOL, Utils } from './common';
@@ -14,6 +15,8 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['if', builtinIf],
     ['while', builtinWhile],
     ['for', builtinFor],
+
+    ['Array', builtinArray],
 
     ['help', Utils.injectHelp(
         'help(target)',
