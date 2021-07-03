@@ -43,4 +43,64 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
         })
     )],
 
+    ['typeOf', Utils.injectHelp(
+        'typeOf(value)',
+        createFunctionHandler(1, 1, (args, referer, context) => {
+            const value = args[0];
+            switch (typeof value) {
+                case 'number': {
+                    return 'number';
+                }
+                case 'string': {
+                    return 'string';
+                }
+                case 'boolean': {
+                    return 'boolean';
+                }
+                case 'function': {
+                    return 'function';
+                }
+                case 'object': {
+                    if (!value) {
+                        return 'null';
+                    } else if (Array.isArray(value)) {
+                        return 'array';
+                    } else if (Utils.isDict(value)) {
+                        return 'dict';
+                    }
+                }
+                default: {
+                    Utils.raise(TypeError, 'unrecognized type', referer, context);
+                    return null;
+                }
+            }
+        })
+    )],
+
+    ['number', Utils.injectHelp(
+        'number(value)',
+        createFunctionHandler(1, 1, (args, context, env) => {
+            const type = typeof args[0];
+            if (type === 'object' || type === 'function') {
+                return NaN;
+            } else {
+                return Number(args[0]);
+            }
+        })
+    )],
+
+    ['string', Utils.injectHelp(
+        'string(value)',
+        createFunctionHandler(1, 1, (args, context, env) => {
+            return Utils.toString(args[0]);
+        })
+    )],
+
+    ['boolean', Utils.injectHelp(
+        'boolean(value)',
+        createFunctionHandler(1, 1, (args, context, env) => {
+            return Boolean(args[0]);
+        })
+    )],
+
 ]);
