@@ -225,7 +225,7 @@ export const operators: readonly OperatorDefinition[] = [{
     symbol: '~',
     priority: 2,
     handler(buffer, index, context) {
-        const operand = evalBufferNode(buffer, index + 1, buffer[index], context); 
+        const operand = evalBufferNode(buffer, index + 1, buffer[index], context);
         if (typeof operand !== 'number') {
             Utils.raise(TypeError, 'expect a number', buffer[index + 1], context);
         }
@@ -258,6 +258,14 @@ export const operators: readonly OperatorDefinition[] = [{
         'number',
         'number',
         (a, b) => (a / b)
+    ),
+}, {
+    symbol: '%',
+    priority: 3,
+    handler: createBinaryOperator<number, number>(
+        'number',
+        'number',
+        (a, b) => (a % b)
     ),
 }, {
     symbol: '+',

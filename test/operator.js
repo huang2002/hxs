@@ -57,6 +57,11 @@ module.exports = (ctx) => {
     );
 
     ctx.assertStrictEqual(
+        evalCode(`6 + 5 % 4`),
+        7
+    );
+
+    ctx.assertStrictEqual(
         evalCode(`-Infinity`),
         -Infinity
     );
