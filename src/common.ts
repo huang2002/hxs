@@ -36,7 +36,7 @@ export type SyntaxHandler = (
 ) => void;
 /** dts2md break */
 export interface FunctionHandler {
-    (args: readonly SyntaxNode[], referer: SyntaxNode, context: ScriptContext): ContextValue;
+    (rawArgs: readonly SyntaxNode[], referer: SyntaxNode, context: ScriptContext): ContextValue;
     [HELP_SYMBOL]?: string;
 }
 /** dts2md break */
