@@ -23,6 +23,46 @@ module.exports = (ctx) => {
     );
 
     ctx.assertStrictEqual(
+        evalCode(`typeOf(1)`),
+        'number'
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`typeOf(NaN)`),
+        'number'
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`typeOf('number')`),
+        'string'
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`typeOf(true)`),
+        'boolean'
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`typeOf(typeOf)`),
+        'function'
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`typeOf(null)`),
+        'null'
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`typeOf([])`),
+        'array'
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`typeOf({})`),
+        'dict'
+    );
+
+    ctx.assertStrictEqual(
         evalCode('number(true)'),
         1
     );
