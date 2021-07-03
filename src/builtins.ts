@@ -43,6 +43,32 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
         })
     )],
 
+    ['exist', Utils.injectHelp(
+        'exist(variableName)',
+        createFunctionHandler(1, 1, (args, referer, context) => {
+            if (typeof args[0] !== 'string') {
+                Utils.raise(TypeError, 'expect a string as variable name', referer, context);
+            }
+            return context.store.has(args[0] as string);
+        })
+    )],
+
+    ['delete', Utils.injectHelp(
+        'delete(variableName)',
+        createFunctionHandler(1, 1, (args, referer, context) => {
+            const name = args[0];
+            if (typeof name !== 'string') {
+                Utils.raise(TypeError, 'expect a string as variable name', referer, context);
+            }
+            const { store } = context;
+            if (!store.has(name as string)) {
+                Utils.raise(ReferenceError, `"${name}" is not defined`, referer, context);
+            }
+            store.delete(name as string);
+            return null;
+        })
+    )],
+
     ['typeOf', Utils.injectHelp(
         'typeOf(value)',
         createFunctionHandler(1, 1, (args, referer, context) => {

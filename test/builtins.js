@@ -23,6 +23,26 @@ module.exports = (ctx) => {
     );
 
     ctx.assertStrictEqual(
+        evalCode(`exist(#undefined)`),
+        false
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`exist(#exist)`),
+        true
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`delete(#delete); exist(#delete)`),
+        false
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`defined = null; exist(#defined)`),
+        true
+    );
+
+    ctx.assertStrictEqual(
         evalCode(`typeOf(1)`),
         'number'
     );
