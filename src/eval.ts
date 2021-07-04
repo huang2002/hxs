@@ -1,7 +1,7 @@
 import { SymbolNode, parse, SpanNode } from '3h-ast';
-import { builtins } from './builtins/builtins';
+import { builtins } from './builtins/index';
 import { ContextValue, ScriptContext, SyntaxNode, Utils } from './common';
-import { operatorHandlers, operatorPriorities } from './operators';
+import { operatorHandlers, operatorPriorities } from './operators/index';
 
 /**
  * Evalute a single node.
