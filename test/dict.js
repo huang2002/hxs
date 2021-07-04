@@ -40,4 +40,6 @@ module.exports = (ctx) => {
         { x: 0, y: { z: 2 } }
     );
 
+    ctx.expectThrow(evalCode, TypeError, [`{ 0: 1 }`]);
+
 };

@@ -31,6 +31,8 @@ module.exports = (ctx) => {
         11
     );
 
+    ctx.expectThrow(evalCode, TypeError, [`while (1) {}`]);
+
     ctx.assertStrictEqual(
         evalCode(`
             s = 0;
@@ -63,5 +65,9 @@ module.exports = (ctx) => {
         `),
         0 - 1 - 2 - 3 - 4
     );
+
+    ctx.expectThrow(evalCode, TypeError, [`for (0, 0, 10) {}`]);
+    ctx.expectThrow(evalCode, RangeError, [`for (#i, 0, 10, 0) {}`]);
+    ctx.expectThrow(evalCode, RangeError, [`for (#i, 0, 10, -1) {}`]);
 
 };

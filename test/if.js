@@ -48,4 +48,7 @@ module.exports = (ctx) => {
         0
     );
 
+    ctx.expectThrow(evalCode, TypeError, [`if ('true') {}`]);
+    ctx.expectThrow(evalCode, TypeError, [`if (0) {}`]);
+
 };
