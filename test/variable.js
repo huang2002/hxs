@@ -40,6 +40,6 @@ module.exports = (ctx) => {
         [0b1000, 0b0110, 0b1110]
     );
 
-    ctx.expectThrow(evalCode, SyntaxError, [`0 = 0`]);
+    ctx.expectThrow(SyntaxError, evalCode, [`0 = 0`]);
 
 };

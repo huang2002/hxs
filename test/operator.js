@@ -9,8 +9,8 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`(666)`), 666);
 
     ctx.assertStrictEqual(evalCode(`2 ** 3`), 8);
-    ctx.expectThrow(evalCode, TypeError, [`'2' ** 3`]);
-    ctx.expectThrow(evalCode, TypeError, [`2 ** '3'`]);
+    ctx.expectThrow(TypeError, evalCode, [`'2' ** 3`]);
+    ctx.expectThrow(TypeError, evalCode, [`2 ** '3'`]);
 
     ctx.assertStrictEqual(evalCode(`!true`), false);
     ctx.assertStrictEqual(evalCode(`!false`), true);
@@ -18,7 +18,7 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`!1`), false);
 
     ctx.assertStrictEqual(evalCode(`~1011B`), ~0b1011);
-    ctx.expectThrow(evalCode, TypeError, [`~true`]);
+    ctx.expectThrow(TypeError, evalCode, [`~true`]);
 
     ctx.assertStrictEqual(evalCode(`#foo`), 'foo');
 
@@ -27,12 +27,12 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`1 + 2 * (3 / 2)`), 4);
     ctx.assertStrictEqual(evalCode(`1 - 2 * 3 / 2`), -2);
     ctx.assertStrictEqual(evalCode(`6 + 5 % 4`), 7);
-    ctx.expectThrow(evalCode, TypeError, [`1 + '1'`]);
-    ctx.expectThrow(evalCode, TypeError, [`true - 1`]);
+    ctx.expectThrow(TypeError, evalCode, [`1 + '1'`]);
+    ctx.expectThrow(TypeError, evalCode, [`true - 1`]);
 
     ctx.assertStrictEqual(evalCode(`-Infinity`), -Infinity);
-    ctx.expectThrow(evalCode, TypeError, [`-'1'`]);
-    ctx.expectThrow(evalCode, TypeError, [`-true`]);
+    ctx.expectThrow(TypeError, evalCode, [`-'1'`]);
+    ctx.expectThrow(TypeError, evalCode, [`-true`]);
 
     ctx.assertStrictEqual(evalCode(`1 > 2`), false);
     ctx.assertStrictEqual(evalCode(`1 >= 2`), false);

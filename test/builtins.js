@@ -22,17 +22,17 @@ module.exports = (ctx) => {
         ['foo', 'baz']
     );
 
-    ctx.expectThrow(evalCode, TypeError, [`dir([0, 1])`]);
-    ctx.expectThrow(evalCode, TypeError, [`dir(0)`]);
+    ctx.expectThrow(TypeError, evalCode, [`dir([0, 1])`]);
+    ctx.expectThrow(TypeError, evalCode, [`dir(0)`]);
 
     ctx.assertStrictEqual(evalCode(`exist(#undefined)`), false);
     ctx.assertStrictEqual(evalCode(`exist(#exist)`), true);
     ctx.assertStrictEqual(evalCode(`defined = null; exist(#defined)`), true);
-    ctx.expectThrow(evalCode, TypeError, [`exist(0)`]);
+    ctx.expectThrow(TypeError, evalCode, [`exist(0)`]);
 
     ctx.assertStrictEqual(evalCode(`delete(#delete); exist(#delete)`), false);
-    ctx.expectThrow(evalCode, ReferenceError, [`delete(#undefined)`]);
-    ctx.expectThrow(evalCode, TypeError, [`delete(0)`]);
+    ctx.expectThrow(ReferenceError, evalCode, [`delete(#undefined)`]);
+    ctx.expectThrow(TypeError, evalCode, [`delete(0)`]);
 
     ctx.assertStrictEqual(evalCode(`typeOf(1)`), 'number');
     ctx.assertStrictEqual(evalCode(`typeOf(NaN)`), 'number');
