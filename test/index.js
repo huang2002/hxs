@@ -4,6 +4,7 @@ const { test } = require('3h-test');
 test(null, {
 
     variable: require('./variable.js'),
+    string: require('./string.js'),
     array: require('./array.js'),
     function: require('./function.js'),
     operator: require('./operator.js'),
