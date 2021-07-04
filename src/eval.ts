@@ -1,5 +1,5 @@
 import { SymbolNode, parse, SpanNode } from '3h-ast';
-import { builtins } from './builtins';
+import { builtins } from './builtins/builtins';
 import { ContextValue, ScriptContext, SyntaxNode, Utils } from './common';
 import { operatorHandlers, operatorPriorities } from './operators';
 

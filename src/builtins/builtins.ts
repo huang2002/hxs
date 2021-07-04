@@ -1,8 +1,8 @@
-import { builtinArray } from './builtins/array';
-import { builtinIf } from './builtins/if';
-import { builtinFor, builtinWhile } from './builtins/loop';
-import { ContextStore, ContextValue, Dict, FunctionHandler, HELP_SYMBOL, Utils } from './common';
-import { createFunctionHandler } from './function';
+import { builtinArray } from './array';
+import { builtinIf } from './if';
+import { builtinFor, builtinWhile } from './loop';
+import { ContextStore, ContextValue, Dict, FunctionHandler, HELP_SYMBOL, Utils } from '../common';
+import { createFunctionHandler } from '../function';
 
 export const builtins: ContextStore = new Map<string, ContextValue>([
 
