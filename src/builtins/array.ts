@@ -55,14 +55,12 @@ export const builtinArray = Utils.createDict({
             if (typeof index !== 'number') {
                 Utils.raise(TypeError, 'expect a number as index', referer, context);
             }
-            const arraySize = (array as ContextValue[]).length;
-            const normalizedIndex = (index as number) < 0
-                ? arraySize + (index as number)
-                : (index as number);
-            if (normalizedIndex >= arraySize || normalizedIndex < 0) {
-                const message = `index(${index}) out of range(array size: ${arraySize})`;
-                Utils.raise(RangeError, message, referer, context);
-            }
+            const normalizedIndex = Utils.normalizeIndex(
+                index as number,
+                (array as ContextValue[]).length,
+                referer,
+                context,
+            );
             (array as ContextValue[])[normalizedIndex] = args[2];
             return null;
         })
@@ -165,14 +163,13 @@ export const builtinArray = Utils.createDict({
             }
 
             const arraySize = (array as ContextValue[]).length;
-            const normalizedIndex = (index as number) < 0
-                ? arraySize + (index as number)
-                : (index as number);
-
-            if (normalizedIndex > arraySize || normalizedIndex < 0) {
-                const message = `index(${index}) out of range(array size: ${arraySize})`;
-                Utils.raise(RangeError, message, referer, context);
-            }
+            const normalizedIndex = Utils.normalizeIndex(
+                index as number,
+                (array as ContextValue[]).length,
+                referer,
+                context,
+                true,
+            );
 
             const insertCount = args.length - 2;
             (array as ContextValue[]).length += insertCount;
@@ -207,14 +204,12 @@ export const builtinArray = Utils.createDict({
             }
 
             const arraySize = (array as ContextValue[]).length;
-            const normalizedIndex = (index as number) < 0 ?
-                arraySize + (index as number)
-                : (index as number);
-
-            if (normalizedIndex > arraySize || normalizedIndex < 0) {
-                const message = `index(${index}) out of range(array size: ${arraySize})`;
-                Utils.raise(RangeError, message, referer, context);
-            }
+            const normalizedIndex = Utils.normalizeIndex(
+                index as number,
+                (array as ContextValue[]).length,
+                referer,
+                context,
+            );
 
             if (args.length === 3) {
                 if (typeof args[2] !== 'number') {

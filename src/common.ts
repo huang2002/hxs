@@ -73,6 +73,27 @@ export namespace Utils {
         array.length -= count;
     };
     /** dts2md break */
+    export const normalizeIndex = (
+        index: number,
+        arraySize: number,
+        referer: SyntaxNode,
+        context: ScriptContext,
+        allowEnd = false,
+    ) => {
+        const normalizedIndex = (index as number) < 0
+            ? arraySize + (index as number)
+            : (index as number);
+        if (
+            normalizedIndex > arraySize
+            || normalizedIndex < 0
+            || (!allowEnd && normalizedIndex === arraySize)
+        ) {
+            const message = `index(${index}) out of range(array size: ${arraySize})`;
+            Utils.raise(RangeError, message, referer, context);
+        }
+        return normalizedIndex;
+    };
+    /** dts2md break */
     /**
      * Throw a specific error with environment info appended.
      */
