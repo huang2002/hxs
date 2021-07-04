@@ -12,6 +12,9 @@ module.exports = (ctx) => {
     ctx.assertDeepEqual(evalCode(`[0, [1]][1]`), [1]);
     ctx.assertDeepEqual(evalCode(`[0, [1]][-1]`), [1]);
     ctx.assertStrictEqual(evalCode(`[0, [1]][-2]`), 0);
+    ctx.expectThrow(TypeError, evalCode, [`[0, [1]]['0']`]);
+    ctx.expectThrow(RangeError, evalCode, [`[0, [1]][2]`]);
+    ctx.expectThrow(RangeError, evalCode, [`[0, [1]][-3]`]);
 
     ctx.assertShallowEqual(evalCode('Array.create()'), []);
     ctx.assertShallowEqual(evalCode('Array.create(0)'), []);
