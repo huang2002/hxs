@@ -101,7 +101,7 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
 
     const func = createFunctionHandler(argList.length, Infinity, (args, referer, _context) => {
 
-        const scopeStore = new Map(_context.store);
+        const scopeStore = new Map(context.store);
         for (let i = 0; i < args.length; i++) {
             scopeStore.set(argList[i], args[i] as ContextValue);
         }
