@@ -8,6 +8,11 @@ module.exports = (ctx) => {
 
     ctx.assertDeepEqual(evalCode(`[0, [1, 2], [3]]`), [0, [1, 2], [3]]);
 
+    ctx.assertStrictEqual(evalCode(`[0, [1]][0]`), 0);
+    ctx.assertDeepEqual(evalCode(`[0, [1]][1]`), [1]);
+    ctx.assertDeepEqual(evalCode(`[0, [1]][-1]`), [1]);
+    ctx.assertStrictEqual(evalCode(`[0, [1]][-2]`), 0);
+
     ctx.assertShallowEqual(evalCode('Array.create()'), []);
     ctx.assertShallowEqual(evalCode('Array.create(0)'), []);
     ctx.assertShallowEqual(evalCode('Array.create(1)'), [null]);
