@@ -4,6 +4,7 @@ import { builtinFor, builtinWhile } from './loop';
 import { ContextStore, ContextValue, Dict, FunctionHandler, HELP_SYMBOL, Utils } from '../common';
 import { createFunctionHandler } from '../function';
 import { builtinString } from './string';
+import { builtinDict } from './dict';
 
 export const builtins: ContextStore = new Map<string, ContextValue>([
 
@@ -19,6 +20,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
 
     ['Array', builtinArray],
     ['String', builtinString],
+    ['Dict', builtinDict],
 
     ['help', Utils.injectHelp(
         'help(target)',
