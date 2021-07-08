@@ -44,4 +44,19 @@ module.exports = (ctx) => {
         [0, 1, 10, 11]
     );
 
+    ctx.assertStrictEqual(
+        evalCode(`
+            sum = @(x) { "sum(x0, x1, ...)";
+                s = x;
+                more = Array.slice(arguments, 1);
+                if (Array.sizeOf(more) > 0) {
+                    s += Function.invoke(sum, more);
+                };
+                return(s);
+            };
+            sum(1, 2, 3, 4, 5)
+        `),
+        1 + 2 + 3 + 4 + 5
+    );
+
 };
