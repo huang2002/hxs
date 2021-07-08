@@ -66,6 +66,23 @@ module.exports = (ctx) => {
         0 - 1 - 2 - 3 - 4
     );
 
+    ctx.assertStrictEqual(
+        evalCode(`
+            s = 0;
+            for (#i, 0, 10) {
+                if (i < 2) {
+                    continue();
+                } (i >= 8) {
+                    break();
+                } (true) {
+                    s += i;
+                };
+            };
+            s
+        `),
+        2 + 3 + 4 + 5 + 6 + 7
+    );
+
     ctx.expectThrow(TypeError, evalCode, [`for (0, 0, 10) {}`]);
     ctx.expectThrow(RangeError, evalCode, [`for (#i, 0, 10, 0) {}`]);
     ctx.expectThrow(RangeError, evalCode, [`for (#i, 0, 10, -1) {}`]);
