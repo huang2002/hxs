@@ -11,20 +11,6 @@ module.exports = (ctx) => {
         builtins.get('help')[HELP_SYMBOL]
     );
 
-    ctx.assertShallowEqual(
-        evalCode(`
-            dict = {
-                #foo: 'bar',
-                #baz: true,
-            };
-            dir(dict)
-        `),
-        ['foo', 'baz']
-    );
-
-    ctx.expectThrow(TypeError, evalCode, [`dir([0, 1])`]);
-    ctx.expectThrow(TypeError, evalCode, [`dir(0)`]);
-
     ctx.assertStrictEqual(evalCode(`exist(#undefined)`), false);
     ctx.assertStrictEqual(evalCode(`exist(#exist)`), true);
     ctx.assertStrictEqual(evalCode(`defined = null; exist(#defined)`), true);
