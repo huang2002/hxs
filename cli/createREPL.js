@@ -12,15 +12,19 @@ exports.createREPL = () => {
     });
 
     const store = new Map(builtins);
+    const context = {
+        store,
+        source: 'repl',
+    };
 
     store.set('__repl', Utils.injectHelp(
         'REPL manager',
         Utils.createDict({
             setPrompt: Utils.injectHelp(
                 '__repl.setPrompt(str)',
-                createFunctionHandler(1, 1, (args, referer, context) => {
+                createFunctionHandler(1, 1, (args, referer, _context) => {
                     if (typeof args[0] !== 'string') {
-                        Utils.raise(TypeError, 'expect a string as prompt', referer, context);
+                        Utils.raise(TypeError, 'expect a string as prompt', referer, _context);
                     }
                     interface.setPrompt(/** @type {string} */(args[0]));
                     return null;
@@ -42,10 +46,7 @@ exports.createREPL = () => {
         try {
             console.log(
                 Utils.toDisplay(
-                    evalCode(input, {
-                        store,
-                        source: 'repl',
-                    })
+                    evalCode(input, context)
                 )
             );
             console.log();
