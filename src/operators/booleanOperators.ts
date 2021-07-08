@@ -12,7 +12,7 @@ export const booleanOperators: OperatorDefinition[] = [{
     },
 }, {
     symbol: '&&',
-    priority: 11,
+    priority: 10,
     handler: createBinaryOperator<boolean, boolean>(
         'boolean',
         'boolean',
@@ -20,7 +20,7 @@ export const booleanOperators: OperatorDefinition[] = [{
     ),
 }, {
     symbol: '||',
-    priority: 12,
+    priority: 11,
     handler: createBinaryOperator<boolean, boolean>(
         'boolean',
         'boolean',

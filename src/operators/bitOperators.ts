@@ -15,7 +15,7 @@ export const bitOperators: OperatorDefinition[] = [{
     },
 }, {
     symbol: '&',
-    priority: 8,
+    priority: 7,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -23,7 +23,7 @@ export const bitOperators: OperatorDefinition[] = [{
     ),
 }, {
     symbol: '^',
-    priority: 9,
+    priority: 8,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -31,7 +31,7 @@ export const bitOperators: OperatorDefinition[] = [{
     ),
 }, {
     symbol: '|',
-    priority: 10,
+    priority: 9,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
