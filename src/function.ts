@@ -2,8 +2,8 @@ import { SpanNode, WordNode } from '3h-ast';
 import { FunctionHandler, ContextValue, SyntaxHandler, SyntaxNode, Utils, ScriptContext } from './common';
 import { evalList, evalNodes } from './eval';
 
-const raiseArgError = (referer: SyntaxNode, context: ScriptContext) => {
-    Utils.raise(SyntaxError, 'invalid argument declaration', referer, context);
+const raiseArgError = (referrer: SyntaxNode, context: ScriptContext) => {
+    Utils.raise(SyntaxError, 'invalid argument declaration', referrer, context);
 };
 
 /**
@@ -58,7 +58,7 @@ export const parseArgList = (
 
 export type FunctionCallback = (
     args: ContextValue[],
-    referer: SyntaxNode,
+    referrer: SyntaxNode,
     context: ScriptContext,
 ) => ContextValue;
 
@@ -67,14 +67,14 @@ export const createFunctionHandler = (
     maxArgCount: number,
     callback: FunctionCallback,
 ): FunctionHandler => (
-    (rawArgs, referer, context) => {
+    (rawArgs, referrer, context) => {
         const args = evalList(rawArgs, context);
         if (args.length < minArgCount) {
-            Utils.raise(TypeError, 'too few arguments', referer, context);
+            Utils.raise(TypeError, 'too few arguments', referrer, context);
         } else if (args.length > maxArgCount) {
-            Utils.raise(TypeError, 'too many arguments', referer, context);
+            Utils.raise(TypeError, 'too many arguments', referrer, context);
         }
-        return callback(args, referer, context);
+        return callback(args, referrer, context);
     }
 );
 
@@ -99,7 +99,7 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
     const argList = parseArgList((argSpan as SpanNode).body, context);
     const body = (bodySpan as SpanNode).body;
 
-    const func = createFunctionHandler(argList.length, Infinity, (args, referer, _context) => {
+    const func = createFunctionHandler(argList.length, Infinity, (args, referrer, _context) => {
 
         const scopeStore = new Map(context.store);
         for (let i = 0; i < args.length; i++) {
@@ -124,15 +124,15 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
 
         scopeStore.set(
             'forward',
-            createFunctionHandler(1, 1, (args, _referer) => {
+            createFunctionHandler(1, 1, (args, _referrer) => {
                 const names = args[0];
                 if (!Array.isArray(names)) {
-                    Utils.raise(TypeError, 'expect an array of strings', _referer, context);
+                    Utils.raise(TypeError, 'expect an array of strings', _referrer, context);
                 }
                 for (let i = 0; i < (names as string[]).length; i++) {
                     const name = (names as string[])[i];
                     if (typeof name !== 'string') {
-                        Utils.raise(TypeError, 'expect an array of strings', _referer, context);
+                        Utils.raise(TypeError, 'expect an array of strings', _referrer, context);
                     }
                     forwardVariables.add(name);
                 }

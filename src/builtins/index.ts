@@ -26,7 +26,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
 
     ['help', Utils.injectHelp(
         'help(target)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             switch (typeof args[0]) {
                 case 'function':
                 case 'object': {
@@ -43,9 +43,9 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
 
     ['exist', Utils.injectHelp(
         'exist(variableName)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             if (typeof args[0] !== 'string') {
-                Utils.raise(TypeError, 'expect a string as variable name', referer, context);
+                Utils.raise(TypeError, 'expect a string as variable name', referrer, context);
             }
             return context.store.has(args[0] as string);
         })
@@ -53,14 +53,14 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
 
     ['delete', Utils.injectHelp(
         'delete(variableName)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             const name = args[0];
             if (typeof name !== 'string') {
-                Utils.raise(TypeError, 'expect a string as variable name', referer, context);
+                Utils.raise(TypeError, 'expect a string as variable name', referrer, context);
             }
             const { store } = context;
             if (!store.has(name as string)) {
-                Utils.raise(ReferenceError, `"${name}" is not defined`, referer, context);
+                Utils.raise(ReferenceError, `"${name}" is not defined`, referrer, context);
             }
             store.delete(name as string);
             return null;
@@ -69,7 +69,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
 
     ['typeOf', Utils.injectHelp(
         'typeOf(value)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             const value = args[0];
             switch (typeof value) {
                 case 'number': {
@@ -94,7 +94,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
                     }
                 }
                 default: {
-                    Utils.raise(TypeError, 'unrecognized type', referer, context);
+                    Utils.raise(TypeError, 'unrecognized type', referrer, context);
                     return null;
                 }
             }
@@ -103,7 +103,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
 
     ['number', Utils.injectHelp(
         'number(value)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             const type = typeof args[0];
             if (type === 'object' || type === 'function') {
                 return NaN;
@@ -115,21 +115,21 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
 
     ['string', Utils.injectHelp(
         'string(value)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             return Utils.toDisplay(args[0]);
         })
     )],
 
     ['boolean', Utils.injectHelp(
         'boolean(value)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             return Boolean(args[0]);
         })
     )],
 
     ['print', Utils.injectHelp(
         'print(message...)',
-        createFunctionHandler(0, Infinity, (args, referer, context) => {
+        createFunctionHandler(0, Infinity, (args, referrer, context) => {
             let message = '';
             for (let i = 0; i < args.length; i++) {
                 message += Utils.toString(args[i]);

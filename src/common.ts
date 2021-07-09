@@ -36,7 +36,7 @@ export type SyntaxHandler = (
 ) => void;
 
 export interface FunctionHandler<T extends ContextValue = ContextValue> {
-    (rawArgs: readonly SyntaxNode[], referer: SyntaxNode, context: ScriptContext): T;
+    (rawArgs: readonly SyntaxNode[], referrer: SyntaxNode, context: ScriptContext): T;
     [HELP_SYMBOL]?: string;
 }
 
@@ -76,7 +76,7 @@ export namespace Utils {
     export const normalizeIndex = (
         index: number,
         arraySize: number,
-        referer: SyntaxNode,
+        referrer: SyntaxNode,
         context: ScriptContext,
         allowEnd = false,
     ) => {
@@ -89,7 +89,7 @@ export namespace Utils {
             || (!allowEnd && normalizedIndex === arraySize)
         ) {
             const message = `index(${index}) out of range(array size: ${arraySize})`;
-            Utils.raise(RangeError, message, referer, context);
+            Utils.raise(RangeError, message, referrer, context);
         }
         return normalizedIndex;
     };
@@ -100,10 +100,10 @@ export namespace Utils {
     export const raise = (
         constructor: ErrorConstructor,
         message: string,
-        referer: SyntaxNode,
+        referrer: SyntaxNode,
         context: ScriptContext,
     ) => {
-        const { line, column } = referer;
+        const { line, column } = referrer;
         const { source } = context;
         throw new constructor(
             `${message} (Ln ${line}, Col ${column} @${source})`
@@ -153,12 +153,12 @@ export namespace Utils {
 
     export const createValueNode = (
         value: ContextValue,
-        referer: SyntaxNode,
+        referrer: SyntaxNode,
     ): ValueNode => ({
         type: 'value',
-        line: referer.line,
-        column: referer.column,
-        offset: referer.offset,
+        line: referrer.line,
+        column: referrer.column,
+        offset: referrer.offset,
         value,
     });
 

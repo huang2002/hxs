@@ -6,16 +6,16 @@ export const builtinArray = Utils.createDict({
 
     create: Utils.injectHelp(
         'Array.create(size = 0, init = null)',
-        createFunctionHandler(0, 2, (args, referer, context) => {
+        createFunctionHandler(0, 2, (args, referrer, context) => {
             if (args.length === 0) {
                 return [];
             }
             const count = args[0];
             if (typeof count !== 'number') {
-                Utils.raise(TypeError, 'expect a number as array size', referer, context);
+                Utils.raise(TypeError, 'expect a number as array size', referrer, context);
             }
             if ((count as number) < 0 || !Number.isFinite(count)) {
-                Utils.raise(RangeError, 'invalid array size', referer, context);
+                Utils.raise(RangeError, 'invalid array size', referrer, context);
             }
             const init = args.length > 1 ? args[1] : null;
             return Array.from({ length: count as number }, _ => init);
@@ -24,10 +24,10 @@ export const builtinArray = Utils.createDict({
 
     clone: Utils.injectHelp(
         'Array.clone(array)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to clone', referer, context);
+                Utils.raise(TypeError, 'expect an array to clone', referrer, context);
             }
             return (array as ContextValue[]).slice();
         })
@@ -35,10 +35,10 @@ export const builtinArray = Utils.createDict({
 
     sizeOf: Utils.injectHelp(
         'Array.sizeOf(array)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array', referer, context);
+                Utils.raise(TypeError, 'expect an array', referrer, context);
             }
             return (array as ContextValue[]).length;
         })
@@ -46,19 +46,19 @@ export const builtinArray = Utils.createDict({
 
     set: Utils.injectHelp(
         'Array.set(array, index, value)',
-        createFunctionHandler(3, 3, (args, referer, context) => {
+        createFunctionHandler(3, 3, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to modify', referer, context);
+                Utils.raise(TypeError, 'expect an array to modify', referrer, context);
             }
             const index = args[1];
             if (typeof index !== 'number') {
-                Utils.raise(TypeError, 'expect a number as index', referer, context);
+                Utils.raise(TypeError, 'expect a number as index', referrer, context);
             }
             const normalizedIndex = Utils.normalizeIndex(
                 index as number,
                 (array as ContextValue[]).length,
-                referer,
+                referrer,
                 context,
             );
             (array as ContextValue[])[normalizedIndex] = args[2];
@@ -68,10 +68,10 @@ export const builtinArray = Utils.createDict({
 
     push: Utils.injectHelp(
         'Array.push(array, data...)',
-        createFunctionHandler(2, Infinity, (args, referer, context) => {
+        createFunctionHandler(2, Infinity, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to modify', referer, context);
+                Utils.raise(TypeError, 'expect an array to modify', referrer, context);
             }
             for (let i = 1; i < args.length; i++) {
                 (array as ContextValue[]).push(args[i]);
@@ -82,10 +82,10 @@ export const builtinArray = Utils.createDict({
 
     unshift: Utils.injectHelp(
         'Array.unshift(array, data...)',
-        createFunctionHandler(2, Infinity, (args, referer, context) => {
+        createFunctionHandler(2, Infinity, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to modify', referer, context);
+                Utils.raise(TypeError, 'expect an array to modify', referrer, context);
             }
             for (let i = 1; i < args.length; i++) {
                 (array as ContextValue[]).unshift(args[i]);
@@ -96,10 +96,10 @@ export const builtinArray = Utils.createDict({
 
     pop: Utils.injectHelp(
         'Array.pop(array)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to modify', referer, context);
+                Utils.raise(TypeError, 'expect an array to modify', referrer, context);
             }
             return (
                 (array as ContextValue[]).length
@@ -111,10 +111,10 @@ export const builtinArray = Utils.createDict({
 
     shift: Utils.injectHelp(
         'Array.shift(array)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to modify', referer, context);
+                Utils.raise(TypeError, 'expect an array to modify', referrer, context);
             }
             return (
                 (array as ContextValue[]).length
@@ -126,18 +126,18 @@ export const builtinArray = Utils.createDict({
 
     slice: Utils.injectHelp(
         'Array.slice(array, start = 0, end = Array.sizeOf(array))',
-        createFunctionHandler(1, 3, (args, referer, context) => {
+        createFunctionHandler(1, 3, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array as source', referer, context);
+                Utils.raise(TypeError, 'expect an array as source', referrer, context);
             }
             if (args.length > 1) {
                 if (typeof args[1] !== 'number') {
-                    Utils.raise(TypeError, 'expect a number as begin index', referer, context);
+                    Utils.raise(TypeError, 'expect a number as begin index', referrer, context);
                 }
                 if (args.length > 2) {
                     if (typeof args[2] !== 'number') {
-                        Utils.raise(TypeError, 'expect a number as end index', referer, context);
+                        Utils.raise(TypeError, 'expect a number as end index', referrer, context);
                     }
                 }
             }
@@ -150,23 +150,23 @@ export const builtinArray = Utils.createDict({
 
     insert: Utils.injectHelp(
         'Array.insert(array, index, data...)',
-        createFunctionHandler(3, Infinity, (args, referer, context) => {
+        createFunctionHandler(3, Infinity, (args, referrer, context) => {
 
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to operate on', referer, context);
+                Utils.raise(TypeError, 'expect an array to operate on', referrer, context);
             }
 
             const index = args[1];
             if (typeof index !== 'number') {
-                Utils.raise(TypeError, 'expect a number as start index', referer, context);
+                Utils.raise(TypeError, 'expect a number as start index', referrer, context);
             }
 
             const arraySize = (array as ContextValue[]).length;
             const normalizedIndex = Utils.normalizeIndex(
                 index as number,
                 (array as ContextValue[]).length,
-                referer,
+                referrer,
                 context,
                 true,
             );
@@ -191,32 +191,32 @@ export const builtinArray = Utils.createDict({
 
     remove: Utils.injectHelp(
         'Array.remove(array, index, count = 1)',
-        createFunctionHandler(2, 3, (args, referer, context) => {
+        createFunctionHandler(2, 3, (args, referrer, context) => {
 
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array as the first argument', referer, context);
+                Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
             }
 
             const index = args[1];
             if (typeof index !== 'number') {
-                Utils.raise(TypeError, 'expect a number as start index', referer, context);
+                Utils.raise(TypeError, 'expect a number as start index', referrer, context);
             }
 
             const arraySize = (array as ContextValue[]).length;
             const normalizedIndex = Utils.normalizeIndex(
                 index as number,
                 (array as ContextValue[]).length,
-                referer,
+                referrer,
                 context,
             );
 
             if (args.length === 3) {
                 if (typeof args[2] !== 'number') {
-                    Utils.raise(TypeError, 'expect a number as removing count', referer, context);
+                    Utils.raise(TypeError, 'expect a number as removing count', referrer, context);
                 }
                 if (args[2] as number < 0 || args[2] !== args[2]) {
-                    Utils.raise(RangeError, 'invalid removing count', referer, context);
+                    Utils.raise(RangeError, 'invalid removing count', referrer, context);
                 }
             }
 
@@ -243,10 +243,10 @@ export const builtinArray = Utils.createDict({
 
     clear: Utils.injectHelp(
         'Array.clear(array)',
-        createFunctionHandler(1, 1, (args, referer, context) => {
+        createFunctionHandler(1, 1, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to operate on', referer, context);
+                Utils.raise(TypeError, 'expect an array to operate on', referrer, context);
             }
             (array as ContextValue[]).length = 0;
             return null;
@@ -255,17 +255,17 @@ export const builtinArray = Utils.createDict({
 
     flat: Utils.injectHelp(
         'Array.flat(arrays, depth = 1)',
-        createFunctionHandler(1, 2, (args, referer, context) => {
+        createFunctionHandler(1, 2, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to flat', referer, context);
+                Utils.raise(TypeError, 'expect an array to flat', referrer, context);
             }
             const depth = (args.length === 2) ? args[1] : 1;
             if (typeof depth !== 'number') {
-                Utils.raise(TypeError, 'expect a number as depth', referer, context);
+                Utils.raise(TypeError, 'expect a number as depth', referrer, context);
             }
             if ((depth as number) <= 0 || depth !== depth) {
-                Utils.raise(RangeError, 'invalid depth', referer, context);
+                Utils.raise(RangeError, 'invalid depth', referrer, context);
             }
             return (array as ContextValue[]).flat(depth as number);
         })
@@ -273,16 +273,16 @@ export const builtinArray = Utils.createDict({
 
     unpack: Utils.injectHelp(
         'Array.unpack(array, names, loose = false)',
-        createFunctionHandler(2, 3, (args, referer, context) => {
+        createFunctionHandler(2, 3, (args, referrer, context) => {
 
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to unpack', referer, context);
+                Utils.raise(TypeError, 'expect an array to unpack', referrer, context);
             }
 
             const names = args[1];
             if (!Array.isArray(names)) {
-                Utils.raise(TypeError, 'expect an array of strings as variable names', referer, context);
+                Utils.raise(TypeError, 'expect an array of strings as variable names', referrer, context);
             }
 
             const nameCount = (names as string[]).length;
@@ -290,13 +290,13 @@ export const builtinArray = Utils.createDict({
 
             for (let i = 0; i < nameCount; i++) {
                 if (typeof (names as string[])[i] !== 'string') {
-                    Utils.raise(TypeError, 'expect strings as variable names', referer, context);
+                    Utils.raise(TypeError, 'expect strings as variable names', referrer, context);
                 }
             }
 
             const loose = args.length === 3 && args[2];
             if (typeof loose !== 'boolean') {
-                Utils.raise(TypeError, 'expect a boolean as loose option', referer, context);
+                Utils.raise(TypeError, 'expect a boolean as loose option', referrer, context);
             }
 
             const { store } = context;
@@ -315,7 +315,7 @@ export const builtinArray = Utils.createDict({
                 }
             } else {
                 if (nameCount > arraySize) {
-                    Utils.raise(RangeError, 'not enough values in the given array', referer, context);
+                    Utils.raise(RangeError, 'not enough values in the given array', referrer, context);
                 }
                 for (let i = 0; i < nameCount; i++) {
                     store.set((names as string[])[i], (array as ContextValue[])[i]);
@@ -329,10 +329,10 @@ export const builtinArray = Utils.createDict({
 
     indexOf: Utils.injectHelp(
         'Array.indexOf(array, value)',
-        createFunctionHandler(2, 2, (args, referer, context) => {
+        createFunctionHandler(2, 2, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to search in', referer, context);
+                Utils.raise(TypeError, 'expect an array to search in', referrer, context);
             }
             return (array as ContextValue[]).indexOf(args[1]);
         })
@@ -340,10 +340,10 @@ export const builtinArray = Utils.createDict({
 
     lastIndexOf: Utils.injectHelp(
         'Array.lastIndexOf(array, value)',
-        createFunctionHandler(2, 2, (args, referer, context) => {
+        createFunctionHandler(2, 2, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to search in', referer, context);
+                Utils.raise(TypeError, 'expect an array to search in', referrer, context);
             }
             return (array as ContextValue[]).lastIndexOf(args[1]);
         })
@@ -351,10 +351,10 @@ export const builtinArray = Utils.createDict({
 
     includes: Utils.injectHelp(
         'Array.includes(array, value)',
-        createFunctionHandler(2, 2, (args, referer, context) => {
+        createFunctionHandler(2, 2, (args, referrer, context) => {
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array to check', referer, context);
+                Utils.raise(TypeError, 'expect an array to check', referrer, context);
             }
             return (array as ContextValue[]).includes(args[1]);
         })
@@ -362,16 +362,16 @@ export const builtinArray = Utils.createDict({
 
     sort: Utils.injectHelp(
         'Array.sort(array, compareFn?)',
-        createFunctionHandler(1, 2, (args, referer, context) => {
+        createFunctionHandler(1, 2, (args, referrer, context) => {
 
             const array = args[0];
             if (!Array.isArray(array)) {
-                Utils.raise(TypeError, 'expect an array as the first argument', referer, context);
+                Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
             }
 
             const compareFn = args[1];
             if (args.length > 1 && typeof compareFn !== 'function') {
-                Utils.raise(TypeError, 'expect a function as the second argument', referer, context);
+                Utils.raise(TypeError, 'expect a function as the second argument', referrer, context);
             }
 
             let _compareFn;
@@ -380,17 +380,17 @@ export const builtinArray = Utils.createDict({
                     const COMMA_NODE: SymbolNode = {
                         type: 'symbol',
                         value: ',',
-                        line: referer.line,
-                        column: referer.column,
-                        offset: referer.offset,
+                        line: referrer.line,
+                        column: referrer.column,
+                        offset: referrer.offset,
                     };
                     return (compareFn as FunctionHandler<number>)(
                         [
-                            Utils.createValueNode(a, referer),
+                            Utils.createValueNode(a, referrer),
                             COMMA_NODE,
-                            Utils.createValueNode(b, referer),
+                            Utils.createValueNode(b, referrer),
                         ],
-                        referer,
+                        referrer,
                         context,
                     );
                 };

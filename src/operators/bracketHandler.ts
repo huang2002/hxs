@@ -54,7 +54,7 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
             Utils.raise(TypeError, 'expect a function', buffer[index], context);
         }
 
-        const callback: FunctionHandler = (args, referer, _context) => {
+        const callback: FunctionHandler = (args, referrer, _context) => {
             return evalNodes((buffer[index] as SpanNode).body, _context);
         };
 

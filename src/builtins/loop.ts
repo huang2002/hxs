@@ -4,13 +4,13 @@ import { createFunctionHandler } from '../function';
 
 export const builtinWhile: FunctionHandler = Utils.injectHelp(
     'while (condition) { ... }',
-    (rawArgs, referer, context) => (
+    (rawArgs, referrer, context) => (
 
-        createFunctionHandler(1, 1, (_args, _referer, _context) => {
+        createFunctionHandler(1, 1, (_args, _referrer, _context) => {
 
             const callback = _args[0];
             if (typeof callback !== 'function') {
-                Utils.raise(TypeError, 'expect a callback', _referer, _context);
+                Utils.raise(TypeError, 'expect a callback', _referrer, _context);
             }
 
             const BREAK_FLAG = Symbol('hxs_break_flag');
@@ -32,7 +32,7 @@ export const builtinWhile: FunctionHandler = Utils.injectHelp(
 
                         const condition = evalExpression(rawArgs, context);
                         if (typeof condition !== 'boolean') {
-                            Utils.raise(TypeError, 'expect a boolean as condition', referer, context);
+                            Utils.raise(TypeError, 'expect a boolean as condition', referrer, context);
                         }
 
                         if (!condition) {
@@ -40,7 +40,7 @@ export const builtinWhile: FunctionHandler = Utils.injectHelp(
                         }
 
                         try {
-                            (callback as FunctionHandler)([], referer, _context);
+                            (callback as FunctionHandler)([], referrer, _context);
                         } catch (error) {
                             if (error === BREAK_FLAG) {
                                 break;
@@ -62,21 +62,21 @@ export const builtinWhile: FunctionHandler = Utils.injectHelp(
 
 export const builtinFor: FunctionHandler = Utils.injectHelp(
     'for (iteratorName, begin, end, step?) { ... }',
-    createFunctionHandler(3, 4, (args, referer, context) => {
+    createFunctionHandler(3, 4, (args, referrer, context) => {
 
         const iteratorName = args[0] as string;
         if (typeof iteratorName !== 'string') {
-            Utils.raise(TypeError, 'expect a string as iterator name', referer, context);
+            Utils.raise(TypeError, 'expect a string as iterator name', referrer, context);
         }
 
         const begin = args[1] as number;
         if (!Number.isFinite(begin)) {
-            Utils.raise(TypeError, 'expect a finite number as begin value', referer, context);
+            Utils.raise(TypeError, 'expect a finite number as begin value', referrer, context);
         }
 
         const end = args[2] as number;
         if (!Number.isFinite(end)) {
-            Utils.raise(TypeError, 'expect a finite number as end value', referer, context);
+            Utils.raise(TypeError, 'expect a finite number as end value', referrer, context);
         }
 
         const defaultStep = begin <= end ? 1 : -1;
@@ -84,20 +84,20 @@ export const builtinFor: FunctionHandler = Utils.injectHelp(
             ? args[3] as number
             : defaultStep;
         if (!Number.isFinite(step)) {
-            Utils.raise(TypeError, 'expect a finite number as step', referer, context);
+            Utils.raise(TypeError, 'expect a finite number as step', referrer, context);
         }
         if (
             begin !== end
             && Math.sign(defaultStep) !== Math.sign(step)
         ) {
-            Utils.raise(RangeError, 'invalid step', referer, context);
+            Utils.raise(RangeError, 'invalid step', referrer, context);
         }
 
-        return createFunctionHandler(1, 1, (_args, _referer, _context) => {
+        return createFunctionHandler(1, 1, (_args, _referrer, _context) => {
 
             const callback = _args[0];
             if (typeof callback !== 'function') {
-                Utils.raise(TypeError, 'expect a callback', _referer, _context);
+                Utils.raise(TypeError, 'expect a callback', _referrer, _context);
             }
 
             const BREAK_FLAG = Symbol('hxs_break_flag');
@@ -118,7 +118,7 @@ export const builtinFor: FunctionHandler = Utils.injectHelp(
                         for (let iterator = begin; iterator < end; iterator += step) {
                             try {
                                 _context.store.set(iteratorName, iterator);
-                                (callback as FunctionHandler)([], referer, _context);
+                                (callback as FunctionHandler)([], referrer, _context);
                             } catch (error) {
                                 if (error === BREAK_FLAG) {
                                     break;
@@ -131,7 +131,7 @@ export const builtinFor: FunctionHandler = Utils.injectHelp(
                         for (let iterator = begin; iterator > end; iterator += step) {
                             try {
                                 _context.store.set(iteratorName, iterator);
-                                (callback as FunctionHandler)([], referer, _context);
+                                (callback as FunctionHandler)([], referrer, _context);
                             } catch (error) {
                                 if (error === BREAK_FLAG) {
                                     break;

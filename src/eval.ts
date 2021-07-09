@@ -44,11 +44,11 @@ export const evalNode = (
 export const evalBufferNode = (
     buffer: SyntaxNode[],
     index: number,
-    referer: SyntaxNode,
+    referrer: SyntaxNode,
     context: ScriptContext,
 ) => {
     if (index < 0 || index >= buffer.length) {
-        Utils.raise(SyntaxError, 'invalid operation', referer, context);
+        Utils.raise(SyntaxError, 'invalid operation', referrer, context);
     }
     return evalNode(buffer[index], context);
 };
