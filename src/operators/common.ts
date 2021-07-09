@@ -6,7 +6,7 @@ export interface OperatorDefinition {
     priority: number;
     handler: SyntaxHandler;
 }
-/** dts2md break */
+
 export const createBinaryOperator = <
     T extends ContextValue,
     U extends ContextValue

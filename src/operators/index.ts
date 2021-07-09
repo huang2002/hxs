@@ -82,14 +82,14 @@ export const operators: readonly OperatorDefinition[] = [
         },
     }
 ];
-/** dts2md break */
+
 /**
  * A utility map. (operator->handler)
  */
 export const operatorHandlers: ReadonlyMap<string, SyntaxHandler> = new Map(
     operators.map(op => [op.symbol, op.handler])
 );
-/** dts2md break */
+
 /**
  * Another utility map. (operator->priority)
  */

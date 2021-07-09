@@ -32,7 +32,7 @@ export const parseArg = (
     }
     return result;
 };
-/** dts2md break */
+
 /**
  * Parse argument list.
  */
@@ -55,13 +55,13 @@ export const parseArgList = (
     }
     return result;
 };
-/** dts2md break */
+
 export type FunctionCallback = (
     args: ContextValue[],
     referer: SyntaxNode,
     context: ScriptContext,
 ) => ContextValue;
-/** dts2md break */
+
 export const createFunctionHandler = (
     minArgCount: number,
     maxArgCount: number,
@@ -77,7 +77,7 @@ export const createFunctionHandler = (
         return callback(args, referer, context);
     }
 );
-/** dts2md break */
+
 /**
  * Create a function from source code.
  */

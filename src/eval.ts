@@ -37,7 +37,7 @@ export const evalNode = (
         }
     }
 };
-/** dts2md break */
+
 /**
  * Execute and replace the given node of the buffer.
  */
@@ -52,7 +52,7 @@ export const evalBufferNode = (
     }
     return evalNode(buffer[index], context);
 };
-/** dts2md break */
+
 /**
  * Evalute an expression.
  */
@@ -121,7 +121,7 @@ export const evalExpression = (
     }
 
 };
-/** dts2md break */
+
 /**
  * Evaluate the given nodes.
  */
@@ -145,7 +145,7 @@ export const evalNodes = (
         return null;
     }
 };
-/** dts2md break */
+
 /**
  * Evalute an list.
  */
@@ -169,7 +169,7 @@ export const evalList = (
     }
     return result;
 };
-/** dts2md break */
+
 /**
  * Execute the given code.
  */

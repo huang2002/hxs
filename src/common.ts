@@ -1,7 +1,7 @@
 import { ASTNode, ASTNodeTemplate, NumberNode } from '3h-ast';
 
 export const HELP_SYMBOL = Symbol('hxs_help_symbol');
-/** dts2md break */
+
 export type ContextValue =
     | null
     | boolean
@@ -10,38 +10,38 @@ export type ContextValue =
     | Dict
     | FunctionHandler
     | ContextValue[];
-/** dts2md break */
+
 export interface Dict {
     [key: string]: ContextValue;
     [HELP_SYMBOL]?: string;
 };
-/** dts2md break */
+
 export type ContextStore = Map<string, ContextValue>;
-/** dts2md break */
+
 export type ValueNode = ASTNodeTemplate<'value', {
     value: ContextValue;
 }>;
-/** dts2md break */
+
 export type SyntaxNode = ASTNode | ValueNode;
-/** dts2md break */
+
 export interface ScriptContext {
     store: ContextStore;
     source: string;
 }
-/** dts2md break */
+
 export type SyntaxHandler = (
     buffer: SyntaxNode[],
     index: number,
     context: ScriptContext,
 ) => void;
-/** dts2md break */
+
 export interface FunctionHandler<T extends ContextValue = ContextValue> {
     (rawArgs: readonly SyntaxNode[], referer: SyntaxNode, context: ScriptContext): T;
     [HELP_SYMBOL]?: string;
 }
-/** dts2md break */
+
 export namespace Utils {
-    /** dts2md break */
+
     /**
      * A stable in-place sorting function.
      */
@@ -57,7 +57,7 @@ export namespace Utils {
             }
         }
     };
-    /** dts2md break */
+
     /**
      * Remove specific element(s) from the array.
      * (Default count: `array.length - start`)
@@ -72,7 +72,7 @@ export namespace Utils {
         }
         array.length -= count;
     };
-    /** dts2md break */
+
     export const normalizeIndex = (
         index: number,
         arraySize: number,
@@ -93,7 +93,7 @@ export namespace Utils {
         }
         return normalizedIndex;
     };
-    /** dts2md break */
+
     /**
      * Throw a specific error with environment info appended.
      */
@@ -109,7 +109,7 @@ export namespace Utils {
             `${message} (Ln ${line}, Col ${column} @${source})`
         );
     };
-    /** dts2md break */
+
     export const parseNumber = (
         node: NumberNode,
         context: ScriptContext,
@@ -142,15 +142,15 @@ export namespace Utils {
         }
         return result;
     };
-    /** dts2md break */
+
     export const isDict = (value: unknown): value is Dict => (
         Object.prototype.toString.call(value) === '[object Object]'
     );
-    /** dts2md break */
+
     export const createDict = (dict: Dict): Dict => (
         Object.assign(Object.create(null), dict)
     );
-    /** dts2md break */
+
     export const createValueNode = (
         value: ContextValue,
         referer: SyntaxNode,
@@ -161,7 +161,7 @@ export namespace Utils {
         offset: referer.offset,
         value,
     });
-    /** dts2md break */
+
     export const replaceBuffer = (
         buffer: SyntaxNode[],
         start: number,
@@ -173,7 +173,7 @@ export namespace Utils {
             removeElements(buffer, start + 1, width - 1);
         }
     };
-    /** dts2md break */
+
     /**
      * Excute the callback with the temporary variables
      * defined in context store and recover conflicting
@@ -200,12 +200,12 @@ export namespace Utils {
             }
         }
     };
-    /** dts2md break */
+
     export const injectHelp = <T>(helpInfo: string, target: T) => {
         (target as any)[HELP_SYMBOL] = helpInfo;
         return target;
     };
-    /** dts2md break */
+
     export const toString = (value: ContextValue, shallow = false): string => {
         const type = typeof value;
         if (type === 'string') {
@@ -235,7 +235,7 @@ export namespace Utils {
         }
 
     };
-    /** dts2md break */
+
     export const toDisplay = (value: ContextValue, shallow?: boolean): string => {
         if (typeof value !== 'string') {
             return toString(value, shallow);
