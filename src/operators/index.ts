@@ -12,6 +12,8 @@ import { compareOperators } from './compareOperators';
 import { mathOperators } from './mathOperators';
 import { parathesisHandler } from './parathesisHandler';
 
+export * from './common';
+
 /**
  * List of operator definitions.
  */
