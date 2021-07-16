@@ -6,10 +6,8 @@ const { evalCode, builtins, HELP_SYMBOL } = require('../dist/hxs.umd.js');
  */
 module.exports = (ctx) => {
 
-    ctx.assertDeepEqual(
-        evalCode(`help(help)`),
-        builtins.get('help')[HELP_SYMBOL]
-    );
+    ctx.assertDeepEqual(evalCode(`help(help)`), builtins.get('help')[HELP_SYMBOL]);
+    ctx.assertStrictEqual(typeof evalCode(`help(null)`), 'string');
 
     ctx.assertStrictEqual(evalCode(`exist(#undefined)`), false);
     ctx.assertStrictEqual(evalCode(`exist(#exist)`), true);

@@ -32,7 +32,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
             switch (typeof args[0]) {
                 case 'function':
                 case 'object': {
-                    if (HELP_SYMBOL in (args[0] as Dict | FunctionHandler)) {
+                    if (args[0] && HELP_SYMBOL in (args[0] as Dict | FunctionHandler)) {
                         return (args[0] as Dict | FunctionHandler)[HELP_SYMBOL]!;
                     }
                     break;
