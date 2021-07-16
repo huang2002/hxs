@@ -43,6 +43,22 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
         })
     )],
 
+    ['injectHelp', Utils.injectHelp(
+        'injectHelp(helpInfo, target)',
+        createFunctionHandler(2, 2, (args, referrer, context) => {
+            const helpInfo = args[0] as string;
+            if (typeof helpInfo !== 'string') {
+                Utils.raise(TypeError, 'expect a string as help info', referrer, context);
+            }
+            const target = args[1] as Dict | FunctionHandler;
+            if (typeof target !== 'function' && !Utils.isDict(target)) {
+                Utils.raise(TypeError, 'expect a dict or function as target', referrer, context);
+            }
+            target[HELP_SYMBOL] = helpInfo;
+            return target;
+        })
+    )],
+
     ['exist', Utils.injectHelp(
         'exist(variableName)',
         createFunctionHandler(1, 1, (args, referrer, context) => {

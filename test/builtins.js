@@ -9,6 +9,11 @@ module.exports = (ctx) => {
     ctx.assertDeepEqual(evalCode(`help(help)`), builtins.get('help')[HELP_SYMBOL]);
     ctx.assertStrictEqual(typeof evalCode(`help(null)`), 'string');
 
+    ctx.assertStrictEqual(evalCode(`help(injectHelp('foo', {}))`), 'foo');
+    ctx.assertStrictEqual(evalCode(`help(injectHelp('bar', @() {}))`), 'bar');
+    ctx.expectThrow(TypeError, evalCode, [`injectHelp(0, {})`]);
+    ctx.expectThrow(TypeError, evalCode, [`injectHelp('baz', [])`]);
+
     ctx.assertStrictEqual(evalCode(`exist(#undefined)`), false);
     ctx.assertStrictEqual(evalCode(`exist(#exist)`), true);
     ctx.assertStrictEqual(evalCode(`defined = null; exist(#defined)`), true);
