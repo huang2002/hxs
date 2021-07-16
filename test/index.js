@@ -7,6 +7,7 @@ test(null, {
     string: require('./string.js'),
     array: require('./array.js'),
     function: require('./function.js'),
+    math: require('./math.js'),
     operator: require('./operator.js'),
     dict: require('./dict.js'),
     if: require('./if.js'),
