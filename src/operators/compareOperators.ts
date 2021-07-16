@@ -4,7 +4,7 @@ import { createBinaryOperator, OperatorDefinition } from './common';
 
 export const compareOperators: OperatorDefinition[] = [{
     symbol: '<',
-    priority: 5,
+    priority: 6,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -12,7 +12,7 @@ export const compareOperators: OperatorDefinition[] = [{
     ),
 }, {
     symbol: '>',
-    priority: 5,
+    priority: 6,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -20,7 +20,7 @@ export const compareOperators: OperatorDefinition[] = [{
     ),
 }, {
     symbol: '<=',
-    priority: 5,
+    priority: 6,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -28,7 +28,7 @@ export const compareOperators: OperatorDefinition[] = [{
     ),
 }, {
     symbol: '>=',
-    priority: 5,
+    priority: 6,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -36,7 +36,7 @@ export const compareOperators: OperatorDefinition[] = [{
     ),
 }, {
     symbol: '==',
-    priority: 6,
+    priority: 7,
     handler(buffer, index, context) {
         const a = evalBufferNode(buffer, index - 1, buffer[index], context);
         const b = evalBufferNode(buffer, index + 1, buffer[index], context);
@@ -45,7 +45,7 @@ export const compareOperators: OperatorDefinition[] = [{
     },
 }, {
     symbol: '!=',
-    priority: 6,
+    priority: 7,
     handler(buffer, index, context) {
         const a = evalBufferNode(buffer, index - 1, buffer[index], context);
         const b = evalBufferNode(buffer, index + 1, buffer[index], context);

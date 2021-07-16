@@ -32,6 +32,9 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`-'1'`]);
     ctx.expectThrow(TypeError, evalCode, [`-true`]);
 
+    ctx.assertStrictEqual(evalCode(`1 << 1`), 2);
+    ctx.assertStrictEqual(evalCode(`2 >> 1`), 1);
+
     ctx.assertStrictEqual(evalCode(`1 > 2`), false);
     ctx.assertStrictEqual(evalCode(`1 >= 2`), false);
     ctx.assertStrictEqual(evalCode(`1 < 2`), true);

@@ -14,8 +14,24 @@ export const bitOperators: OperatorDefinition[] = [{
         Utils.replaceBuffer(buffer, index, 2, valueNode);
     },
 }, {
+    symbol: '<<',
+    priority: 5,
+    handler: createBinaryOperator<number, number>(
+        'number',
+        'number',
+        (a, b) => (a << b)
+    ),
+}, {
+    symbol: '>>',
+    priority: 5,
+    handler: createBinaryOperator<number, number>(
+        'number',
+        'number',
+        (a, b) => (a >> b)
+    ),
+}, {
     symbol: '&',
-    priority: 7,
+    priority: 8,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -23,7 +39,7 @@ export const bitOperators: OperatorDefinition[] = [{
     ),
 }, {
     symbol: '^',
-    priority: 8,
+    priority: 9,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -31,7 +47,7 @@ export const bitOperators: OperatorDefinition[] = [{
     ),
 }, {
     symbol: '|',
-    priority: 9,
+    priority: 10,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
