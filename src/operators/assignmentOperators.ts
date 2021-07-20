@@ -1,6 +1,6 @@
 import { WordNode } from '3h-ast';
 import { Utils } from '../common';
-import { evalExpression } from '../eval';
+import { evalExpression } from "../eval/evalExpression";
 import { OperatorDefinition } from './common';
 
 export const assignmentOperators: OperatorDefinition[] = [{

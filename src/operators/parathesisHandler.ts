@@ -1,6 +1,7 @@
 import { SpanNode } from '3h-ast';
 import { FunctionHandler, SyntaxHandler, Utils } from '../common';
-import { evalExpression, evalNode } from '../eval';
+import { evalExpression } from "../eval/evalExpression";
+import { evalNode } from "../eval/evalNode";
 
 export const parathesisHandler: SyntaxHandler = (buffer, index, context) => {
 

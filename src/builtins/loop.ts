@@ -1,5 +1,5 @@
 import { FunctionHandler, Utils } from '../common';
-import { evalExpression } from '../eval';
+import { evalExpression } from "../eval/evalExpression";
 import { createFunctionHandler } from '../function';
 
 export const builtinWhile: FunctionHandler = Utils.injectHelp(

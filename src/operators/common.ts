@@ -1,5 +1,5 @@
 import { ContextValue, SyntaxHandler, Utils } from '../common';
-import { evalBufferNode } from '../eval';
+import { evalBufferNode } from "../eval/evalBufferNode";
 
 export interface OperatorDefinition {
     symbol: string;

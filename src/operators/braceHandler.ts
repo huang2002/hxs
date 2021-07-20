@@ -1,6 +1,8 @@
 import { SpanNode } from '3h-ast';
 import { Dict, ContextValue, SyntaxHandler, Utils } from '../common';
-import { evalBufferNode, evalExpression, evalList } from '../eval';
+import { evalList } from "../eval/evalList";
+import { evalExpression } from "../eval/evalExpression";
+import { evalBufferNode } from "../eval/evalBufferNode";
 
 export const braceHandler: SyntaxHandler = (buffer, index, context) => {
 

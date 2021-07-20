@@ -1,6 +1,8 @@
 import { SpanNode, SymbolNode } from '3h-ast';
 import { Dict, FunctionHandler, SyntaxHandler, Utils } from '../common';
-import { evalExpression, evalNode, evalNodes } from '../eval';
+import { evalNodes } from "../eval/evalNodes";
+import { evalExpression } from "../eval/evalExpression";
+import { evalNode } from "../eval/evalNode";
 
 export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
 

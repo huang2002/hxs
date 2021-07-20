@@ -1,6 +1,7 @@
 import { SpanNode, WordNode } from '3h-ast';
 import { FunctionHandler, ContextValue, SyntaxHandler, SyntaxNode, Utils, ScriptContext } from './common';
-import { evalList, evalNodes } from './eval';
+import { evalList } from "./eval/evalList";
+import { evalNodes } from "./eval/evalNodes";
 
 const raiseArgError = (referrer: SyntaxNode, context: ScriptContext) => {
     Utils.raise(SyntaxError, 'invalid argument declaration', referrer, context);
