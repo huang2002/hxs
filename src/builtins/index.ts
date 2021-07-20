@@ -1,6 +1,7 @@
 import { builtinArray } from './array';
 import { builtinIf } from './if';
-import { builtinFor, builtinWhile } from './loop';
+import { builtinFor } from './for';
+import { builtinWhile } from "./while";
 import { ContextStore, ContextValue, Dict, FunctionHandler, HELP_SYMBOL, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
 import { builtinString } from './string';
