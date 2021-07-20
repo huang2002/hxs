@@ -1,8 +1,9 @@
 import { ScriptContext, SyntaxNode } from '../common';
-import { CompiledExpression, compileExpression, evalCompiledExpression } from './evalExpression';
+import { getOperatorNodes, executeOperatorNodes, OperatorNode } from './evalExpression';
 
 export type CompiledNodes = Readonly<{
-    expressions: readonly CompiledExpression[];
+    buffers: readonly (SyntaxNode[])[];
+    operatorNodes: readonly (readonly OperatorNode[])[];
     endsWithSemicolon: boolean;
 }>;
 
@@ -11,41 +12,45 @@ export const compileNodes = (
     context: ScriptContext,
     begin = 0,
     end = nodes.length,
-) => {
-    const expressions = [];
+): CompiledNodes => {
+    const buffers = [];
+    const operatorNodes = [];
     let left = begin;
     for (let right = 0; right < end; right++) {
         const node = nodes[right];
         if (node.type === 'symbol' && node.value === ';') {
-            expressions.push(
-                compileExpression(
-                    nodes.slice(left, right),
-                    context
-                )
+            const buffer = nodes.slice(left, right);
+            buffers.push(buffer);
+            operatorNodes.push(
+                getOperatorNodes(buffer, context)
             );
             left = right + 1;
         }
     }
     const endsWithSemicolon = left >= end;
     if (!endsWithSemicolon) { // ends without a semicolon
-        expressions.push(
-            compileExpression(
-                nodes.slice(left, end),
-                context
-            )
+        const buffer = nodes.slice(left, end);
+        buffers.push(buffer);
+        operatorNodes.push(
+            getOperatorNodes(buffer, context)
         );
     }
-    return { expressions, endsWithSemicolon };
+    return { buffers, operatorNodes, endsWithSemicolon };
 };
 
 export const evalCompiledNodes = (
-    nodes: CompiledNodes,
+    compiledNodes: CompiledNodes,
     context: ScriptContext,
+    copyBuffers = false,
 ) => {
-    const { expressions, endsWithSemicolon } = nodes;
+    const { buffers, operatorNodes, endsWithSemicolon } = compiledNodes;
     let lastValue = null;
-    for (let i = 0; i < expressions.length; i++) {
-        lastValue = evalCompiledExpression(expressions[i], context);
+    for (let i = 0; i < buffers.length; i++) {
+        lastValue = executeOperatorNodes(
+            copyBuffers ? buffers[i].slice() : buffers[i],
+            operatorNodes[i],
+            context,
+        );
     }
     return endsWithSemicolon ? null : lastValue;
 };

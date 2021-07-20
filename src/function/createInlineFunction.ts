@@ -1,6 +1,6 @@
 import { SpanNode } from '3h-ast';
 import { ContextValue, SyntaxHandler, Utils, ScriptContext } from '../common';
-import { evalNodes } from "../eval/evalNodes";
+import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
 import { parseArgList } from './common';
 import { createFunctionHandler } from './createFunctionHandler';
 
@@ -22,6 +22,7 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
 
     const argList = parseArgList((argSpan as SpanNode).body, context);
     const body = (bodySpan as SpanNode).body;
+    const compiledBody = compileNodes(body, context);
 
     const func = createFunctionHandler(argList.length, Infinity, (args, referrer, _context) => {
 
@@ -70,7 +71,7 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
         };
 
         try {
-            evalNodes(body, scopeContext);
+            evalCompiledNodes(compiledBody, scopeContext, true);
         } catch (err) {
             if (err !== RETURN_FLAG) {
                 throw err;

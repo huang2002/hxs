@@ -3,17 +3,14 @@ import { ContextValue, ScriptContext, SyntaxNode, Utils } from '../common';
 import { operatorHandlers, operatorPriorities } from '../operators/index';
 import { evalNode } from './evalNode';
 
-export type CompiledExpression = Readonly<{
-    buffer: SyntaxNode[];
-    operatorNodes: readonly (SymbolNode | SpanNode)[];
-}>;
+export type OperatorNode = SymbolNode | SpanNode;
 
-export const compileExpression = (
+export const getOperatorNodes = (
     buffer: SyntaxNode[],
     context: ScriptContext,
-): CompiledExpression => {
+) => {
 
-    let operatorNodes: (SymbolNode | SpanNode)[] = [];
+    let operatorNodes: OperatorNode[] = [];
 
     // find all operators (and spans)
     for (let i = 0; i < buffer.length; i++) {
@@ -41,16 +38,15 @@ export const compileExpression = (
         return priorityA - priorityB;
     });
 
-    return { buffer, operatorNodes };
+    return operatorNodes;
 
 };
 
-export const evalCompiledExpression = (
-    expression: CompiledExpression,
+export const executeOperatorNodes = (
+    buffer: SyntaxNode[],
+    operatorNodes: readonly OperatorNode[],
     context: ScriptContext,
 ): ContextValue => {
-
-    const { buffer, operatorNodes } = expression;
 
     // execute operators
     for (let i = 0; i < operatorNodes.length; i++) {
@@ -91,8 +87,9 @@ export const evalExpression = (
         return null;
     }
     const buffer = nodes.slice(begin, end);
-    return evalCompiledExpression(
-        compileExpression(buffer, context),
+    return executeOperatorNodes(
+        buffer,
+        getOperatorNodes(buffer, context),
         context
     );
 };
