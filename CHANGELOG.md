@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.13.0
+
+- Improve performance
+- Refactor source code
+
 ## 0.12.0
 
 - Add bit shifting operators
