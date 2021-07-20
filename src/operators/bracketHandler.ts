@@ -1,6 +1,6 @@
 import { SpanNode, SymbolNode } from '3h-ast';
 import { Dict, FunctionHandler, SyntaxHandler, Utils } from '../common';
-import { evalNodes } from "../eval/evalNodes";
+import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
 import { evalExpression } from "../eval/evalExpression";
 import { evalNode } from "../eval/evalNode";
 
@@ -56,8 +56,9 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
             Utils.raise(TypeError, 'expect a function', buffer[index], context);
         }
 
+        const compiledBody = compileNodes((buffer[index] as SpanNode).body, context);
         const callback: FunctionHandler = (args, referrer, _context) => {
-            return evalNodes((buffer[index] as SpanNode).body, _context);
+            return evalCompiledNodes(compiledBody, _context);
         };
 
         const returnValue = (handler as FunctionHandler)(
