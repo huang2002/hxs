@@ -1,5 +1,5 @@
 import { FunctionHandler, Utils } from '../common';
-import { createFunctionHandler } from '../function';
+import { createFunctionHandler } from "../function/createFunctionHandler";
 
 const createIf = (ended: boolean): FunctionHandler => Utils.injectHelp(
     'if (condition0) { ... } (condition1) { ... } ...',

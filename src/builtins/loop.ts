@@ -1,6 +1,6 @@
 import { FunctionHandler, Utils } from '../common';
 import { evalExpression } from "../eval/evalExpression";
-import { createFunctionHandler } from '../function';
+import { createFunctionHandler } from "../function/createFunctionHandler";
 
 export const builtinWhile: FunctionHandler = Utils.injectHelp(
     'while (condition) { ... }',

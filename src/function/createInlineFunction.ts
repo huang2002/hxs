@@ -1,83 +1,8 @@
-import { SpanNode, WordNode } from '3h-ast';
-import { FunctionHandler, ContextValue, SyntaxHandler, SyntaxNode, Utils, ScriptContext } from './common';
-import { evalList } from "./eval/evalList";
-import { evalNodes } from "./eval/evalNodes";
-
-const raiseArgError = (referrer: SyntaxNode, context: ScriptContext) => {
-    Utils.raise(SyntaxError, 'invalid argument declaration', referrer, context);
-};
-
-/**
- * Parse single argument declaration.
- */
-export const parseArg = (
-    rawArgList: readonly SyntaxNode[],
-    begin: number,
-    end: number,
-    context: ScriptContext,
-) => {
-    const firstNode = rawArgList[begin];
-    if (firstNode.type !== 'word') {
-        raiseArgError(firstNode, context);
-    }
-    let result!: string;
-    switch (end - begin) {
-        case 1: {
-            result = (firstNode as WordNode).value;
-            break;
-        }
-        default: {
-            // TODO: implement default args and remove this error
-            raiseArgError(firstNode, context);
-        }
-    }
-    return result;
-};
-
-/**
- * Parse argument list.
- */
-export const parseArgList = (
-    rawArgList: readonly SyntaxNode[],
-    context: ScriptContext,
-) => {
-    const result = [];
-    let l = 0;
-    for (let r = 0; r < rawArgList.length; r++) {
-        const node = rawArgList[r];
-        if (node.type !== 'symbol' || node.value !== ',') {
-            continue;
-        }
-        result.push(parseArg(rawArgList, l, r, context));
-        l = r + 1;
-    }
-    if (l < rawArgList.length) { // ends without a comma
-        result.push(parseArg(rawArgList, l, rawArgList.length, context));
-    }
-    return result;
-};
-
-export type FunctionCallback = (
-    args: ContextValue[],
-    referrer: SyntaxNode,
-    context: ScriptContext,
-) => ContextValue;
-
-export const createFunctionHandler = (
-    minArgCount: number,
-    maxArgCount: number,
-    callback: FunctionCallback,
-): FunctionHandler => (
-    (rawArgs, referrer, context) => {
-        const args = evalList(rawArgs, context);
-        if (args.length < minArgCount) {
-            Utils.raise(TypeError, 'too few arguments', referrer, context);
-        } else if (args.length > maxArgCount) {
-            Utils.raise(TypeError, 'too many arguments', referrer, context);
-        }
-        return callback(args, referrer, context);
-    }
-);
+import { SpanNode } from '3h-ast';
+import { ContextValue, SyntaxHandler, Utils, ScriptContext } from '../common';
+import { evalNodes } from "../eval/evalNodes";
+import { parseArgList } from './common';
+import { createFunctionHandler } from './createFunctionHandler';
 
 /**
  * Create a function from source code.
@@ -87,13 +12,11 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
     const argSpan = buffer[index + 1];
     const bodySpan = buffer[index + 2];
 
-    if (
-        index + 2 >= buffer.length
+    if (index + 2 >= buffer.length
         || argSpan.type !== 'span'
         || argSpan.start !== '('
         || bodySpan.type !== 'span'
-        || bodySpan.start !== '{'
-    ) {
+        || bodySpan.start !== '{') {
         Utils.raise(SyntaxError, 'invalid function declaration', buffer[index], context);
     }
 

@@ -2,7 +2,7 @@ import { builtinArray } from './array';
 import { builtinIf } from './if';
 import { builtinFor, builtinWhile } from './loop';
 import { ContextStore, ContextValue, Dict, FunctionHandler, HELP_SYMBOL, Utils } from '../common';
-import { createFunctionHandler } from '../function';
+import { createFunctionHandler } from "../function/createFunctionHandler";
 import { builtinString } from './string';
 import { builtinDict } from './dict';
 import { builtinFunction } from './function';

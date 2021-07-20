@@ -1,7 +1,7 @@
 import { WordNode } from '3h-ast';
 import { Dict, ContextValue, SyntaxHandler, Utils } from '../common';
 import { evalBufferNode } from "../eval/evalBufferNode";
-import { createInlineFunction } from '../function';
+import { createInlineFunction } from "../function/createInlineFunction";
 import { assignmentOperators } from './assignmentOperators';
 import { bitOperators } from './bitOperators';
 import { booleanOperators } from './booleanOperators';

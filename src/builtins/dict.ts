@@ -1,5 +1,5 @@
 import { ContextValue, Dict, Utils } from '../common';
-import { createFunctionHandler } from '../function';
+import { createFunctionHandler } from "../function/createFunctionHandler";
 
 export const builtinDict = Utils.createDict({
 

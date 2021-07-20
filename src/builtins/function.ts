@@ -1,6 +1,6 @@
 import { SymbolNode } from '3h-ast';
 import { ContextValue, FunctionHandler, SyntaxNode, Utils } from '../common';
-import { createFunctionHandler } from '../function';
+import { createFunctionHandler } from "../function/createFunctionHandler";
 
 export const builtinFunction = Utils.createDict({
 
