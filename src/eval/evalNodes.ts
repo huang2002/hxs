@@ -40,11 +40,12 @@ export const compileNodes = (
 
 export const evalCompiledNodes = (
     nodes: CompiledNodes,
+    context: ScriptContext,
 ) => {
     const { expressions, endsWithSemicolon } = nodes;
     let lastValue = null;
     for (let i = 0; i < expressions.length; i++) {
-        lastValue = evalCompiledExpression(expressions[i]);
+        lastValue = evalCompiledExpression(expressions[i], context);
     }
     return endsWithSemicolon ? null : lastValue;
 };
@@ -59,6 +60,7 @@ export const evalNodes = (
     end = nodes.length,
 ) => (
     evalCompiledNodes(
-        compileNodes(nodes, context, begin, end)
+        compileNodes(nodes, context, begin, end),
+        context
     )
 );

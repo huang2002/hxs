@@ -5,7 +5,6 @@ import { evalNode } from './evalNode';
 
 export type CompiledExpression = Readonly<{
     buffer: SyntaxNode[];
-    context: ScriptContext;
     operatorNodes: readonly (SymbolNode | SpanNode)[];
 }>;
 
@@ -42,15 +41,16 @@ export const compileExpression = (
         return priorityA - priorityB;
     });
 
-    return { buffer, context, operatorNodes };
+    return { buffer, operatorNodes };
 
 };
 
 export const evalCompiledExpression = (
     expression: CompiledExpression,
+    context: ScriptContext,
 ): ContextValue => {
 
-    const { buffer, context, operatorNodes } = expression;
+    const { buffer, operatorNodes } = expression;
 
     // execute operators
     for (let i = 0; i < operatorNodes.length; i++) {
@@ -92,6 +92,7 @@ export const evalExpression = (
     }
     const buffer = nodes.slice(begin, end);
     return evalCompiledExpression(
-        compileExpression(buffer, context)
+        compileExpression(buffer, context),
+        context
     );
 };
