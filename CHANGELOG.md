@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.0
+
+- Add placeholder(`_`)
+
 ## 0.13.0
 
 - Improve performance
