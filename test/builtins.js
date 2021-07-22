@@ -54,4 +54,22 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode('boolean(string)'), true);
     ctx.assertStrictEqual(evalCode('boolean(0)'), false);
 
+    ctx.assertDeepEqual(
+        evalCode(`
+            a = _;
+            1 + 1;
+            b = _;
+            c = _ + _;
+            @(_) {
+                d = _;
+                forward([#d, #e]);
+                2 ** 9;
+                e = _ + _;
+            };
+            _(2);
+            [a, b, c, d, e, _]
+        `),
+        [null, 2, 4, null, 1024, null]
+    );
+
 };

@@ -51,6 +51,7 @@ export const evalCompiledNodes = (
             operatorNodes[i],
             context,
         );
+        context.store.set('_', lastValue);
     }
     return endsWithSemicolon ? null : lastValue;
 };

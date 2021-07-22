@@ -35,6 +35,7 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
         const forwardVariables = new Set<string>();
         let returnValue: ContextValue = null;
 
+        scopeStore.set('_', null);
         scopeStore.set('arguments', args);
 
         scopeStore.set(

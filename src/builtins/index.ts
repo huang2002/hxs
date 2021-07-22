@@ -16,6 +16,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['Infinity', Infinity],
     ['NaN', NaN],
     ['null', null],
+    ['_', null],
 
     ['if', builtinIf],
     ['while', builtinWhile],
