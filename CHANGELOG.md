@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.0
+
+- Fix combination order
+
 ## 0.14.0
 
 - Add placeholder(`_`)
