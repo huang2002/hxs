@@ -1,5 +1,5 @@
-import { ScriptContext, SyntaxNode } from '../common';
-import { getOperatorNodes, executeOperatorNodes, OperatorNode } from './evalExpression';
+import { ScriptContext, SyntaxNode, OperatorNode } from '../common';
+import { getOperatorNodes, executeOperatorNodes } from './evalExpression';
 
 export type CompiledNodes = Readonly<{
     buffers: readonly (SyntaxNode[])[];

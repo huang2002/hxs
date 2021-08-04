@@ -1,9 +1,6 @@
-import { SymbolNode, SpanNode } from '3h-ast';
-import { ContextValue, ScriptContext, SyntaxNode, Utils } from '../common';
-import { operatorHandlers, operatorPriorities } from '../operators/index';
+import { ContextValue, ScriptContext, SyntaxNode, Utils, OperatorNode } from '../common';
+import { operatorHandlers, operatorLtr, operatorPriorities } from '../operators/index';
 import { evalNode } from './evalNode';
-
-export type OperatorNode = SymbolNode | SpanNode;
 
 export const getOperatorNodes = (
     buffer: SyntaxNode[],
@@ -30,13 +27,41 @@ export const getOperatorNodes = (
     // sort operators in order of priority (high->low)
     Utils.sort(operatorNodes, (nodeA, nodeB) => {
         const priorityA = operatorPriorities.get(
-            nodeA.type === 'symbol' ? nodeA.value : nodeA.start
+            Utils.getOperatorSymbol(nodeA)
         )!;
         const priorityB = operatorPriorities.get(
-            nodeB.type === 'symbol' ? nodeB.value : nodeB.start
+            Utils.getOperatorSymbol(nodeB)
         )!;
         return priorityA - priorityB;
     });
+
+    let p = 0;
+    let t;
+    while (p < operatorNodes.length) {
+        let symbol = Utils.getOperatorSymbol(operatorNodes[p]);
+        for (let q = p + 1; q <= operatorNodes.length; q++) {
+            if (
+                q < operatorNodes.length
+                && Utils.getOperatorSymbol(operatorNodes[q]) === symbol
+            ) {
+                continue;
+            }
+            if (operatorLtr.get(symbol)!) {
+                p = q;
+                break;
+            }
+            let l = p;
+            let r = q - 1;
+            while (l < r) {
+                t = operatorNodes[l];
+                operatorNodes[l] = operatorNodes[r];
+                operatorNodes[r] = t;
+                l++;
+                r--;
+            }
+            p = q;
+        }
+    }
 
     return operatorNodes;
 

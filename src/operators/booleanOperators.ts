@@ -5,6 +5,7 @@ import { createBinaryOperator, OperatorDefinition } from './common';
 export const booleanOperators: OperatorDefinition[] = [{
     symbol: '!',
     priority: 2,
+    ltr: false,
     handler(buffer, index, context) {
         const operand = evalBufferNode(buffer, index + 1, buffer[index], context);
         const valueNode = Utils.createValueNode(!operand, buffer[index]);
@@ -13,6 +14,7 @@ export const booleanOperators: OperatorDefinition[] = [{
 }, {
     symbol: '&&',
     priority: 11,
+    ltr: true,
     handler: createBinaryOperator<boolean, boolean>(
         'boolean',
         'boolean',
@@ -21,6 +23,7 @@ export const booleanOperators: OperatorDefinition[] = [{
 }, {
     symbol: '||',
     priority: 12,
+    ltr: true,
     handler: createBinaryOperator<boolean, boolean>(
         'boolean',
         'boolean',

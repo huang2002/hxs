@@ -5,6 +5,7 @@ import { createBinaryOperator, OperatorDefinition } from './common';
 export const mathOperators: OperatorDefinition[] = [{
     symbol: '**',
     priority: 2,
+    ltr: false,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -13,6 +14,7 @@ export const mathOperators: OperatorDefinition[] = [{
 }, {
     symbol: '*',
     priority: 3,
+    ltr: true,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -21,6 +23,7 @@ export const mathOperators: OperatorDefinition[] = [{
 }, {
     symbol: '/',
     priority: 3,
+    ltr: true,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -29,6 +32,7 @@ export const mathOperators: OperatorDefinition[] = [{
 }, {
     symbol: '%',
     priority: 3,
+    ltr: true,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -37,6 +41,7 @@ export const mathOperators: OperatorDefinition[] = [{
 }, {
     symbol: '+',
     priority: 4,
+    ltr: true,
     handler: createBinaryOperator<number, number>(
         'number',
         'number',
@@ -45,6 +50,7 @@ export const mathOperators: OperatorDefinition[] = [{
 }, {
     symbol: '-',
     priority: 4,
+    ltr: true,
     handler(buffer, index, context) {
 
         const b = evalBufferNode(buffer, index + 1, buffer[index], context);

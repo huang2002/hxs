@@ -1,4 +1,4 @@
-import { ASTNode, ASTNodeTemplate, NumberNode } from '3h-ast';
+import { ASTNode, ASTNodeTemplate, NumberNode, SymbolNode, SpanNode } from '3h-ast';
 
 export const HELP_SYMBOL = Symbol('hxs_help_symbol');
 
@@ -39,6 +39,8 @@ export interface FunctionHandler<T extends ContextValue = ContextValue> {
     (rawArgs: readonly SyntaxNode[], referrer: SyntaxNode, context: ScriptContext): T;
     [HELP_SYMBOL]?: string;
 }
+
+export type OperatorNode = SymbolNode | SpanNode;
 
 export namespace Utils {
 
@@ -250,5 +252,9 @@ export namespace Utils {
             return "'" + value.replace(/'/g, "\\'") + "'";
         }
     };
+
+    export const getOperatorSymbol = (node: OperatorNode) => (
+        node.type === 'symbol' ? node.value : node.start
+    );
 
 }

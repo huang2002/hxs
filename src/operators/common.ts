@@ -4,6 +4,7 @@ import { evalBufferNode } from "../eval/evalBufferNode";
 export interface OperatorDefinition {
     symbol: string;
     priority: number;
+    ltr: boolean; // left to right
     handler: SyntaxHandler;
 }
 

@@ -6,6 +6,7 @@ import { OperatorDefinition } from './common';
 export const assignmentOperators: OperatorDefinition[] = [{
     symbol: '=',
     priority: Infinity,
+    ltr: false,
     handler(buffer, index, context) {
 
         if (index === 0) {
@@ -27,6 +28,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
 }, {
     symbol: '+=',
     priority: Infinity,
+    ltr: false,
     handler(buffer, index, context) {
 
         if (index === 0) {
@@ -63,6 +65,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
 }, {
     symbol: '-=',
     priority: Infinity,
+    ltr: false,
     handler(buffer, index, context) {
 
         if (index === 0) {
@@ -99,6 +102,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
 }, {
     symbol: '*=',
     priority: Infinity,
+    ltr: false,
     handler(buffer, index, context) {
 
         if (index === 0) {
@@ -135,6 +139,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
 }, {
     symbol: '/=',
     priority: Infinity,
+    ltr: false,
     handler(buffer, index, context) {
 
         if (index === 0) {
@@ -171,6 +176,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
 }, {
     symbol: '&=',
     priority: Infinity,
+    ltr: false,
     handler(buffer, index, context) {
 
         if (index === 0) {
@@ -207,6 +213,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
 }, {
     symbol: '^=',
     priority: Infinity,
+    ltr: false,
     handler(buffer, index, context) {
 
         if (index === 0) {
@@ -243,6 +250,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
 }, {
     symbol: '|=',
     priority: Infinity,
+    ltr: false,
     handler(buffer, index, context) {
 
         if (index === 0) {

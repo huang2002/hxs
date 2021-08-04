@@ -26,11 +26,13 @@ export const operators: readonly OperatorDefinition[] = [
     {
         symbol: '@',
         priority: 0,
+        ltr: true,
         handler: createInlineFunction,
     },
     {
         symbol: '.',
         priority: 1,
+        ltr: true,
         handler(buffer, index, context) {
 
             const target = evalBufferNode(buffer, index - 1, buffer[index], context);
@@ -59,21 +61,25 @@ export const operators: readonly OperatorDefinition[] = [
     {
         symbol: '[',
         priority: 1,
+        ltr: true,
         handler: braceHandler,
     },
     {
         symbol: '(',
         priority: 1,
+        ltr: true,
         handler: parathesisHandler,
     },
     {
         symbol: '{',
         priority: 1,
+        ltr: true,
         handler: bracketHandler,
     },
     {
         symbol: '#',
         priority: 2,
+        ltr: true,
         handler(buffer, index, context) {
             const wordNode = buffer[index + 1];
             if (index + 1 === buffer.length || wordNode.type !== 'word') {
@@ -93,8 +99,15 @@ export const operatorHandlers: ReadonlyMap<string, SyntaxHandler> = new Map(
 );
 
 /**
- * Another utility map. (operator->priority)
+ * A utility map. (operator->priority)
  */
 export const operatorPriorities: ReadonlyMap<string, number> = new Map(
     operators.map(op => [op.symbol, op.priority])
+);
+
+/**
+ * A utility map. (operator->ltr)
+ */
+export const operatorLtr: ReadonlyMap<string, boolean> = new Map(
+    operators.map(op => [op.symbol, op.ltr])
 );
