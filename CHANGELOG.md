@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.16.0
+
+- Add `Number`
+- Add help info to builtin dicts
+
 ## 0.15.0
 
 - Fix combination order
