@@ -8,6 +8,7 @@ import { builtinString } from './string';
 import { builtinDict } from './dict';
 import { builtinFunction } from './function';
 import { builtinMath } from './math';
+import { builtinNumber } from './number';
 
 export const builtins: ContextStore = new Map<string, ContextValue>([
 
@@ -26,6 +27,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['String', builtinString],
     ['Dict', builtinDict],
     ['Function', builtinFunction],
+    ['Number', builtinNumber],
     ['Math', builtinMath],
 
     ['help', Utils.injectHelp(
