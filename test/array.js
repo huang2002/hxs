@@ -128,4 +128,18 @@ module.exports = (ctx) => {
     ctx.assertShallowEqual(evalCode(`Array.sort(['0', '2', '1'])`), ['0', '1', '2']);
     ctx.expectThrow(TypeError, evalCode, [`Array.sort('abc')`]);
 
+    ctx.assertShallowEqual(evalCode(`a = [1, 2, 3]; Array.forEach(a, @(x, i) { Array.set(a, i, x + i) }); a`), [1, 3, 5]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.forEach('abc', @() {})`]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.forEach([], null)`]);
+
+    ctx.assertShallowEqual(evalCode(`a = [1, 2, 3]; Array.map(a, @(x, i) { return(x + i) })`), [1, 3, 5]);
+    ctx.assertShallowEqual(evalCode(`a = [1, 2, 3]; Array.map(a, @(x, i) { return(x + i) }); a`), [1, 2, 3]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.map('abc', @() {})`]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.map([], null)`]);
+
+    ctx.assertShallowEqual(evalCode(`a = [1, 2, 3]; Array.filter(a, @(x, i) { return(x & 1) })`), [1, 3]);
+    ctx.assertShallowEqual(evalCode(`a = [1, 2, 3]; Array.filter(a, @(x, i) { return(x & 1) }); a`), [1, 2, 3]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.filter('abc', @() {})`]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.filter([], null)`]);
+
 };

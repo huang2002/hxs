@@ -403,5 +403,121 @@ export const builtinArray = Utils.injectHelp(
             })
         ),
 
+        forEach: Utils.injectHelp(
+            'Array.forEach(array, callback)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+
+                const array = args[0] as ContextValue[];
+                if (!Array.isArray(array)) {
+                    Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
+                }
+
+                const callback = args[1] as FunctionHandler;
+                if (args.length > 1 && typeof callback !== 'function') {
+                    Utils.raise(TypeError, 'expect a function as callback', referrer, context);
+                }
+
+                const COMMA_NODE: SymbolNode = {
+                    type: 'symbol',
+                    value: ',',
+                    line: referrer.line,
+                    column: referrer.column,
+                    offset: referrer.offset,
+                };
+                for (let i = 0; i < array.length; i++) {
+                    callback(
+                        [
+                            Utils.createValueNode(array[i], referrer),
+                            COMMA_NODE,
+                            Utils.createValueNode(i, referrer),
+                            COMMA_NODE,
+                            Utils.createValueNode(array, referrer),
+                        ],
+                        referrer,
+                        context,
+                    );
+                }
+
+                return null;
+
+            })
+        ),
+
+        map: Utils.injectHelp(
+            'Array.map(array, callback)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+
+                const array = args[0] as ContextValue[];
+                if (!Array.isArray(array)) {
+                    Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
+                }
+
+                const callback = args[1] as FunctionHandler;
+                if (args.length > 1 && typeof callback !== 'function') {
+                    Utils.raise(TypeError, 'expect a function as callback', referrer, context);
+                }
+
+                const COMMA_NODE: SymbolNode = {
+                    type: 'symbol',
+                    value: ',',
+                    line: referrer.line,
+                    column: referrer.column,
+                    offset: referrer.offset,
+                };
+                return array.map((element, index) => (
+                    callback(
+                        [
+                            Utils.createValueNode(element, referrer),
+                            COMMA_NODE,
+                            Utils.createValueNode(index, referrer),
+                            COMMA_NODE,
+                            Utils.createValueNode(array, referrer),
+                        ],
+                        referrer,
+                        context,
+                    )
+                ));
+
+            })
+        ),
+
+        filter: Utils.injectHelp(
+            'Array.filter(array, callback)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+
+                const array = args[0] as ContextValue[];
+                if (!Array.isArray(array)) {
+                    Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
+                }
+
+                const callback = args[1] as FunctionHandler;
+                if (args.length > 1 && typeof callback !== 'function') {
+                    Utils.raise(TypeError, 'expect a function as callback', referrer, context);
+                }
+
+                const COMMA_NODE: SymbolNode = {
+                    type: 'symbol',
+                    value: ',',
+                    line: referrer.line,
+                    column: referrer.column,
+                    offset: referrer.offset,
+                };
+                return array.filter((element, index) => (
+                    callback(
+                        [
+                            Utils.createValueNode(element, referrer),
+                            COMMA_NODE,
+                            Utils.createValueNode(index, referrer),
+                            COMMA_NODE,
+                            Utils.createValueNode(array, referrer),
+                        ],
+                        referrer,
+                        context,
+                    )
+                ));
+
+            })
+        ),
+
     })
 );
