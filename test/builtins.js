@@ -78,4 +78,24 @@ module.exports = (ctx) => {
         [null, 2, 4, null, 1024, null]
     );
 
+    ctx.assertDeepEqual(evalCode(`a = [0, 1, 2]; set(a, 1, 10); a`), [0, 10, 2]);
+    ctx.assertDeepEqual(evalCode(`o = { #a: 0 }; set(o, #b, 1); o`), { a: 0, b: 1 });
+    ctx.expectThrow(TypeError, evalCode, [`set('012', 1, '10')`]);
+    ctx.expectThrow(TypeError, evalCode, [`set([], '0', '10')`]);
+
+    ctx.assertDeepEqual(evalCode(`a = [0, 1, 2]; remove(a, 1); a`), [0, 2]);
+    ctx.assertDeepEqual(evalCode(`o = { #a: 0, #b: 1 }; remove(o, #b); o`), { a: 0 });
+    ctx.expectThrow(TypeError, evalCode, [`remove('012', 1)`]);
+    ctx.expectThrow(TypeError, evalCode, [`remove({}, 0, 1)`]);
+
+    ctx.assertStrictEqual(evalCode(`sizeOf([0, 1, 2])`), 3);
+    ctx.assertStrictEqual(evalCode(`sizeOf("abc")`), 3);
+    ctx.expectThrow(TypeError, evalCode, [`sizeOf({})`]);
+
+    ctx.assertStrictEqual(evalCode(`forEach`), evalCode(`Array.forEach`));
+    ctx.assertStrictEqual(evalCode(`map`), evalCode(`Array.map`));
+    ctx.assertStrictEqual(evalCode(`filter`), evalCode(`Array.filter`));
+    ctx.assertStrictEqual(evalCode(`join`), evalCode(`String.join`));
+    ctx.assertStrictEqual(evalCode(`keys`), evalCode(`Dict.keys`));
+
 };
