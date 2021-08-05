@@ -128,4 +128,19 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`Dict.unpack([], ['a'])`]);
     ctx.expectThrow(ReferenceError, evalCode, [`Dict.unpack({}, ['a'])`]);
 
+    ctx.assertDeepEqual(
+        evalCode(`
+            o = {
+                #a: 0,
+                #b: 1,
+            };
+            Dict.remove(o, #a);
+            o
+        `),
+        { b: 1 }
+    );
+
+    ctx.expectThrow(TypeError, evalCode, [`Dict.remove([], '0')`]);
+    ctx.expectThrow(TypeError, evalCode, [`Dict.remove({}, 0)`]);
+
 };

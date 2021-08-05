@@ -144,5 +144,21 @@ export const builtinDict = Utils.injectHelp(
             })
         ),
 
+        remove: Utils.injectHelp(
+            'Dict.remove(dict, key)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+                const dict = args[0] as Dict;
+                if (!Utils.isDict(dict)) {
+                    Utils.raise(TypeError, `expect a dict`, referrer, context);
+                }
+                const key = args[1] as string;
+                if (typeof key !== 'string') {
+                    Utils.raise(TypeError, `expect a string as index`, referrer, context);
+                }
+                delete dict[key];
+                return null;
+            })
+        ),
+
     })
 );
