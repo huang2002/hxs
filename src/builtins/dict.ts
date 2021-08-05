@@ -93,7 +93,7 @@ export const builtinDict = Utils.injectHelp(
                 }
                 const key = args[1];
                 if (typeof key !== 'string') {
-                    Utils.raise(TypeError, `expect a string as index`, referrer, context);
+                    Utils.raise(TypeError, `expect a string as key`, referrer, context);
                 }
                 (dict as Dict)[key as string] = args[2];
                 return null;
@@ -153,7 +153,7 @@ export const builtinDict = Utils.injectHelp(
                 }
                 const key = args[1] as string;
                 if (typeof key !== 'string') {
-                    Utils.raise(TypeError, `expect a string as index`, referrer, context);
+                    Utils.raise(TypeError, `expect a string as key`, referrer, context);
                 }
                 delete dict[key];
                 return null;
