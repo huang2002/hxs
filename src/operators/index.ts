@@ -1,6 +1,7 @@
 import { WordNode } from '3h-ast';
 import { Dict, ContextValue, SyntaxHandler, Utils } from '../common';
 import { evalBufferNode } from "../eval/evalBufferNode";
+import { createInlineExpression } from '../function/createInlineExpression';
 import { createInlineFunction } from "../function/createInlineFunction";
 import { assignmentOperators } from './assignmentOperators';
 import { bitOperators } from './bitOperators';
@@ -28,6 +29,12 @@ export const operators: readonly OperatorDefinition[] = [
         priority: 0,
         ltr: true,
         handler: createInlineFunction,
+    },
+    {
+        symbol: '=>',
+        priority: 0,
+        ltr: true,
+        handler: createInlineExpression,
     },
     {
         symbol: '.',

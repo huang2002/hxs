@@ -59,4 +59,13 @@ module.exports = (ctx) => {
         1 + 2 + 3 + 4 + 5
     );
 
+    ctx.assertDeepEqual(
+        evalCode(`
+            x = 0;
+            f = (y) => (x = x + y);
+            [f(1), x]
+        `),
+        [1, 0]
+    );
+
 };
