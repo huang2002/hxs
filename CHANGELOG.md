@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.0
+
+- Add `Dict.remove`
+- Add `Array.forEach/map/filter`
+- Add utility functions
+
 ## 0.16.0
 
 - Add `Number`
