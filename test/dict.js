@@ -9,20 +9,20 @@ module.exports = (ctx) => {
     ctx.assertDeepEqual(evalCode(`{}`), {});
 
     ctx.assertDeepEqual(
-        evalCode(`{ #foo: #bar }`),
+        evalCode(`{ #foo -> #bar }`),
         { foo: 'bar' }
     );
 
-    ctx.assertStrictEqual(evalCode(`{ #foo: #bar }.foo`), 'bar');
-    ctx.assertStrictEqual(evalCode(`{ #foo: #bar }.baz`), null);
+    ctx.assertStrictEqual(evalCode(`{ #foo -> #bar }.foo`), 'bar');
+    ctx.assertStrictEqual(evalCode(`{ #foo -> #bar }.baz`), null);
 
     ctx.assertDeepEqual(
         evalCode(`
             key_a = 'baz';
             b = true;
             {
-                key_a: 0,
-                #b: b,
+                key_a -> 0,
+                #b -> b,
             }
         `),
         { baz: 0, b: true }
@@ -31,16 +31,16 @@ module.exports = (ctx) => {
     ctx.assertDeepEqual(
         evalCode(`
             {
-                #x: 0,
-                #y: {
-                    #z: 2,
+                #x -> 0,
+                #y -> {
+                    #z -> 2,
                 },
             }
         `),
         { x: 0, y: { z: 2 } }
     );
 
-    ctx.expectThrow(TypeError, evalCode, [`{ 0: 1 }`]);
+    ctx.expectThrow(TypeError, evalCode, [`{ 0 -> 1 }`]);
 
     ctx.assertShallowEqual(evalCode('Dict.create()'), {});
     ctx.expectThrow(TypeError, evalCode, ['Dict.create([])']);
@@ -131,8 +131,8 @@ module.exports = (ctx) => {
     ctx.assertDeepEqual(
         evalCode(`
             o = {
-                #a: 0,
-                #b: 1,
+                #a -> 0,
+                #b -> 1,
             };
             Dict.remove(o, #a);
             o

@@ -26,7 +26,7 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
             let j;
             for (j = left; j < right; j++) {
                 if (nodes[j].type === 'symbol'
-                    && (nodes[j] as SymbolNode).value === ':') {
+                    && (nodes[j] as SymbolNode).value === '->') {
                     break;
                 }
             }
