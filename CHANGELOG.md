@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.19.0
+
+- Use `->` for dict entries
+- Add `Function.bind`
+- Add utility function `slice`
+- Add shortcut `invoke` & `bind`
+
 ## 0.18.0
 
 - Add expressions
