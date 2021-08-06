@@ -92,7 +92,7 @@ export const remove = Utils.injectHelp(
 );
 
 export const sizeOf = Utils.injectHelp(
-    'sizeOf(array_string)',
+    'sizeOf(array_or_string)',
     createFunctionHandler(1, 1, (args, referrer, context) => {
         const target = args[0];
         if (Array.isArray(target) || typeof target === 'string') {
