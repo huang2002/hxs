@@ -36,7 +36,12 @@ export type SyntaxHandler = (
 ) => void;
 
 export interface FunctionHandler<T extends ContextValue = ContextValue> {
-    (rawArgs: readonly SyntaxNode[], referrer: SyntaxNode, context: ScriptContext): T;
+    (
+        rawArgs: readonly SyntaxNode[],
+        referrer: SyntaxNode,
+        context: ScriptContext,
+        thisArg: ContextValue,
+    ): T;
     [HELP_SYMBOL]?: string;
 }
 

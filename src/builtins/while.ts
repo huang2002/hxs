@@ -40,7 +40,7 @@ export const builtinWhile: FunctionHandler = Utils.injectHelp(
                         }
 
                         try {
-                            (callback as FunctionHandler)([], referrer, _context);
+                            (callback as FunctionHandler)([], referrer, _context, null);
                         } catch (error) {
                             if (error === BREAK_FLAG) {
                                 break;

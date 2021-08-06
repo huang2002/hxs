@@ -7,8 +7,8 @@ export const builtinFunction = Utils.injectHelp(
     Utils.createDict({
 
         invoke: Utils.injectHelp(
-            'Function.invoke(function, args)',
-            createFunctionHandler(2, 2, (args, referrer, context) => {
+            'Function.invoke(function, args, thisArg = null)',
+            createFunctionHandler(2, 3, (args, referrer, context) => {
                 const fn = args[0];
                 if (typeof fn !== 'function') {
                     Utils.raise(TypeError, 'expect a function to invoke', referrer, context);
@@ -31,7 +31,8 @@ export const builtinFunction = Utils.injectHelp(
                     );
                     _fnArgs.push(commaNode);
                 }
-                return (fn as FunctionHandler)(_fnArgs, referrer, context);
+                const thisArg = args.length === 3 ? args[2] : null;
+                return (fn as FunctionHandler)(_fnArgs, referrer, context, thisArg);
             })
         ),
 

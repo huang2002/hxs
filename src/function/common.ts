@@ -4,7 +4,8 @@ import { ContextValue, SyntaxNode, ScriptContext, Utils } from '../common';
 export type FunctionCallback = (
     args: ContextValue[],
     referrer: SyntaxNode,
-    context: ScriptContext
+    context: ScriptContext,
+    thisArg: ContextValue,
 ) => ContextValue;
 
 const raiseArgError = (referrer: SyntaxNode, context: ScriptContext) => {

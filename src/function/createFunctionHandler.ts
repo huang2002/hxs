@@ -7,13 +7,13 @@ export const createFunctionHandler = (
     maxArgCount: number,
     callback: FunctionCallback,
 ): FunctionHandler => (
-    (rawArgs, referrer, context) => {
+    (rawArgs, referrer, context, thisArg) => {
         const args = evalList(rawArgs, context);
         if (args.length < minArgCount) {
             Utils.raise(TypeError, 'too few arguments', referrer, context);
         } else if (args.length > maxArgCount) {
             Utils.raise(TypeError, 'too many arguments', referrer, context);
         }
-        return callback(args, referrer, context);
+        return callback(args, referrer, context, thisArg);
     }
 );

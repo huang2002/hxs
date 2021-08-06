@@ -394,6 +394,7 @@ export const builtinArray = Utils.injectHelp(
                             ],
                             referrer,
                             context,
+                            null,
                         );
                     };
                 }
@@ -435,6 +436,7 @@ export const builtinArray = Utils.injectHelp(
                         ],
                         referrer,
                         context,
+                        null,
                     );
                 }
 
@@ -475,6 +477,7 @@ export const builtinArray = Utils.injectHelp(
                         ],
                         referrer,
                         context,
+                        null,
                     )
                 ));
 
@@ -513,6 +516,7 @@ export const builtinArray = Utils.injectHelp(
                         ],
                         referrer,
                         context,
+                        null,
                     )
                 ));
 

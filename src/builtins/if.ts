@@ -14,7 +14,7 @@ const createIf = (ended: boolean): FunctionHandler => Utils.injectHelp(
                 Utils.raise(TypeError, 'expect a callback', referrer, context);
             }
             if (!ended && condition) {
-                (callback as FunctionHandler)([], referrer, context);
+                (callback as FunctionHandler)([], referrer, context, null);
                 return createIf(true);
             } else {
                 return createIf(false);

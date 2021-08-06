@@ -59,7 +59,7 @@ export const builtinFor: FunctionHandler = Utils.injectHelp(
                         for (let iterator = begin; iterator < end; iterator += step) {
                             try {
                                 _context.store.set(iteratorName, iterator);
-                                (callback as FunctionHandler)([], referrer, _context);
+                                (callback as FunctionHandler)([], referrer, _context, null);
                             } catch (error) {
                                 if (error === BREAK_FLAG) {
                                     break;
@@ -72,7 +72,7 @@ export const builtinFor: FunctionHandler = Utils.injectHelp(
                         for (let iterator = begin; iterator > end; iterator += step) {
                             try {
                                 _context.store.set(iteratorName, iterator);
-                                (callback as FunctionHandler)([], referrer, _context);
+                                (callback as FunctionHandler)([], referrer, _context, null);
                             } catch (error) {
                                 if (error === BREAK_FLAG) {
                                     break;

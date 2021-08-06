@@ -20,7 +20,8 @@ export const parathesisHandler: SyntaxHandler = (buffer, index, context) => {
         const value = (handler as FunctionHandler)(
             (buffer[index] as SpanNode).body,
             buffer[index],
-            context
+            context,
+            null,
         );
 
         const valueNode = Utils.createValueNode(value, buffer[index]);

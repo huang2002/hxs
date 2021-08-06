@@ -59,6 +59,18 @@ module.exports = (ctx) => {
         1 + 2 + 3 + 4 + 5
     );
 
+    ctx.assertStrictEqual(
+        evalCode(`
+            f = @() {
+                forward([#b]);
+                b = this;
+            };
+            Function.invoke(f, [], 666);
+            b
+        `),
+        666
+    );
+
     ctx.assertDeepEqual(
         evalCode(`
             x = 0;

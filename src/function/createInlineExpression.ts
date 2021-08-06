@@ -32,6 +32,7 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
         }
 
         scopeStore.set('_', null);
+        scopeStore.set('this', null);
         scopeStore.set('arguments', args);
 
         const scopeContext: ScriptContext = {

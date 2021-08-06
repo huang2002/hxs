@@ -64,7 +64,8 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
         const returnValue = (handler as FunctionHandler)(
             [Utils.createValueNode(callback, buffer[index])],
             buffer[index],
-            context
+            context,
+            null,
         );
 
         const valueNode = Utils.createValueNode(returnValue, buffer[index]);
