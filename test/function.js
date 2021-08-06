@@ -80,4 +80,15 @@ module.exports = (ctx) => {
         [1, 0]
     );
 
+    ctx.assertDeepEqual(
+        evalCode(`
+            foo = @() {
+                return(this);
+            };
+            bar = Function.bind(foo, 0);
+            [Function.invoke(bar, [1]), Function.bind(bar, 2)()]
+        `),
+        [0, 0]
+    );
+
 };

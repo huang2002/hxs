@@ -36,5 +36,18 @@ export const builtinFunction = Utils.injectHelp(
             })
         ),
 
+        bind: Utils.injectHelp(
+            'Function.bind(function, thisArg)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+                const fn = args[0];
+                if (typeof fn !== 'function') {
+                    Utils.raise(TypeError, 'expect a function to bind', referrer, context);
+                }
+                return (_args, _referrer, _context) => {
+                    return (fn as FunctionHandler)(_args, _referrer, _context, args[1]);
+                };
+            })
+        ),
+
     })
 );

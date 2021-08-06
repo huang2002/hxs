@@ -97,5 +97,7 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`filter`), evalCode(`Array.filter`));
     ctx.assertStrictEqual(evalCode(`join`), evalCode(`String.join`));
     ctx.assertStrictEqual(evalCode(`keys`), evalCode(`Dict.keys`));
+    ctx.assertStrictEqual(evalCode(`invoke`), evalCode(`Function.invoke`));
+    ctx.assertStrictEqual(evalCode(`bind`), evalCode(`Function.bind`));
 
 };
