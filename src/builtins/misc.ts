@@ -103,3 +103,29 @@ export const sizeOf = Utils.injectHelp(
         }
     })
 );
+
+export const slice = Utils.injectHelp(
+    'slice(array_or_string, begin = 0, end = sizeOf(array_or_string))',
+    createFunctionHandler(1, 3, (args, referrer, context) => {
+        const target = args[0];
+        if (Array.isArray(target) || typeof target === 'string') {
+            if (args.length > 1) {
+                if (typeof args[1] !== 'number') {
+                    Utils.raise(TypeError, 'expect a number as begin index', referrer, context);
+                }
+                if (args.length > 2) {
+                    if (typeof args[2] !== 'number') {
+                        Utils.raise(TypeError, 'expect a number as end index', referrer, context);
+                    }
+                }
+            }
+            return target.slice(
+                args[1] as number | undefined,
+                args[2] as number | undefined,
+            );
+        } else {
+            Utils.raise(TypeError, `expect an array or string`, referrer, context);
+            return null; // for type checking
+        }
+    })
+);

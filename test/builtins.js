@@ -92,6 +92,16 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`sizeOf("abc")`), 3);
     ctx.expectThrow(TypeError, evalCode, [`sizeOf({})`]);
 
+    ctx.assertDeepEqual(evalCode(`slice([0, 1, 2])`), [0, 1, 2]);
+    ctx.assertDeepEqual(evalCode(`slice([0, 1, 2], 1)`), [1, 2]);
+    ctx.assertDeepEqual(evalCode(`slice([0, 1, 2], 1, -1)`), [1]);
+    ctx.assertDeepEqual(evalCode(`slice("abc")`), 'abc');
+    ctx.assertDeepEqual(evalCode(`slice("abc", 1)`), 'bc');
+    ctx.assertDeepEqual(evalCode(`slice("abc", 1, -1)`), 'b');
+    ctx.expectThrow(TypeError, evalCode, [`slice({})`]);
+    ctx.expectThrow(TypeError, evalCode, [`slice([], '0')`]);
+    ctx.expectThrow(TypeError, evalCode, [`slice([], 0, '1')`]);
+
     ctx.assertStrictEqual(evalCode(`forEach`), evalCode(`Array.forEach`));
     ctx.assertStrictEqual(evalCode(`map`), evalCode(`Array.map`));
     ctx.assertStrictEqual(evalCode(`filter`), evalCode(`Array.filter`));
