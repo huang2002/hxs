@@ -25,13 +25,18 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
     const compiledBody = compileNodes(body, context);
 
     const func = createFunctionHandler(
-        argList.length,
+        argList.requiredCount,
         Infinity,
         (args, referrer, _context, thisArg) => {
 
             const scopeStore = new Map(context.store);
-            for (let i = 0; i < args.length; i++) {
-                scopeStore.set(argList[i], args[i] as ContextValue);
+            const argDefinitions = argList.args;
+            for (let i = 0; i < argDefinitions.length; i++) {
+                if (i < args.length) {
+                    scopeStore.set(argDefinitions[i].name, args[i]);
+                } else {
+                    scopeStore.set(argDefinitions[i].name, argDefinitions[i].default);
+                }
             }
 
             const RETURN_FLAG = Symbol('hxs_return_flag');

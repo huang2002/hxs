@@ -1,5 +1,5 @@
 import { SpanNode } from '3h-ast';
-import { ContextValue, SyntaxHandler, Utils, ScriptContext } from '../common';
+import { SyntaxHandler, Utils, ScriptContext } from '../common';
 import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
 import { parseArgList } from './common';
 import { createFunctionHandler } from './createFunctionHandler';
@@ -24,25 +24,34 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
     const body = (bodySpan as SpanNode).body;
     const compiledBody = compileNodes(body, context);
 
-    const func = createFunctionHandler(argList.length, Infinity, (args, referrer, _context) => {
+    const func = createFunctionHandler(
+        argList.requiredCount,
+        Infinity,
+        (args, referrer, _context) => {
 
-        const scopeStore = new Map(context.store);
-        for (let i = 0; i < args.length; i++) {
-            scopeStore.set(argList[i], args[i] as ContextValue);
+            const scopeStore = new Map(context.store);
+            const argDefinitions = argList.args;
+            for (let i = 0; i < argDefinitions.length; i++) {
+                if (i < args.length) {
+                    scopeStore.set(argDefinitions[i].name, args[i]);
+                } else {
+                    scopeStore.set(argDefinitions[i].name, argDefinitions[i].default);
+                }
+            }
+
+            scopeStore.set('_', null);
+            scopeStore.set('this', null);
+            scopeStore.set('arguments', args);
+
+            const scopeContext: ScriptContext = {
+                store: scopeStore,
+                source: context.source,
+            };
+
+            return evalCompiledNodes(compiledBody, scopeContext, true);
+
         }
-
-        scopeStore.set('_', null);
-        scopeStore.set('this', null);
-        scopeStore.set('arguments', args);
-
-        const scopeContext: ScriptContext = {
-            store: scopeStore,
-            source: context.source,
-        };
-
-        return evalCompiledNodes(compiledBody, scopeContext, true);
-
-    });
+    );
 
     const valueNode = Utils.createValueNode(func, buffer[index]);
     Utils.replaceBuffer(buffer, index - 1, 3, valueNode);

@@ -91,4 +91,35 @@ module.exports = (ctx) => {
         [0, 0]
     );
 
+    ctx.assertDeepEqual(
+        evalCode(`
+            f = @(a, b = 1) {
+                return(a + b);
+            };
+            g = (x, y = 2, z = 3) => (x + y + z);
+            h = (t = 0) => (t);
+            [
+                f(1, 2),
+                f(1),
+                g(1, 2, 3),
+                g(0, 1),
+                g(1),
+                h(6),
+                h(),
+            ]
+        `),
+        [
+            1 + 2,
+            1 + 1,
+            1 + 2 + 3,
+            0 + 1 + 3,
+            1 + 2 + 3,
+            6,
+            0,
+        ]
+    );
+
+    ctx.expectThrow(SyntaxError, evalCode, [`@(a, b = 1, c) {}`]);
+    ctx.expectThrow(SyntaxError, evalCode, [`(x = 1, y) => ()`]);
+
 };
