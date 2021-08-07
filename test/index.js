@@ -13,6 +13,7 @@ test(null, {
     dict: require('./dict.js'),
     if: require('./if.js'),
     loop: require('./loop.js'),
+    error: require('./error.js'),
     builtins: require('./builtins.js'),
     hello_world: require('./hello_world.js'),
 
