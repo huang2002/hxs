@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.20.0
+
+- Add `raise` & `try`
+- Add `Dict.assign` & `assign`
+
 ## 0.19.0
 
 - Use `->` for dict entries
