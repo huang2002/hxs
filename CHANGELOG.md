@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.0
+
+- Add default-argument syntax
+
 ## 0.20.0
 
 - Add `raise` & `try`
