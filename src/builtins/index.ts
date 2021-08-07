@@ -55,6 +55,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['filter', builtinArray.filter],
     ['join', builtinString.join],
     ['keys', builtinDict.keys],
+    ['assign', builtinDict.assign],
     ['invoke', builtinFunction.invoke],
     ['bind', builtinFunction.bind],
 

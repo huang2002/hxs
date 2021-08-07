@@ -160,5 +160,33 @@ export const builtinDict = Utils.injectHelp(
             })
         ),
 
+        assign: Utils.injectHelp(
+            'Dict.assign(dict, props, allow_overwrite = true)',
+            createFunctionHandler(2, 3, (args, referrer, context) => {
+                const dict = args[0] as Dict;
+                if (!Utils.isDict(dict)) {
+                    Utils.raise(TypeError, `expect a dict to modify`, referrer, context);
+                }
+                const props = args[1] as Dict;
+                if (!Utils.isDict(props)) {
+                    Utils.raise(TypeError, `expect another dict as props`, referrer, context);
+                }
+                const allowOverwrite = args.length === 3 ? args[2] as boolean : true;
+                if (typeof allowOverwrite !== 'boolean') {
+                    Utils.raise(TypeError, `expect a boolean as overwrite option`, referrer, context);
+                }
+                if (allowOverwrite) {
+                    return Object.assign(dict, props);
+                } else {
+                    for (const key in props) {
+                        if (!(key in dict)) {
+                            dict[key] = props[key];
+                        }
+                    }
+                    return dict;
+                }
+            })
+        ),
+
     })
 );
