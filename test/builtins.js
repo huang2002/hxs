@@ -102,6 +102,14 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`slice([], '0')`]);
     ctx.expectThrow(TypeError, evalCode, [`slice([], 0, '1')`]);
 
+    ctx.assertDeepEqual(evalCode(`clone([0, 1, 2])`), [0, 1, 2]);
+    ctx.assertDeepEqual(evalCode(`clone([])`), []);
+    ctx.assertDeepEqual(evalCode(`clone({ #foo -> #bar })`), { foo: 'bar' });
+    ctx.assertDeepEqual(evalCode(`clone({})`), {});
+    ctx.expectThrow(TypeError, evalCode, [`clone(2)`]);
+    ctx.expectThrow(TypeError, evalCode, [`clone('')`]);
+    ctx.expectThrow(TypeError, evalCode, [`clone(null)`]);
+
     ctx.assertStrictEqual(evalCode(`forEach`), evalCode(`Array.forEach`));
     ctx.assertStrictEqual(evalCode(`map`), evalCode(`Array.map`));
     ctx.assertStrictEqual(evalCode(`filter`), evalCode(`Array.filter`));

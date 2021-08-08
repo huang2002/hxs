@@ -129,3 +129,19 @@ export const slice = Utils.injectHelp(
         }
     })
 );
+
+
+export const clone = Utils.injectHelp(
+    'clone(array_or_dict)',
+    createFunctionHandler(1, 1, (args, referrer, context) => {
+        const target = args[0];
+        if (Array.isArray(target)) {
+            return target.slice();
+        } else if (Utils.isDict(target)) {
+            return Utils.createDict(target);
+        } else {
+            Utils.raise(TypeError, `expect an array or dict to clone`, referrer, context);
+            return null; // for type checking
+        }
+    })
+);
