@@ -8,6 +8,9 @@ export const booleanOperators: OperatorDefinition[] = [{
     ltr: false,
     handler(buffer, index, context) {
         const operand = evalBufferNode(buffer, index + 1, buffer[index], context);
+        if (typeof operand !== 'boolean') {
+            Utils.raise(TypeError, 'expect a boolean following', buffer[index + 1], context);
+        }
         const valueNode = Utils.createValueNode(!operand, buffer[index]);
         Utils.replaceBuffer(buffer, index, 2, valueNode);
     },

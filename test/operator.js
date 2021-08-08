@@ -15,9 +15,9 @@ module.exports = (ctx) => {
 
     ctx.assertStrictEqual(evalCode(`!true`), false);
     ctx.assertStrictEqual(evalCode(`!false`), true);
-    ctx.assertStrictEqual(evalCode(`!0`), true);
-    ctx.assertStrictEqual(evalCode(`!1`), false);
-    ctx.assertStrictEqual(evalCode(`!!0`), false);
+    ctx.assertStrictEqual(evalCode(`!!false`), false);
+    ctx.expectThrow(TypeError, evalCode, [`!0`]);
+    ctx.expectThrow(TypeError, evalCode, [`!1`]);
 
     ctx.assertStrictEqual(evalCode(`~1011B`), ~0b1011);
     ctx.expectThrow(TypeError, evalCode, [`~true`]);
