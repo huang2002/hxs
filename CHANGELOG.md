@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.22.0
+
+- Add `clone`
+- Add rest arguments
+- Add expansion syntax
+- Add more assignment operators
+- Add type checking to not operator
+- Add `createAdditionalAssignmentOperator`
+- Fix error referrer
+
 ## 0.21.0
 
 - Add default-argument syntax
