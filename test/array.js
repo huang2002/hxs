@@ -142,4 +142,7 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`Array.filter('abc', @() {})`]);
     ctx.expectThrow(TypeError, evalCode, [`Array.filter([], null)`]);
 
+    ctx.assertDeepEqual(evalCode(`[...[0, 1], 2, ...[[3]]]`), [0, 1, 2, [3]]);
+    ctx.expectThrow(TypeError, evalCode, [`[...'abc']`]);
+
 };

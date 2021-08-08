@@ -187,4 +187,30 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`Dict.assign({}, [])`]);
     ctx.expectThrow(TypeError, evalCode, [`Dict.assign({}, {}, 0)`]);
 
+    ctx.assertDeepEqual(
+        evalCode(`
+            foo = {
+                #a -> 0,
+                #b -> 1,
+            };
+            bar = {
+                #b -> -1,
+                #c -> 2,
+            };
+            [
+                { ...foo, ...bar },
+                { ...bar, ...foo },
+                { #a -> 10, ...foo, #c -> 20 },
+            ]
+        `),
+        [
+            { a: 0, b: -1, c: 2 },
+            { a: 0, b: 1, c: 2 },
+            { a: 0, b: 1, c: 20 },
+        ]
+    );
+
+    ctx.expectThrow(TypeError, evalCode, [`{ ...[] }`]);
+    ctx.expectThrow(TypeError, evalCode, [`{ ...'abc' }`]);
+
 };

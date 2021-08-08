@@ -127,7 +127,7 @@ module.exports = (ctx) => {
             product = @(x, y...) { "product(x0, x1...)";
                 p = x;
                 if (Array.sizeOf(y) > 0) {
-                    p *= Function.invoke(product, y);
+                    p *= product(...y);
                 };
                 return(p);
             };
@@ -156,5 +156,8 @@ module.exports = (ctx) => {
 
     ctx.expectThrow(SyntaxError, evalCode, [`@(a, b..., c = null) {}`]);
     ctx.expectThrow(SyntaxError, evalCode, [`(x..., y) => ()`]);
+
+    ctx.expectThrow(SyntaxError, evalCode, [`print(...{}) => ()`]);
+    ctx.expectThrow(SyntaxError, evalCode, [`print(...'') => ()`]);
 
 };

@@ -26,24 +26,38 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
                 }
             }
 
-            let j;
-            for (j = left; j < right; j++) {
-                if (nodes[j].type === 'symbol'
-                    && (nodes[j] as SymbolNode).value === '->') {
-                    break;
+            const firstNode = nodes[left];
+            if (firstNode.type === 'symbol' && firstNode.value === '...') { // expand
+
+                const props = evalExpression(nodes, context, left + 1, right);
+                if (!Utils.isDict(props)) {
+                    Utils.raise(TypeError, 'expect a dict to expand', firstNode, context);
                 }
-            }
-            if (j === right) {
-                Utils.raise(SyntaxError, 'invalid dict creation', nodes[left], context);
-            }
 
-            const name = evalExpression(nodes, context, left, j);
-            if (typeof name !== 'string') {
-                Utils.raise(TypeError, 'expect a string', nodes[left], context);
-            }
+                Object.assign(result, props);
 
-            const value = evalExpression(nodes, context, j + 1, right);
-            result[name as string] = value;
+            } else { // `key -> value` entries
+
+                let j;
+                for (j = left; j < right; j++) {
+                    if (nodes[j].type === 'symbol'
+                        && (nodes[j] as SymbolNode).value === '->') {
+                        break;
+                    }
+                }
+                if (j === right) {
+                    Utils.raise(SyntaxError, 'invalid dict creation', nodes[left], context);
+                }
+
+                const name = evalExpression(nodes, context, left, j);
+                if (typeof name !== 'string') {
+                    Utils.raise(TypeError, 'expect a string', nodes[left], context);
+                }
+
+                const value = evalExpression(nodes, context, j + 1, right);
+                result[name as string] = value;
+
+            }
 
             if (right < nodes.length - 1) {
                 left = right + 1;
