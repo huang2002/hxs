@@ -33,14 +33,13 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
                     break;
                 }
             }
-
             if (j === right) {
-                Utils.raise(SyntaxError, 'invalid dict creation', buffer[index], context);
+                Utils.raise(SyntaxError, 'invalid dict creation', nodes[left], context);
             }
 
             const name = evalExpression(nodes, context, left, j);
             if (typeof name !== 'string') {
-                Utils.raise(TypeError, 'expect a string', buffer[left], context);
+                Utils.raise(TypeError, 'expect a string', nodes[left], context);
             }
 
             const value = evalExpression(nodes, context, j + 1, right);
