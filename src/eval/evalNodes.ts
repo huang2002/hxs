@@ -13,28 +13,35 @@ export const compileNodes = (
     begin = 0,
     end = nodes.length,
 ): CompiledNodes => {
-    const buffers = [];
-    const operatorNodes = [];
-    let left = begin;
-    for (let right = 0; right < end; right++) {
-        const node = nodes[right];
-        if (node.type === 'symbol' && node.value === ';') {
-            const buffer = nodes.slice(left, right);
-            buffers.push(buffer);
-            operatorNodes.push(
-                getOperatorNodes(buffer, context)
-            );
-            left = right + 1;
-        }
+    const buffers: SyntaxNode[][] = [];
+    const operatorNodes: OperatorNode[][] = [];
+    if (begin >= end) {
+        return {
+            buffers,
+            operatorNodes,
+            endsWithSemicolon: true,
+        };
     }
-    const endsWithSemicolon = left >= end;
-    if (!endsWithSemicolon) { // ends without a semicolon
-        const buffer = nodes.slice(left, end);
+    let left = begin;
+    for (let right = 0; right <= end; right++) {
+        if (right < end) {
+            const node = nodes[right];
+            if (node.type !== 'symbol' || node.value !== ';') {
+                continue;
+            }
+        }
+        const buffer = nodes.slice(left, right);
         buffers.push(buffer);
         operatorNodes.push(
             getOperatorNodes(buffer, context)
         );
+        if (right < end - 1) {
+            left = right + 1;
+        } else {
+            break;
+        }
     }
+    const endsWithSemicolon = left >= end;
     return { buffers, operatorNodes, endsWithSemicolon };
 };
 

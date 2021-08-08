@@ -1,4 +1,4 @@
-import { ScriptContext, SyntaxNode } from '../common';
+import { ContextValue, ScriptContext, SyntaxNode } from '../common';
 import { evalExpression } from './evalExpression';
 
 /**
@@ -10,17 +10,24 @@ export const evalList = (
     begin = 0,
     end = nodes.length
 ) => {
-    const result = [];
-    let left = begin;
-    for (let right = 0; right < end; right++) {
-        const node = nodes[right];
-        if (node.type === 'symbol' && node.value === ',') {
-            result.push(evalExpression(nodes, context, left, right));
-            left = right + 1;
-        }
+    const result: ContextValue[] = [];
+    if (begin >= end) {
+        return result;
     }
-    if (left < end) { // ends without a semicolon
-        result.push(evalExpression(nodes, context, left, end));
+    let left = begin;
+    for (let right = 0; right <= end; right++) {
+        if (right < end) {
+            const node = nodes[right];
+            if (node.type !== 'symbol' || node.value !== ',') {
+                continue;
+            }
+        }
+        result.push(evalExpression(nodes, context, left, right));
+        if (right < end - 1) {
+            left = right + 1;
+        } else {
+            break;
+        }
     }
     return result;
 };

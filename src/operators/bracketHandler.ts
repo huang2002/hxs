@@ -11,14 +11,17 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
         const result = Object.create(null) as Dict;
         const nodes = (buffer[index] as SpanNode).body;
 
-        let left = 0;
-        for (let right = 0; right < nodes.length; right++) {
+        if (nodes.length === 0) {
+            buffer[index] = Utils.createValueNode(result, buffer[index]);
+            return;
+        }
 
-            const node = nodes[right];
-            if (node.type !== 'symbol' || node.value !== ',') {
-                if (right + 1 === nodes.length) {
-                    right++;
-                } else {
+        let left = 0;
+        for (let right = 0; right <= nodes.length; right++) {
+
+            if (right < nodes.length) {
+                const node = nodes[right];
+                if (node.type !== 'symbol' || node.value !== ',') {
                     continue;
                 }
             }
@@ -43,7 +46,11 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
             const value = evalExpression(nodes, context, j + 1, right);
             result[name as string] = value;
 
-            left = right + 1;
+            if (right < nodes.length - 1) {
+                left = right + 1;
+            } else {
+                break;
+            }
 
         }
 
