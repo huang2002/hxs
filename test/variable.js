@@ -17,27 +17,42 @@ module.exports = (ctx) => {
 
     ctx.assertShallowEqual(
         evalCode(`
-            a = b = c = d = 3;
+            a = b = c = d = e = f = 3;
             a += a;
             b -= b;
             c *= c;
             d /= d;
-            [a, b, c, d]
+            e %= e;
+            f **= f;
+            [a, b, c, d, e, f]
         `),
-        [6, 0, 9, 1]
+        [3 + 3, 3 - 3, 3 * 3, 3 / 3, 3 % 3, 3 ** 3]
     );
 
     ctx.assertShallowEqual(
         evalCode(`
             x = 1010B;
             y = 1100B;
-            a = b = c = x;
+            a = b = c = d = e = x;
             a &= y;
             b ^= y;
             c |= y;
-            [a, b, c]
+            d <<= 1;
+            e >>= 1;
+            [a, b, c, d, e]
         `),
-        [0b1000, 0b0110, 0b1110]
+        [0b1000, 0b0110, 0b1110, 0b10100, 0b0101]
+    );
+
+    ctx.assertDeepEqual(
+        evalCode(`
+            t = true;
+            f = false;
+            t &&= false;
+            f ||= true;
+            [t, f]
+        `),
+        [false, true]
     );
 
     ctx.expectThrow(SyntaxError, evalCode, [`0 = 0`]);

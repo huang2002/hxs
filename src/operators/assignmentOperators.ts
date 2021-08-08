@@ -62,6 +62,24 @@ export const assignmentOperators: OperatorDefinition[] = [{
         (a, b) => (a / b)
     ),
 }, {
+    symbol: '%=',
+    priority: Infinity,
+    ltr: false,
+    handler: createAdditionalAssignmentOperator<number, number>(
+        'number',
+        'number',
+        (a, b) => (a % b)
+    ),
+}, {
+    symbol: '**=',
+    priority: Infinity,
+    ltr: false,
+    handler: createAdditionalAssignmentOperator<number, number>(
+        'number',
+        'number',
+        (a, b) => (a ** b)
+    ),
+}, {
     symbol: '&=',
     priority: Infinity,
     ltr: false,
@@ -87,5 +105,41 @@ export const assignmentOperators: OperatorDefinition[] = [{
         'number',
         'number',
         (a, b) => (a | b)
+    ),
+}, {
+    symbol: '<<=',
+    priority: Infinity,
+    ltr: false,
+    handler: createAdditionalAssignmentOperator<number, number>(
+        'number',
+        'number',
+        (a, b) => (a << b)
+    ),
+}, {
+    symbol: '>>=',
+    priority: Infinity,
+    ltr: false,
+    handler: createAdditionalAssignmentOperator<number, number>(
+        'number',
+        'number',
+        (a, b) => (a >> b)
+    ),
+}, {
+    symbol: '&&=',
+    priority: Infinity,
+    ltr: false,
+    handler: createAdditionalAssignmentOperator<boolean, boolean>(
+        'boolean',
+        'boolean',
+        (a, b) => (a && b)
+    ),
+}, {
+    symbol: '||=',
+    priority: Infinity,
+    ltr: false,
+    handler: createAdditionalAssignmentOperator<boolean, boolean>(
+        'boolean',
+        'boolean',
+        (a, b) => (a || b)
     ),
 }];
