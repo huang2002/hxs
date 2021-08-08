@@ -1,5 +1,5 @@
 // @ts-check
-const { evalCode, builtins, HELP_SYMBOL } = require('../dist/hxs.umd.js');
+const { evalCode, builtins, HELP_SYMBOL, Utils } = require('../dist/hxs.umd.js');
 
 /**
  * @type {import('3h-test').TestCaseCallback}
@@ -47,14 +47,21 @@ module.exports = (ctx) => {
 
     ctx.assertStrictEqual(evalCode('string(true)'), 'true');
     ctx.assertStrictEqual(evalCode('string(string)'), '<function>');
-    ctx.assertStrictEqual(evalCode(`string('abc')`), "'abc'");
-    ctx.assertStrictEqual(evalCode(`string('"')`), `'"'`);
-    ctx.assertStrictEqual(evalCode(`string("abc")`), "'abc'");
-    ctx.assertStrictEqual(evalCode(`string("isn't")`), `"isn't"`);
-    ctx.assertStrictEqual(evalCode(`string('\\'"\`')`), `'\\'"\`'`);
-    ctx.assertStrictEqual(evalCode('string([string])'), '(size: 1) [<function>]');
-    ctx.assertStrictEqual(evalCode('string([[string]])'), '(size: 1) [<array>]');
-    ctx.assertStrictEqual(evalCode('string({})'), '<dict>');
+    ctx.assertStrictEqual(evalCode(`string('foo')`), 'foo');
+    ctx.assertStrictEqual(evalCode('string([])'), '(size: 0) []');
+    ctx.assertStrictEqual(evalCode('string([string])'), '(size: 1) [\n  <function>,\n]');
+    ctx.assertStrictEqual(evalCode('string([[string]])'), '(size: 1) [\n  <array>,\n]');
+    ctx.assertStrictEqual(evalCode('string([0, 1, 2], 0)'), '<array>');
+    ctx.assertStrictEqual(evalCode('string({})'), '(size: 0) {}');
+    ctx.assertStrictEqual(
+        evalCode(`string({ #a -> 0, #b -> 1 })`),
+        `(size: 2) {\n  'a' -> 0,\n  'b' -> 1,\n}`
+    );
+    ctx.assertStrictEqual(
+        evalCode(`string({ #a -> 0, #b -> 1 }, 1, '\\t')`),
+        `(size: 2) {\n\t'a' -> 0,\n\t...\n}`
+    );
+    ctx.assertStrictEqual(evalCode(`string({ #foo -> 'bar' }, 0)`), '<dict>');
 
     ctx.assertStrictEqual(evalCode('boolean(1)'), true);
     ctx.assertStrictEqual(evalCode('boolean(string)'), true);
@@ -117,5 +124,10 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`keys`), evalCode(`Dict.keys`));
     ctx.assertStrictEqual(evalCode(`invoke`), evalCode(`Function.invoke`));
     ctx.assertStrictEqual(evalCode(`bind`), evalCode(`Function.bind`));
+
+    ctx.assertStrictEqual(Utils.toDisplay(evalCode(`'abc'`)), "'abc'");
+    ctx.assertStrictEqual(Utils.toDisplay(evalCode(`'"'`)), `'"'`);
+    ctx.assertStrictEqual(Utils.toDisplay(evalCode(`"abc"`)), "'abc'");
+    ctx.assertStrictEqual(Utils.toDisplay(evalCode(`"isn't"`)), `"isn't"`);
 
 };

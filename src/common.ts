@@ -213,39 +213,86 @@ export namespace Utils {
         return target;
     };
 
-    export const toString = (value: ContextValue, shallow = false): string => {
+    export const toString = (
+        value: ContextValue,
+        previewSize = 10,
+        previewIndent = '  ',
+    ): string => {
+
         const type = typeof value;
+
         if (type === 'string') {
+
             return value as string;
+
         } else if (type === 'function') {
+
             return '<function>';
+
         } else if (Array.isArray(value)) {
-            if (shallow) {
+
+            if (previewSize <= 0) {
                 return '<array>';
             }
+
             let result = `(size: ${value.length}) [`;
-            if (value.length <= 10) {
-                result += value.map(v => toDisplay(v, true))
-                    .join(', ');
-            } else {
-                result += value.slice(0, 10)
-                    .map(v => toDisplay(v, true))
-                    .join(', ')
-                    + ', ...';
+
+            if (value.length > 0) {
+                result += '\n' + previewIndent;
+                result += value.slice(0, previewSize)
+                    .map(v => (toDisplay(v, 0) + ',\n'))
+                    .join(previewIndent);
+            }
+            if (value.length > previewSize) {
+                result += previewIndent + '...\n';
             }
             result += ']';
+
             return result;
+
         } else if (isDict(value)) {
-            return '<dict>';
+
+            if (previewSize <= 0) {
+                return '<dict>';
+            }
+
+            const entries = Object.entries(value);
+            let result = `(size: ${entries.length}) {`;
+
+            if (entries.length > 0) {
+                result += '\n' + previewIndent;
+                result += entries.slice(0, previewSize)
+                    .map(entry => (
+                        toDisplay(entry[0], 0)
+                        + ' -> '
+                        + toDisplay(entry[1], 0)
+                        + ',\n'
+                    ))
+                    .join(previewIndent);
+                if (entries.length > previewSize) {
+                    result += previewIndent + '...\n';
+                }
+            }
+
+            result += '}';
+
+            return result;
+
         } else {
+
             return String(value);
+
         }
 
     };
 
-    export const toDisplay = (value: ContextValue, shallow?: boolean): string => {
+    export const toDisplay = (
+        value: ContextValue,
+        previewSize?: number,
+        previewIndent?: string,
+    ): string => {
         if (typeof value !== 'string') {
-            return toString(value, shallow);
+            return toString(value, previewSize, previewIndent);
         }
         if (!value.includes("'")) {
             return "'" + value + "'";

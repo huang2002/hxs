@@ -48,9 +48,17 @@ export const number = Utils.injectHelp(
 );
 
 export const string = Utils.injectHelp(
-    'string(value)',
-    createFunctionHandler(1, 1, (args, referrer, context) => {
-        return Utils.toDisplay(args[0]);
+    `string(value, preview_size = 10, preview_indent = '  ')`,
+    createFunctionHandler(1, 3, (args, referrer, context) => {
+        const previewSize = args.length >= 2 ? args[1] as number : 10;
+        if (typeof previewSize !== 'number') {
+            Utils.raise(TypeError, 'expect a number as preview size', referrer, context);
+        }
+        const previewIndent = args.length >= 3 ? args[2] as string : '  ';
+        if (typeof previewIndent !== 'string') {
+            Utils.raise(TypeError, 'expect a string as preview indent', referrer, context);
+        }
+        return Utils.toString(args[0], previewSize, previewIndent);
     })
 );
 
