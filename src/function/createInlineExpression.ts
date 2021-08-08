@@ -38,6 +38,9 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
                     scopeStore.set(argDefinitions[i].name, argDefinitions[i].default);
                 }
             }
+            if (argList.restArg !== null) {
+                scopeStore.set(argList.restArg, args.slice(argDefinitions.length));
+            }
 
             scopeStore.set('_', null);
             scopeStore.set('this', null);

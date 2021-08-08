@@ -122,4 +122,39 @@ module.exports = (ctx) => {
     ctx.expectThrow(SyntaxError, evalCode, [`@(a, b = 1, c) {}`]);
     ctx.expectThrow(SyntaxError, evalCode, [`(x = 1, y) => ()`]);
 
+    ctx.assertStrictEqual(
+        evalCode(`
+            product = @(x, y...) { "product(x0, x1...)";
+                p = x;
+                if (Array.sizeOf(y) > 0) {
+                    p *= Function.invoke(product, y);
+                };
+                return(p);
+            };
+            product(1, 2, 3, 4, 5)
+        `),
+        1 * 2 * 3 * 4 * 5
+    );
+
+    ctx.assertDeepEqual(
+        evalCode(`
+            test = (x, y = 1, z...) => ([x, y, z]);
+            [
+                test(1),
+                test(1, 2),
+                test(1, 2, 3),
+                test(1, 2, 3, 4),
+            ]
+        `),
+        [
+            [1, 1, []],
+            [1, 2, []],
+            [1, 2, [3]],
+            [1, 2, [3, 4]],
+        ]
+    );
+
+    ctx.expectThrow(SyntaxError, evalCode, [`@(a, b..., c = null) {}`]);
+    ctx.expectThrow(SyntaxError, evalCode, [`(x..., y) => ()`]);
+
 };

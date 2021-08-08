@@ -38,6 +38,9 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
                     scopeStore.set(argDefinitions[i].name, argDefinitions[i].default);
                 }
             }
+            if (argList.restArg !== null) {
+                scopeStore.set(argList.restArg, args.slice(argDefinitions.length));
+            }
 
             const RETURN_FLAG = Symbol('hxs_return_flag');
             const forwardVariables = new Set<string>();

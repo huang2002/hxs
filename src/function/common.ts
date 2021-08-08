@@ -9,19 +9,17 @@ export type FunctionCallback = (
     thisArg: ContextValue,
 ) => ContextValue;
 
-const raiseArgError = (referrer: SyntaxNode, context: ScriptContext) => {
-    Utils.raise(SyntaxError, 'invalid argument declaration', referrer, context);
-};
-
 export interface ArgDefinition {
     name: string;
     required: boolean;
+    rest: boolean;
     default: ContextValue;
 }
 
 export interface ArgList {
     args: ArgDefinition[];
     requiredCount: number;
+    restArg: string | null;
 }
 
 /**
@@ -35,29 +33,38 @@ export const parseArg = (
     allowRequired: boolean,
 ): ArgDefinition => {
     const firstNode = rawArgs[begin] as WordNode;
-    if (firstNode.type !== 'word') {
-        raiseArgError(firstNode, context);
+    const secondNode = rawArgs[begin + 1];
+    if (!firstNode || firstNode.type !== 'word') {
+        Utils.raise(SyntaxError, 'expect a word as argument name', firstNode, context);
     }
     if (end - begin === 1) {
         if (!allowRequired) {
-            raiseArgError(firstNode, context);
+            Utils.raise(SyntaxError, 'required argument must be before optional ones', firstNode, context);
         }
         return {
             name: firstNode.value,
             required: true,
+            rest: false,
             default: null,
         };
-    } else {
-        if (end - begin === 2) {
-            raiseArgError(firstNode, context);
-        }
-        const secondNode = rawArgs[begin + 1];
-        if (secondNode.type !== 'symbol' || secondNode.value !== '=') {
-            raiseArgError(firstNode, context);
+    } else if (end - begin === 2) {
+        if (secondNode.type !== 'symbol' || secondNode.value !== '...') {
+            Utils.raise(SyntaxError, 'invalid argument declaration', firstNode, context);
         }
         return {
             name: firstNode.value,
             required: false,
+            rest: true,
+            default: null,
+        };
+    } else {
+        if (secondNode.type !== 'symbol' || secondNode.value !== '=') {
+            Utils.raise(SyntaxError, 'invalid argument declaration', firstNode, context);
+        }
+        return {
+            name: firstNode.value,
+            required: false,
+            rest: false,
             default: evalExpression(rawArgs, context, begin + 2, end),
         };
     }
@@ -70,31 +77,59 @@ export const parseArgList = (
     rawArgList: readonly SyntaxNode[],
     context: ScriptContext,
 ): ArgList => {
+    if (rawArgList.length === 0) {
+        return {
+            args: [],
+            requiredCount: 0,
+            restArg: null,
+        };
+    }
     const args = [];
     let allowRequired = true;
     let requiredCount = 0;
     let l = 0;
     let argDef;
-    for (let r = 0; r < rawArgList.length; r++) {
-        const node = rawArgList[r];
-        if (node.type !== 'symbol' || node.value !== ',') {
-            continue;
+    let restArg = null;
+    for (let r = 0; r <= rawArgList.length; r++) {
+        if (r < rawArgList.length) {
+            const node = rawArgList[r];
+            if (node.type !== 'symbol' || node.value !== ',') {
+                continue;
+            }
+        }
+        if (restArg !== null) {
+            Utils.raise(SyntaxError, 'rest argument must be the last one', rawArgList[l], context);
         }
         argDef = parseArg(rawArgList, l, r, context, allowRequired);
-        args.push(argDef);
-        if (argDef.required) {
-            requiredCount++;
+        if (argDef.rest) {
+            restArg = argDef.name;
         } else {
-            allowRequired = false;
+            args.push(argDef);
+            if (argDef.required) {
+                requiredCount++;
+            } else {
+                allowRequired = false;
+            }
         }
-        l = r + 1;
-    }
-    if (l < rawArgList.length) { // ends without a comma
-        argDef = parseArg(rawArgList, l, rawArgList.length, context, allowRequired);
-        args.push(argDef);
-        if (argDef.required) {
-            requiredCount++;
+        if (r < rawArgList.length - 1) {
+            l = r + 1;
+        } else {
+            break;
         }
     }
-    return { args, requiredCount };
+    // if (l < rawArgList.length) { // ends without a comma
+    //     if (restArg !== null) {
+    //         Utils.raise(SyntaxError, 'rest argument must be the last one', rawArgList[l], context);
+    //     }
+    //     argDef = parseArg(rawArgList, l, rawArgList.length, context, allowRequired);
+    //     if (argDef.rest) {
+    //         restArg = argDef.name;
+    //     } else {
+    //         args.push(argDef);
+    //         if (argDef.required) {
+    //             requiredCount++;
+    //         }
+    //     }
+    // }
+    return { args, requiredCount, restArg };
 };
