@@ -14,6 +14,7 @@ test(null, {
     if: require('./if.js'),
     loop: require('./loop.js'),
     error: require('./error.js'),
+    class: require('./class.js'),
     builtins: require('./builtins.js'),
     hello_world: require('./hello_world.js'),
 

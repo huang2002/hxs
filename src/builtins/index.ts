@@ -13,6 +13,7 @@ import { help, injectHelp } from './help';
 import { delete_, exist } from './variable';
 import { clone, print, remove, set, sizeOf, slice } from './misc';
 import { builtinRaise, builtinTry } from './error';
+import { builtinClass } from './class';
 
 export const builtins: ContextStore = new Map<string, ContextValue>([
 
@@ -28,6 +29,7 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['for', builtinFor],
     ['raise', builtinRaise],
     ['try', builtinTry],
+    ['class', builtinClass],
 
     ['Array', builtinArray],
     ['String', builtinString],
