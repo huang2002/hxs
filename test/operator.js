@@ -8,6 +8,8 @@ module.exports = (ctx) => {
 
     ctx.assertStrictEqual(evalCode(`(666)`), 666);
 
+    ctx.assertStrictEqual(evalCode(`666;`), null);
+
     ctx.assertStrictEqual(evalCode(`2 ** 3`), 8);
     ctx.assertStrictEqual(evalCode(`2 ** 3 ** 4`), 2 ** 3 ** 4);
     ctx.expectThrow(TypeError, evalCode, [`'2' ** 3`]);

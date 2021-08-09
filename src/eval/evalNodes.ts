@@ -23,7 +23,8 @@ export const compileNodes = (
         };
     }
     let left = begin;
-    for (let right = 0; right <= end; right++) {
+    let right;
+    for (right = 0; right <= end; right++) {
         if (right < end) {
             const node = nodes[right];
             if (node.type !== 'symbol' || node.value !== ';') {
@@ -41,7 +42,7 @@ export const compileNodes = (
             break;
         }
     }
-    const endsWithSemicolon = left >= end;
+    const endsWithSemicolon = right < end;
     return { buffers, operatorNodes, endsWithSemicolon };
 };
 
