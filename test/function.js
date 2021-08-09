@@ -65,7 +65,7 @@ module.exports = (ctx) => {
                 forward([#b]);
                 b = this;
             };
-            Function.invoke(f, [], 666);
+            Function.invoke(f, null, 666);
             b
         `),
         666
@@ -96,6 +96,18 @@ module.exports = (ctx) => {
             ]
         `),
         [0, 0, 1, 1]
+    );
+
+    ctx.assertDeepEqual(
+        evalCode(`
+            f = @() {
+                g = () => ([this, that]);
+                that = this;
+                return(invoke(g, null, 0));
+            };
+            invoke(f, null, 1)
+        `),
+        [0, 1]
     );
 
     ctx.assertDeepEqual(

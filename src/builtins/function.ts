@@ -7,29 +7,31 @@ export const builtinFunction = Utils.injectHelp(
     Utils.createDict({
 
         invoke: Utils.injectHelp(
-            'Function.invoke(function, args, thisArg = null)',
-            createFunctionHandler(2, 3, (args, referrer, context) => {
+            'Function.invoke(function, args = null, thisArg = null)',
+            createFunctionHandler(1, 3, (args, referrer, context) => {
                 const fn = args[0];
                 if (typeof fn !== 'function') {
                     Utils.raise(TypeError, 'expect a function to invoke', referrer, context);
                 }
-                const fnArgs = args[1] as ContextValue[];
-                if (!Array.isArray(fnArgs)) {
-                    Utils.raise(TypeError, 'expect an array as arguments', referrer, context);
+                const fnArgs = args.length > 1 ? args[1] as (ContextValue[]) | null : null;
+                if (fnArgs !== null && !Array.isArray(fnArgs)) {
+                    Utils.raise(TypeError, 'expect an array or null as arguments', referrer, context);
                 }
                 const _fnArgs: SyntaxNode[] = [];
-                for (let i = 0; i < fnArgs.length; i++) {
-                    const commaNode: SymbolNode = {
-                        type: 'symbol',
-                        value: ',',
-                        line: referrer.line,
-                        column: referrer.column,
-                        offset: referrer.offset,
-                    };
-                    _fnArgs.push(
-                        Utils.createValueNode(fnArgs[i], referrer)
-                    );
-                    _fnArgs.push(commaNode);
+                if (fnArgs) {
+                    for (let i = 0; i < fnArgs.length; i++) {
+                        const commaNode: SymbolNode = {
+                            type: 'symbol',
+                            value: ',',
+                            line: referrer.line,
+                            column: referrer.column,
+                            offset: referrer.offset,
+                        };
+                        _fnArgs.push(
+                            Utils.createValueNode(fnArgs[i], referrer)
+                        );
+                        _fnArgs.push(commaNode);
+                    }
                 }
                 const thisArg = args.length === 3 ? args[2] : null;
                 return (fn as FunctionHandler)(_fnArgs, referrer, context, thisArg);
