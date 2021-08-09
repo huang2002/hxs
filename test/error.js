@@ -15,7 +15,11 @@ module.exports = (ctx) => {
                 try {
                     foo();
                 } (err) {
-                    return(err);
+                    try {
+                        return(err);
+                    } (returnFlag) {
+                        return('you caught return flag');
+                    }
                 }
             };
             bar()

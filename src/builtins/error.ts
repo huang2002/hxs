@@ -39,6 +39,9 @@ export const builtinTry = Utils.injectHelp(
                 try {
                     tryBody([], referrer, context, thisArg);
                 } catch (error) {
+                    if (typeof error === 'symbol') {
+                        throw error;
+                    }
                     Utils.injectTemp(_context.store, {
                         [errName]: String(error),
                     }, () => {
