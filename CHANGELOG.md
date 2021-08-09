@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.24.0
+
+- Improve `Function.invoke`
+- Fix internal flag catching
+- Optimize evaluation
+
 ## 0.23.0
 
 - Add `class`
