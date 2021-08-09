@@ -69,9 +69,15 @@ export const getOperatorNodes = (
 
 export const executeOperatorNodes = (
     buffer: SyntaxNode[],
-    operatorNodes: readonly OperatorNode[],
+    operatorNodes: OperatorNode[],
     context: ScriptContext,
+    optimizeOperators = true,
 ): ContextValue => {
+
+    let extraOperatorIndices: Set<number> | null = null;
+    if (optimizeOperators) {
+        extraOperatorIndices = new Set();
+    }
 
     // execute operators
     for (let i = 0; i < operatorNodes.length; i++) {
@@ -84,15 +90,30 @@ export const executeOperatorNodes = (
                     : operatorNode.start
             )!;
             handler(buffer, index, context);
+        } else if (optimizeOperators) {
+            extraOperatorIndices!.add(i);
+        }
+    }
+
+    // remove extra operators
+    if (extraOperatorIndices) {
+        const optimizedOperators = operatorNodes.filter(
+            (_, i) => !extraOperatorIndices!.has(i)
+        );
+        if (optimizedOperators.length < operatorNodes.length) {
+            for (let i = 0; i < optimizedOperators.length; i++) {
+                operatorNodes[i] = optimizedOperators[i];
+            }
+            operatorNodes.length = optimizedOperators.length;
         }
     }
 
     // check result
     if (buffer.length > 1) {
         Utils.raise(SyntaxError, 'unrecognized syntax', buffer[1], context);
-        return null; // for type checking (ts v4.3.4)
+        return null; // for type checking
     } else if (buffer.length === 0) {
-        return null;
+        return null; // for type checking
     } else {
         return evalNode(buffer[0], context);
     }
@@ -115,6 +136,7 @@ export const evalExpression = (
     return executeOperatorNodes(
         buffer,
         getOperatorNodes(buffer, context),
-        context
+        context,
+        false,
     );
 };

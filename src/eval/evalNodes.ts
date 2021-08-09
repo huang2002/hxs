@@ -3,7 +3,7 @@ import { getOperatorNodes, executeOperatorNodes } from './evalExpression';
 
 export type CompiledNodes = Readonly<{
     buffers: readonly (SyntaxNode[])[];
-    operatorNodes: readonly (readonly OperatorNode[])[];
+    operatorNodes: readonly (OperatorNode[])[];
     endsWithSemicolon: boolean;
 }>;
 
@@ -50,6 +50,7 @@ export const evalCompiledNodes = (
     compiledNodes: CompiledNodes,
     context: ScriptContext,
     copyBuffers = false,
+    optimizeOperators = true,
 ) => {
     const { buffers, operatorNodes, endsWithSemicolon } = compiledNodes;
     let lastValue = null;
@@ -58,6 +59,7 @@ export const evalCompiledNodes = (
             copyBuffers ? buffers[i].slice() : buffers[i],
             operatorNodes[i],
             context,
+            optimizeOperators,
         );
         context.store.set('_', lastValue);
     }
@@ -75,6 +77,8 @@ export const evalNodes = (
 ) => (
     evalCompiledNodes(
         compileNodes(nodes, context, begin, end),
-        context
+        context,
+        false,
+        false,
     )
 );
