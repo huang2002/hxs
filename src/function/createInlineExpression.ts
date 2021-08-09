@@ -27,7 +27,7 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
     const func = createFunctionHandler(
         argList.requiredCount,
         Infinity,
-        (args, referrer, _context) => {
+        (args, referrer, _context, thisArg) => {
 
             const scopeStore = new Map(context.store);
             const argDefinitions = argList.args;
@@ -43,7 +43,7 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
             }
 
             scopeStore.set('_', null);
-            scopeStore.set('this', null);
+            scopeStore.set('this', thisArg);
             scopeStore.set('arguments', args);
 
             const scopeContext: ScriptContext = {

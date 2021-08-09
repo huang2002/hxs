@@ -85,10 +85,17 @@ module.exports = (ctx) => {
             foo = @() {
                 return(this);
             };
-            bar = Function.bind(foo, 0);
-            [Function.invoke(bar, [1]), Function.bind(bar, 2)()]
+            bar = () => (this);
+            _foo = Function.bind(foo, 0);
+            _bar = Function.bind(bar, 1);
+            [
+                Function.invoke(_foo, [1]),
+                Function.bind(_foo, [2])(),
+                Function.invoke(_bar, [3]),
+                _bar(),
+            ]
         `),
-        [0, 0]
+        [0, 0, 1, 1]
     );
 
     ctx.assertDeepEqual(
