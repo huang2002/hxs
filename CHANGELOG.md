@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.23.0
+
+- Add `class`
+- Add `this` to expressions
+- Improve value display
+- Fix evaluation result
+
 ## 0.22.0
 
 - Add `clone`
