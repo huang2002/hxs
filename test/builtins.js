@@ -124,6 +124,7 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`keys`), evalCode(`Dict.keys`));
     ctx.assertStrictEqual(evalCode(`invoke`), evalCode(`Function.invoke`));
     ctx.assertStrictEqual(evalCode(`bind`), evalCode(`Function.bind`));
+    ctx.assertStrictEqual(evalCode(`isNaN`), evalCode(`Number.isNaN`));
 
     ctx.assertStrictEqual(Utils.toDisplay(evalCode(`'abc'`)), "'abc'");
     ctx.assertStrictEqual(Utils.toDisplay(evalCode(`'"'`)), `'"'`);

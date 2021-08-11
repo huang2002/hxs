@@ -64,5 +64,6 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['assign', builtinDict.assign],
     ['invoke', builtinFunction.invoke],
     ['bind', builtinFunction.bind],
+    ['isNaN', builtinNumber.isNaN],
 
 ]);
