@@ -48,5 +48,16 @@ export const builtinNumber = Utils.injectHelp(
             })
         ),
 
+        isNaN: Utils.injectHelp(
+            'Number.isNaN(number)',
+            createFunctionHandler(1, 1, (args, referrer, context) => {
+                const number = args[0] as number;
+                if (typeof number !== 'number') {
+                    Utils.raise(TypeError, 'expect a number', referrer, context);
+                }
+                return Number.isNaN(number);
+            })
+        ),
+
     })
 );

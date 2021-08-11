@@ -27,4 +27,9 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`Number.isInteger('1011')`]);
     ctx.expectThrow(TypeError, evalCode, [`Number.isInteger('Infinity')`]);
 
+    ctx.assertStrictEqual(evalCode(`Number.isNaN(NaN)`), true);
+    ctx.assertStrictEqual(evalCode(`Number.isNaN(1011)`), false);
+    ctx.expectThrow(TypeError, evalCode, [`Number.isNaN('1011')`]);
+    ctx.expectThrow(TypeError, evalCode, [`Number.isNaN('NaN')`]);
+
 };
