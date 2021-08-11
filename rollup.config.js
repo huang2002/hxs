@@ -1,15 +1,16 @@
 import babel from "@rollup/plugin-babel";
+import nodeResolve from "@rollup/plugin-node-resolve";
 
 const input = './js/index.js';
 
 export default [
     {
         input,
-        external: ['3h-ast'],
         plugins: [
+            nodeResolve(),
             babel({
                 babelHelpers: 'bundled'
-            })
+            }),
         ],
         output: {
             globals: {
@@ -17,15 +18,17 @@ export default [
             },
             format: 'umd',
             name: 'HXS',
-            file: './dist/hxs.umd.js'
+            file: './dist/hxs.umd.js',
         }
     },
     {
         input,
-        external: ['3h-ast'],
+        plugins: [
+            nodeResolve(),
+        ],
         output: {
             format: 'esm',
-            file: './dist/hxs.js'
-        }
-    }
+            file: './dist/hxs.js',
+        },
+    },
 ];
