@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.26.0
+
+- Add `Number.isNaN` & `isNaN`
+- Add `Number.parseInt`
+
 ## 0.25.0
 
 - Pack `3h-ast` into final bundle
