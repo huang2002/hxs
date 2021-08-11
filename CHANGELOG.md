@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.25.0
+
+- Pack `3h-ast` into final bundle
+
 ## 0.24.0
 
 - Improve `Function.invoke`
