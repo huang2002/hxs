@@ -32,4 +32,13 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`Number.isNaN('1011')`]);
     ctx.expectThrow(TypeError, evalCode, [`Number.isNaN('NaN')`]);
 
+    ctx.assertStrictEqual(evalCode(`Number.parseInt('666')`), 666);
+    ctx.assertStrictEqual(evalCode(`Number.parseInt('666', 16)`), 0x666);
+    ctx.assertDeepEqual(evalCode(`Number.parseInt('666', 6)`), NaN);
+    ctx.assertDeepEqual(evalCode(`Number.parseInt('0x666')`), NaN);
+    ctx.assertDeepEqual(evalCode(`Number.parseInt('Infinity')`), NaN);
+    ctx.expectThrow(TypeError, evalCode, [`Number.parseInt(666)`]);
+    ctx.expectThrow(TypeError, evalCode, [`Number.parseInt('666', '666')`]);
+    ctx.expectThrow(RangeError, evalCode, [`Number.parseInt('666', NaN)`]);
+
 };
