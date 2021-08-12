@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.27.0
+
+- Add `indexOf`, `lastIndexOf` & `includes`
+- Add shortcut syntax
+
 ## 0.26.0
 
 - Add `Number.isNaN` & `isNaN`
