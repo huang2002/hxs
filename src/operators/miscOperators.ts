@@ -1,5 +1,10 @@
-import { WordNode } from '3h-ast';
-import { ContextValue, Dict, Utils } from '../common';
+import { SymbolNode, WordNode } from '3h-ast';
+import { builtinArray } from '../builtins/array';
+import { builtinDict } from '../builtins/dict';
+import { builtinFunction } from '../builtins/function';
+import { builtinNumber } from '../builtins/number';
+import { builtinString } from '../builtins/string';
+import { ContextValue, Dict, FunctionHandler, Utils } from '../common';
 import { evalBufferNode } from "../eval/evalBufferNode";
 import { OperatorDefinition } from './common';
 
@@ -28,6 +33,89 @@ export const miscOperators: OperatorDefinition[] = [{
         }
 
         const valueNode = Utils.createValueNode(value, buffer[index]);
+        Utils.replaceBuffer(buffer, index - 1, 3, valueNode);
+
+    },
+}, {
+    symbol: ':',
+    priority: 1,
+    ltr: true,
+    handler(buffer, index, context) {
+
+        const target = evalBufferNode(buffer, index - 1, buffer[index], context);
+
+        const nameNode = buffer[index + 1];
+        if (!nameNode || nameNode.type !== 'word') {
+            Utils.raise(TypeError, 'expect a word following', buffer[index], context);
+        }
+
+        let dict: Dict | null = null;
+        switch (typeof target) {
+            case 'number': {
+                dict = builtinNumber;
+                break;
+            }
+            case 'string': {
+                dict = builtinString;
+                break;
+            }
+            case 'boolean': {
+                dict = null;
+                break;
+            }
+            case 'function': {
+                dict = builtinFunction;
+                break;
+            }
+            case 'object': {
+                if (!target) {
+                    dict = null;
+                } else if (Array.isArray(target)) {
+                    dict = builtinArray;
+                } else if (Utils.isDict(target)) {
+                    dict = builtinDict;
+                }
+                break;
+            }
+            default: {
+                dict = null;
+            }
+        }
+
+        const name = (nameNode as WordNode).value;
+        let callback: ContextValue;
+        if (dict && name in dict) {
+            callback = dict[name];
+        } else {
+            callback = null;
+        }
+
+        if (typeof callback !== 'function') {
+            Utils.raise(TypeError, 'expect a function', buffer[index], context);
+        }
+
+        const COMMA_NODE: SymbolNode = {
+            type: 'symbol',
+            value: ',',
+            line: buffer[index].line,
+            column: buffer[index].column,
+            offset: buffer[index].offset,
+        };
+
+        const handler: FunctionHandler = (rawArgs, referrer, _context, thisArg) => {
+            return (callback as FunctionHandler)(
+                [
+                    Utils.createValueNode(target, referrer),
+                    COMMA_NODE,
+                    ...rawArgs,
+                ],
+                referrer,
+                _context,
+                thisArg,
+            );
+        };
+
+        const valueNode = Utils.createValueNode(handler, buffer[index]);
         Utils.replaceBuffer(buffer, index - 1, 3, valueNode);
 
     },
