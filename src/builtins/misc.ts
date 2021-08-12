@@ -1,4 +1,4 @@
-import { Utils } from '../common';
+import { ContextValue, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
 
 export const print = Utils.injectHelp(
@@ -143,5 +143,50 @@ export const clone = Utils.injectHelp(
             Utils.raise(TypeError, `expect an array or dict to clone`, referrer, context);
             return null; // for type checking
         }
+    })
+);
+
+export const indexOf = Utils.injectHelp(
+    'indexOf(array_or_string, value_or_substring)',
+    createFunctionHandler(2, 2, (args, referrer, context) => {
+        const target = args[0] as string | (ContextValue[]);
+        const targetIsString = typeof target === 'string';
+        if (!targetIsString && !Array.isArray(target)) {
+            Utils.raise(TypeError, 'expect an array to search in', referrer, context);
+        }
+        if (targetIsString && typeof args[1] !== 'string') {
+            Utils.raise(TypeError, 'expect another string to search for', referrer, context);
+        }
+        return target.indexOf(args[1] as string);
+    })
+);
+
+export const lastIndexOf = Utils.injectHelp(
+    'lastIndexOf(array_or_string, value_or_substring)',
+    createFunctionHandler(2, 2, (args, referrer, context) => {
+        const target = args[0] as string | (ContextValue[]);
+        const targetIsString = typeof target === 'string';
+        if (!targetIsString && !Array.isArray(target)) {
+            Utils.raise(TypeError, 'expect an array to search in', referrer, context);
+        }
+        if (targetIsString && typeof args[1] !== 'string') {
+            Utils.raise(TypeError, 'expect another string to search for', referrer, context);
+        }
+        return target.lastIndexOf(args[1] as string);
+    })
+);
+
+export const includes = Utils.injectHelp(
+    'includes(array_or_string, value_or_substring)',
+    createFunctionHandler(2, 2, (args, referrer, context) => {
+        const target = args[0] as string | (ContextValue[]);
+        const targetIsString = typeof target === 'string';
+        if (!targetIsString && !Array.isArray(target)) {
+            Utils.raise(TypeError, 'expect an array to search in', referrer, context);
+        }
+        if (targetIsString && typeof args[1] !== 'string') {
+            Utils.raise(TypeError, 'expect another string to search for', referrer, context);
+        }
+        return target.includes(args[1] as string);
     })
 );

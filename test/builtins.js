@@ -117,6 +117,33 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`clone('')`]);
     ctx.expectThrow(TypeError, evalCode, [`clone(null)`]);
 
+    ctx.assertStrictEqual(evalCode(`indexOf([0, '0', 0], 0)`), 0);
+    ctx.assertStrictEqual(evalCode(`indexOf([0, '0', 0], '0')`), 1);
+    ctx.assertStrictEqual(evalCode(`indexOf([0, '0', 0], 1)`), -1);
+    ctx.assertStrictEqual(evalCode(`indexOf('abab', 'a')`), 0);
+    ctx.assertStrictEqual(evalCode(`indexOf('abab', 'b')`), 1);
+    ctx.assertStrictEqual(evalCode(`indexOf('abab', 'c')`), -1);
+    ctx.expectThrow(TypeError, evalCode, [`indexOf({}, 0)`]);
+    ctx.expectThrow(TypeError, evalCode, [`indexOf('012', 0)`]);
+
+    ctx.assertStrictEqual(evalCode(`lastIndexOf([0, '0', 0], 0)`), 2);
+    ctx.assertStrictEqual(evalCode(`lastIndexOf([0, '0', 0], '0')`), 1);
+    ctx.assertStrictEqual(evalCode(`lastIndexOf([0, '0', 0], 1)`), -1);
+    ctx.assertStrictEqual(evalCode(`lastIndexOf('abab', 'a')`), 2);
+    ctx.assertStrictEqual(evalCode(`lastIndexOf('abab', 'b')`), 3);
+    ctx.assertStrictEqual(evalCode(`lastIndexOf('abab', 'c')`), -1);
+    ctx.expectThrow(TypeError, evalCode, [`lastIndexOf({}, 0)`]);
+    ctx.expectThrow(TypeError, evalCode, [`lastIndexOf('012', 0)`]);
+
+    ctx.assertStrictEqual(evalCode(`includes([0, '0', 0], 0)`), true);
+    ctx.assertStrictEqual(evalCode(`includes([0, '0', 0], '0')`), true);
+    ctx.assertStrictEqual(evalCode(`includes([0, '0', 0], 1)`), false);
+    ctx.assertStrictEqual(evalCode(`includes('abab', 'a')`), true);
+    ctx.assertStrictEqual(evalCode(`includes('abab', 'b')`), true);
+    ctx.assertStrictEqual(evalCode(`includes('abab', 'c')`), false);
+    ctx.expectThrow(TypeError, evalCode, [`includes({}, 0)`]);
+    ctx.expectThrow(TypeError, evalCode, [`includes('012', 0)`]);
+
     ctx.assertStrictEqual(evalCode(`forEach`), evalCode(`Array.forEach`));
     ctx.assertStrictEqual(evalCode(`map`), evalCode(`Array.map`));
     ctx.assertStrictEqual(evalCode(`filter`), evalCode(`Array.filter`));

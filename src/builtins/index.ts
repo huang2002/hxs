@@ -11,7 +11,7 @@ import { builtinNumber } from './number';
 import { boolean, number, string, typeOf } from './types';
 import { help, injectHelp } from './help';
 import { delete_, exist } from './variable';
-import { clone, print, remove, set, sizeOf, slice } from './misc';
+import { clone, includes, indexOf, lastIndexOf, print, remove, set, sizeOf, slice } from './misc';
 import { builtinRaise, builtinTry } from './error';
 import { builtinClass } from './class';
 
@@ -55,6 +55,9 @@ export const builtins: ContextStore = new Map<string, ContextValue>([
     ['sizeOf', sizeOf],
     ['slice', slice],
     ['clone', clone],
+    ['indexOf', indexOf],
+    ['lastIndexOf', lastIndexOf],
+    ['includes', includes],
 
     ['forEach', builtinArray.forEach],
     ['map', builtinArray.map],
