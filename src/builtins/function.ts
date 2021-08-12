@@ -19,18 +19,20 @@ export const builtinFunction = Utils.injectHelp(
                 }
                 const _fnArgs: SyntaxNode[] = [];
                 if (fnArgs) {
+                    const COMMA_NODE: SymbolNode = {
+                        type: 'symbol',
+                        value: ',',
+                        line: referrer.line,
+                        column: referrer.column,
+                        offset: referrer.offset,
+                    };
                     for (let i = 0; i < fnArgs.length; i++) {
-                        const commaNode: SymbolNode = {
-                            type: 'symbol',
-                            value: ',',
-                            line: referrer.line,
-                            column: referrer.column,
-                            offset: referrer.offset,
-                        };
+                        if (i > 0) {
+                            _fnArgs.push(COMMA_NODE);
+                        }
                         _fnArgs.push(
                             Utils.createValueNode(fnArgs[i], referrer)
                         );
-                        _fnArgs.push(commaNode);
                     }
                 }
                 const thisArg = args.length === 3 ? args[2] : null;
