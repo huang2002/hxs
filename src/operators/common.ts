@@ -39,8 +39,8 @@ export const createAdditionalAssignmentOperator = <
     T extends ContextValue,
     U extends ContextValue
 >(
-    typeA: string,
-    typeB: string,
+    typeA: string | null,
+    typeB: string | null,
     handler: (a: T, b: U) => ContextValue,
 ): SyntaxHandler => (
     (buffer, index, context) => {
@@ -60,12 +60,12 @@ export const createAdditionalAssignmentOperator = <
         }
 
         const a = context.store.get(name) as T;
-        if (typeof a !== typeA) {
+        if (typeA && typeof a !== typeA) {
             Utils.raise(SyntaxError, `expect a ${typeA}`, buffer[index - 1], context);
         }
 
         const b = evalExpression(buffer, context, index + 1) as U;
-        if (typeof b !== typeB) {
+        if (typeB && typeof b !== typeB) {
             Utils.raise(SyntaxError, `expect a ${typeB}`, buffer[index + 1], context);
         }
 
