@@ -116,7 +116,7 @@ module.exports = (ctx) => {
                 return(a + b);
             };
             g = (x, y = 2, z = 3) => (x + y + z);
-            h = (t = 0) => (t);
+            h = (t?) => (t);
             [
                 f(1, 2),
                 f(1),
@@ -134,7 +134,7 @@ module.exports = (ctx) => {
             0 + 1 + 3,
             1 + 2 + 3,
             6,
-            0,
+            null,
         ]
     );
 

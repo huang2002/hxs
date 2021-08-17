@@ -1,4 +1,4 @@
-import { WordNode } from '3h-ast';
+import { SymbolNode, WordNode } from '3h-ast';
 import { ContextValue, SyntaxNode, ScriptContext, Utils } from '../common';
 import { evalExpression } from '../eval/evalExpression';
 
@@ -48,13 +48,16 @@ export const parseArg = (
             default: null,
         };
     } else if (end - begin === 2) {
-        if (secondNode.type !== 'symbol' || secondNode.value !== '...') {
+        if (
+            secondNode.type !== 'symbol'
+            || (secondNode.value !== '...' && secondNode.value !== '?')
+        ) {
             Utils.raise(SyntaxError, 'invalid argument declaration', firstNode, context);
         }
         return {
             name: firstNode.value,
             required: false,
-            rest: true,
+            rest: (secondNode as SymbolNode).value === '...',
             default: null,
         };
     } else {
