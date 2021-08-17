@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.28.0
+
+- Add `??` & `??=`
+- Add optional args without defaults
+- Improve internal APIs
+
 ## 0.27.0
 
 - Add `indexOf`, `lastIndexOf` & `includes`
