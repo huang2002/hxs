@@ -120,6 +120,16 @@ export const miscOperators: OperatorDefinition[] = [{
 
     },
 }, {
+    symbol: '??',
+    priority: 12,
+    ltr: true,
+    handler(buffer, index, context) {
+        const a = evalBufferNode(buffer, index - 1, buffer[index], context);
+        const b = evalBufferNode(buffer, index + 1, buffer[index], context);
+        const valueNode = Utils.createValueNode(a ?? b, buffer[index]);
+        Utils.replaceBuffer(buffer, index - 1, 3, valueNode);
+    },
+}, {
     symbol: '#',
     priority: 2,
     ltr: true,

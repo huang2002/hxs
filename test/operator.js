@@ -61,6 +61,11 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`false || true`), true);
     ctx.assertStrictEqual(evalCode(`false || false`), false);
 
+    ctx.assertStrictEqual(evalCode(`1 ?? 0`), 1);
+    ctx.assertStrictEqual(evalCode(`0 ?? 1`), 0);
+    ctx.assertStrictEqual(evalCode(`false ?? true`), false);
+    ctx.assertStrictEqual(evalCode(`null ?? 0`), 0);
+
     ctx.assertStrictEqual(evalCode(`2002:toString(2)`), (2002).toString(2));
     ctx.assertStrictEqual(evalCode(`'abcdef':slice(1, -1)`), 'bcde');
     ctx.assertStrictEqual(evalCode(`'abcdef':slice:invoke([1, -1])`), 'bcde');
