@@ -55,6 +55,17 @@ module.exports = (ctx) => {
         [false, true]
     );
 
+    ctx.assertDeepEqual(
+        evalCode(`
+            a = false;
+            b = null;
+            a ??= true;
+            b ??= true;
+            [a, b]
+        `),
+        [false, true]
+    );
+
     ctx.expectThrow(SyntaxError, evalCode, [`0 = 0`]);
 
 };

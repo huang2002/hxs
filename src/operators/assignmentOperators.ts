@@ -1,5 +1,5 @@
 import { WordNode } from '3h-ast';
-import { Utils } from '../common';
+import { ContextValue, Utils } from '../common';
 import { evalExpression } from "../eval/evalExpression";
 import { createAdditionalAssignmentOperator, OperatorDefinition } from './common';
 
@@ -141,5 +141,14 @@ export const assignmentOperators: OperatorDefinition[] = [{
         'boolean',
         'boolean',
         (a, b) => (a || b)
+    ),
+}, {
+    symbol: '??=',
+    priority: Infinity,
+    ltr: false,
+    handler: createAdditionalAssignmentOperator<ContextValue, ContextValue>(
+        null,
+        null,
+        (a, b) => (a ?? b)
     ),
 }];
