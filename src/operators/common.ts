@@ -14,17 +14,17 @@ export const createBinaryOperator = <
     T extends ContextValue,
     U extends ContextValue
 >(
-    typeA: string,
-    typeB: string,
+    typeA: string | null,
+    typeB: string | null,
     handler: (a: T, b: U) => ContextValue,
 ): SyntaxHandler => (
     (buffer, index, context) => {
         const a = evalBufferNode(buffer, index - 1, buffer[index], context);
         const b = evalBufferNode(buffer, index + 1, buffer[index], context);
-        if (typeof a !== typeA) {
+        if (typeA && typeof a !== typeA) {
             Utils.raise(TypeError, `expect a ${typeA}`, buffer[index - 1], context);
         }
-        if (typeof b !== typeB) {
+        if (typeB && typeof b !== typeB) {
             Utils.raise(TypeError, `expect a ${typeB}`, buffer[index + 1], context);
         }
         const valueNode = Utils.createValueNode(

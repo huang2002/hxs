@@ -6,7 +6,7 @@ import { builtinNumber } from '../builtins/number';
 import { builtinString } from '../builtins/string';
 import { ContextValue, Dict, FunctionHandler, Utils } from '../common';
 import { evalBufferNode } from "../eval/evalBufferNode";
-import { OperatorDefinition } from './common';
+import { createBinaryOperator, OperatorDefinition } from './common';
 
 export const miscOperators: OperatorDefinition[] = [{
     symbol: '.',
@@ -123,12 +123,11 @@ export const miscOperators: OperatorDefinition[] = [{
     symbol: '??',
     priority: 12,
     ltr: true,
-    handler(buffer, index, context) {
-        const a = evalBufferNode(buffer, index - 1, buffer[index], context);
-        const b = evalBufferNode(buffer, index + 1, buffer[index], context);
-        const valueNode = Utils.createValueNode(a ?? b, buffer[index]);
-        Utils.replaceBuffer(buffer, index - 1, 3, valueNode);
-    },
+    handler: createBinaryOperator<ContextValue, ContextValue>(
+        null,
+        null,
+        (a, b) => (a ?? b)
+    ),
 }, {
     symbol: '#',
     priority: 2,
