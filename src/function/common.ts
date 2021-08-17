@@ -117,19 +117,5 @@ export const parseArgList = (
             break;
         }
     }
-    // if (l < rawArgList.length) { // ends without a comma
-    //     if (restArg !== null) {
-    //         Utils.raise(SyntaxError, 'rest argument must be the last one', rawArgList[l], context);
-    //     }
-    //     argDef = parseArg(rawArgList, l, rawArgList.length, context, allowRequired);
-    //     if (argDef.rest) {
-    //         restArg = argDef.name;
-    //     } else {
-    //         args.push(argDef);
-    //         if (argDef.required) {
-    //             requiredCount++;
-    //         }
-    //     }
-    // }
     return { args, requiredCount, restArg };
 };
