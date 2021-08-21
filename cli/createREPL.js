@@ -11,13 +11,13 @@ exports.createREPL = () => {
         output: process.stdout,
     });
 
-    const store = new Map(builtins);
+    const store = Utils.createDict(builtins);
     const context = {
         store,
         source: 'repl',
     };
 
-    store.set('__repl', Utils.injectHelp(
+    store.__repl = Utils.injectHelp(
         'REPL manager',
         Utils.createDict({
             setPrompt: Utils.injectHelp(
@@ -37,7 +37,7 @@ exports.createREPL = () => {
                 })
             ),
         })
-    ));
+    );
 
     console.log('Entering REPL mode. Invoke `__repl.exit` to exit.\n');
 

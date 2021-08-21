@@ -27,3 +27,10 @@ export const delete_ = Utils.injectHelp(
         return null;
     })
 );
+
+export const getContextStore = Utils.injectHelp(
+    'getContextStore()',
+    createFunctionHandler(0, 0, (args, referrer, context) => {
+        return context.store;
+    })
+);

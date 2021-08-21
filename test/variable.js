@@ -68,4 +68,20 @@ module.exports = (ctx) => {
 
     ctx.expectThrow(SyntaxError, evalCode, [`0 = 0`]);
 
+    ctx.assertDeepEqual(
+        evalCode(`
+            a = 0;
+            b = 1;
+            c = 2;
+            store = getContextStore();
+            set(store, #a, 10);
+            f = @() {
+                set(store, #b, 11);
+            };
+            f();
+            [a, b, c]
+        `),
+        [10, 11, 2]
+    );
+
 };

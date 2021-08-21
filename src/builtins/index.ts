@@ -10,7 +10,7 @@ import { builtinMath } from './math';
 import { builtinNumber } from './number';
 import { boolean, number, string, typeOf } from './types';
 import { help, injectHelp } from './help';
-import { delete_, exist } from './variable';
+import { delete_, exist, getContextStore } from './variable';
 import { clone, includes, indexOf, lastIndexOf, print, remove, set, sizeOf, slice } from './misc';
 import { builtinRaise, builtinTry } from './error';
 import { builtinClass } from './class';
@@ -19,8 +19,8 @@ export const builtins = Utils.createDict({
 
     true: true,
     false: false,
-    Infinity: Infinity,
-    NaN: NaN,
+    Infinity,
+    NaN,
     null: null,
     _: null,
 
@@ -38,26 +38,27 @@ export const builtins = Utils.createDict({
     Number: builtinNumber,
     Math: builtinMath,
 
-    help: help,
-    injectHelp: injectHelp,
+    help,
+    injectHelp,
 
-    exist: exist,
+    exist,
     delete: delete_,
+    getContextStore,
 
-    typeOf: typeOf,
-    number: number,
-    string: string,
-    boolean: boolean,
+    typeOf,
+    number,
+    string,
+    boolean,
 
-    print: print,
-    set: set,
-    remove: remove,
-    sizeOf: sizeOf,
-    slice: slice,
-    clone: clone,
-    indexOf: indexOf,
-    lastIndexOf: lastIndexOf,
-    includes: includes,
+    print,
+    set,
+    remove,
+    sizeOf,
+    slice,
+    clone,
+    indexOf,
+    lastIndexOf,
+    includes,
 
     forEach: builtinArray.forEach,
     map: builtinArray.map,
