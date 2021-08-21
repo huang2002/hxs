@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.29.0
+
+- Add `getContextStore`
+- Change context stores to dicts
+- Rename some internal identifiers
+
 ## 0.28.0
 
 - Add `??` & `??=`
