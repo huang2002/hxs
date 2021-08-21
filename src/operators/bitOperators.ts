@@ -33,6 +33,15 @@ export const bitOperators: OperatorDefinition[] = [{
         (a, b) => (a >> b)
     ),
 }, {
+    symbol: '>>>',
+    priority: 5,
+    ltr: true,
+    handler: createBinaryOperator<number, number>(
+        'number',
+        'number',
+        (a, b) => (a >>> b)
+    ),
+}, {
     symbol: '&',
     priority: 8,
     ltr: true,

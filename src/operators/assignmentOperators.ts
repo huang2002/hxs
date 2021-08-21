@@ -125,6 +125,15 @@ export const assignmentOperators: OperatorDefinition[] = [{
         (a, b) => (a >> b)
     ),
 }, {
+    symbol: '>>>=',
+    priority: Infinity,
+    ltr: false,
+    handler: createAdditionalAssignmentOperator<number, number>(
+        'number',
+        'number',
+        (a, b) => (a >>> b)
+    ),
+}, {
     symbol: '&&=',
     priority: Infinity,
     ltr: false,

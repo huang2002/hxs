@@ -39,9 +39,11 @@ module.exports = (ctx) => {
             c |= y;
             d <<= 1;
             e >>= 1;
-            [a, b, c, d, e]
+            f = -x;
+            f >>>= 1;
+            [a, b, c, d, e, f]
         `),
-        [0b1000, 0b0110, 0b1110, 0b10100, 0b0101]
+        [0b1000, 0b0110, 0b1110, 0b10100, 0b0101, -0b1010 >>> 1]
     );
 
     ctx.assertDeepEqual(
