@@ -30,11 +30,11 @@
     "index.d.ts"
   ],
   "devDependencies": {
-    "3h-ast": "^0.10.0",
     "@babel/core": "^7.12.13",
     "@babel/preset-env": "^7.12.13",
     "@rollup/plugin-babel": "^5.2.3",
     "@rollup/plugin-node-resolve": "^13.0.4",
+    "3h-ast": "^0.12.0",
     "3h-test": "^0.6.0",
     "rollup": "^2.38.5",
     "terser": "^5.5.1",
