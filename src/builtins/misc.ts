@@ -14,7 +14,7 @@ export const print = Utils.injectHelp(
 );
 
 export const set = Utils.injectHelp(
-    'set(array_or_dict, index_or_key, value)',
+    'set(arrayOrDict, indexOrKey, value)',
     createFunctionHandler(3, 3, (args, referrer, context) => {
 
         const target = args[0];
@@ -53,7 +53,7 @@ export const set = Utils.injectHelp(
 );
 
 export const remove = Utils.injectHelp(
-    'remove(array_or_dict, index_or_key)',
+    'remove(arrayOrDict, indexOrKey)',
     createFunctionHandler(2, 2, (args, referrer, context) => {
 
         const target = args[0];
@@ -92,7 +92,7 @@ export const remove = Utils.injectHelp(
 );
 
 export const sizeOf = Utils.injectHelp(
-    'sizeOf(array_or_string)',
+    'sizeOf(arrayOrString)',
     createFunctionHandler(1, 1, (args, referrer, context) => {
         const target = args[0];
         if (Array.isArray(target) || typeof target === 'string') {
@@ -105,7 +105,7 @@ export const sizeOf = Utils.injectHelp(
 );
 
 export const slice = Utils.injectHelp(
-    'slice(array_or_string, begin = 0, end = sizeOf(array_or_string))',
+    'slice(arrayOrString, begin = 0, end = sizeOf(arrayOrString))',
     createFunctionHandler(1, 3, (args, referrer, context) => {
         const target = args[0];
         if (Array.isArray(target) || typeof target === 'string') {
@@ -132,7 +132,7 @@ export const slice = Utils.injectHelp(
 
 
 export const clone = Utils.injectHelp(
-    'clone(array_or_dict)',
+    'clone(arrayOrDict)',
     createFunctionHandler(1, 1, (args, referrer, context) => {
         const target = args[0];
         if (Array.isArray(target)) {
@@ -147,7 +147,7 @@ export const clone = Utils.injectHelp(
 );
 
 export const indexOf = Utils.injectHelp(
-    'indexOf(array_or_string, value_or_substring)',
+    'indexOf(arrayOrString, valueOrSubstring)',
     createFunctionHandler(2, 2, (args, referrer, context) => {
         const target = args[0] as string | (ContextValue[]);
         const targetIsString = typeof target === 'string';
@@ -162,7 +162,7 @@ export const indexOf = Utils.injectHelp(
 );
 
 export const lastIndexOf = Utils.injectHelp(
-    'lastIndexOf(array_or_string, value_or_substring)',
+    'lastIndexOf(arrayOrString, valueOrSubstring)',
     createFunctionHandler(2, 2, (args, referrer, context) => {
         const target = args[0] as string | (ContextValue[]);
         const targetIsString = typeof target === 'string';
@@ -177,7 +177,7 @@ export const lastIndexOf = Utils.injectHelp(
 );
 
 export const includes = Utils.injectHelp(
-    'includes(array_or_string, value_or_substring)',
+    'includes(arrayOrString, valueOrSubstring)',
     createFunctionHandler(2, 2, (args, referrer, context) => {
         const target = args[0] as string | (ContextValue[]);
         const targetIsString = typeof target === 'string';

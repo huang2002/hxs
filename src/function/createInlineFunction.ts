@@ -42,7 +42,7 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
                 scopeStore.set(argList.restArg, args.slice(argDefinitions.length));
             }
 
-            const RETURN_FLAG = Symbol('hxs_return_flag');
+            const RETURN_FLAG = Symbol('hxs-return-flag');
             const forwardVariables = new Set<string>();
             let returnValue: ContextValue = null;
 

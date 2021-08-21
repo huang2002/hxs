@@ -1,6 +1,6 @@
 import { ASTNode, ASTNodeTemplate, NumberNode, SymbolNode, SpanNode } from '3h-ast';
 
-export const HELP_SYMBOL = Symbol('hxs_help_symbol');
+export const HELP_SYMBOL = Symbol('hxs-help-symbol');
 
 export type ContextValue =
     | null

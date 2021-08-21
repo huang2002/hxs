@@ -41,8 +41,8 @@ export const builtinFor: FunctionHandler = Utils.injectHelp(
                 Utils.raise(TypeError, 'expect a callback', _referrer, _context);
             }
 
-            const BREAK_FLAG = Symbol('hxs_break_flag');
-            const CONTINUE_FLAG = Symbol('hxs_break_flag');
+            const BREAK_FLAG = Symbol('hxs-break-flag');
+            const CONTINUE_FLAG = Symbol('hxs-break-flag');
 
             Utils.injectTemp(
                 _context.store,

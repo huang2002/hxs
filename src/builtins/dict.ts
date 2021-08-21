@@ -161,7 +161,7 @@ export const builtinDict = Utils.injectHelp(
         ),
 
         assign: Utils.injectHelp(
-            'Dict.assign(dict, props, allow_overwrite = true)',
+            'Dict.assign(dict, props, allowOverwrite = true)',
             createFunctionHandler(2, 3, (args, referrer, context) => {
                 const dict = args[0] as Dict;
                 if (!Utils.isDict(dict)) {

@@ -48,7 +48,7 @@ export const number = Utils.injectHelp(
 );
 
 export const string = Utils.injectHelp(
-    `string(value, preview_size = 10, preview_indent = '  ')`,
+    `string(value, previewSize = 10, previewIndent = '  ')`,
     createFunctionHandler(1, 3, (args, referrer, context) => {
         const previewSize = args.length >= 2 ? args[1] as number : 10;
         if (typeof previewSize !== 'number') {
