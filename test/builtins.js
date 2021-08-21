@@ -6,13 +6,13 @@ const { evalCode, builtins, HELP_SYMBOL, Utils } = require('../dist/hxs.umd.js')
  */
 module.exports = (ctx) => {
 
-    ctx.assertDeepEqual(evalCode(`help(help)`), builtins.get('help')[HELP_SYMBOL]);
-    ctx.assertDeepEqual(evalCode(`help(Array)`), builtins.get('Array')[HELP_SYMBOL]);
-    ctx.assertDeepEqual(evalCode(`help(Dict)`), builtins.get('Dict')[HELP_SYMBOL]);
-    ctx.assertDeepEqual(evalCode(`help(Function)`), builtins.get('Function')[HELP_SYMBOL]);
-    ctx.assertDeepEqual(evalCode(`help(Math)`), builtins.get('Math')[HELP_SYMBOL]);
-    ctx.assertDeepEqual(evalCode(`help(Number)`), builtins.get('Number')[HELP_SYMBOL]);
-    ctx.assertDeepEqual(evalCode(`help(String)`), builtins.get('String')[HELP_SYMBOL]);
+    ctx.assertDeepEqual(evalCode(`help(help)`), builtins.help[HELP_SYMBOL]);
+    ctx.assertDeepEqual(evalCode(`help(Array)`), builtins.Array[HELP_SYMBOL]);
+    ctx.assertDeepEqual(evalCode(`help(Dict)`), builtins.Dict[HELP_SYMBOL]);
+    ctx.assertDeepEqual(evalCode(`help(Function)`), builtins.Function[HELP_SYMBOL]);
+    ctx.assertDeepEqual(evalCode(`help(Math)`), builtins.Math[HELP_SYMBOL]);
+    ctx.assertDeepEqual(evalCode(`help(Number)`), builtins.Number[HELP_SYMBOL]);
+    ctx.assertDeepEqual(evalCode(`help(String)`), builtins.String[HELP_SYMBOL]);
     ctx.assertStrictEqual(typeof evalCode(`help(null)`), 'string');
 
     ctx.assertStrictEqual(evalCode(`help(injectHelp('foo', {}))`), 'foo');

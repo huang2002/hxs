@@ -29,22 +29,22 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
         Infinity,
         (args, referrer, _context, thisArg) => {
 
-            const scopeStore = new Map(context.store);
+            const scopeStore = Utils.createDict(context.store);
             const argDefinitions = argList.args;
             for (let i = 0; i < argDefinitions.length; i++) {
                 if (i < args.length) {
-                    scopeStore.set(argDefinitions[i].name, args[i]);
+                    scopeStore[argDefinitions[i].name] = args[i];
                 } else {
-                    scopeStore.set(argDefinitions[i].name, argDefinitions[i].default);
+                    scopeStore[argDefinitions[i].name] = argDefinitions[i].default;
                 }
             }
             if (argList.restArg !== null) {
-                scopeStore.set(argList.restArg, args.slice(argDefinitions.length));
+                scopeStore[argList.restArg] = args.slice(argDefinitions.length);
             }
 
-            scopeStore.set('_', null);
-            scopeStore.set('this', thisArg);
-            scopeStore.set('arguments', args);
+            scopeStore._ = null;
+            scopeStore.this = thisArg;
+            scopeStore.arguments = args;
 
             const scopeContext: ScriptContext = {
                 store: scopeStore,

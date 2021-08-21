@@ -277,12 +277,12 @@ export const builtinArray = Utils.injectHelp(
             'Array.unpack(array, names, loose = false)',
             createFunctionHandler(2, 3, (args, referrer, context) => {
 
-                const array = args[0];
+                const array = args[0] as ContextValue[];
                 if (!Array.isArray(array)) {
                     Utils.raise(TypeError, 'expect an array to unpack', referrer, context);
                 }
 
-                const names = args[1];
+                const names = args[1] as string[];
                 if (!Array.isArray(names)) {
                     Utils.raise(TypeError, 'expect an array of strings as variable names', referrer, context);
                 }
@@ -305,14 +305,14 @@ export const builtinArray = Utils.injectHelp(
                 if (loose) {
                     if (nameCount > arraySize) {
                         for (let i = 0; i < arraySize; i++) {
-                            store.set((names as string[])[i], (array as ContextValue[])[i]);
+                            store[names[i]] = array[i];
                         }
                         for (let i = arraySize; i < nameCount; i++) {
-                            store.set((names as string[])[i], null);
+                            store[names[i]] = null;
                         }
                     } else {
                         for (let i = 0; i < nameCount; i++) {
-                            store.set((names as string[])[i], (array as ContextValue[])[i]);
+                            store[names[i]] = array[i];
                         }
                     }
                 } else {
@@ -320,7 +320,7 @@ export const builtinArray = Utils.injectHelp(
                         Utils.raise(RangeError, 'not enough values in the given array', referrer, context);
                     }
                     for (let i = 0; i < nameCount; i++) {
-                        store.set((names as string[])[i], (array as ContextValue[])[i]);
+                        store[names[i]] = array[i];
                     }
                 }
 

@@ -29,54 +29,48 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
         Infinity,
         (args, referrer, _context, thisArg) => {
 
-            const scopeStore = new Map(context.store);
+            const scopeStore = Utils.createDict(context.store);
             const argDefinitions = argList.args;
             for (let i = 0; i < argDefinitions.length; i++) {
                 if (i < args.length) {
-                    scopeStore.set(argDefinitions[i].name, args[i]);
+                    scopeStore[argDefinitions[i].name] = args[i];
                 } else {
-                    scopeStore.set(argDefinitions[i].name, argDefinitions[i].default);
+                    scopeStore[argDefinitions[i].name] = argDefinitions[i].default;
                 }
             }
             if (argList.restArg !== null) {
-                scopeStore.set(argList.restArg, args.slice(argDefinitions.length));
+                scopeStore[argList.restArg] = args.slice(argDefinitions.length);
             }
 
             const RETURN_FLAG = Symbol('hxs-return-flag');
             const forwardVariables = new Set<string>();
             let returnValue: ContextValue = null;
 
-            scopeStore.set('_', null);
-            scopeStore.set('this', thisArg);
-            scopeStore.set('arguments', args);
+            scopeStore._ = null;
+            scopeStore.this = thisArg;
+            scopeStore.arguments = args;
 
-            scopeStore.set(
-                'return',
-                createFunctionHandler(0, 1, args => {
-                    if (args.length) {
-                        returnValue = args[0];
-                    }
-                    throw RETURN_FLAG;
-                })
-            );
+            scopeStore.return = createFunctionHandler(0, 1, args => {
+                if (args.length) {
+                    returnValue = args[0];
+                }
+                throw RETURN_FLAG;
+            });
 
-            scopeStore.set(
-                'forward',
-                createFunctionHandler(1, 1, (args, _referrer) => {
-                    const names = args[0];
-                    if (!Array.isArray(names)) {
+            scopeStore.forward = createFunctionHandler(1, 1, (args, _referrer) => {
+                const names = args[0];
+                if (!Array.isArray(names)) {
+                    Utils.raise(TypeError, 'expect an array of strings', _referrer, context);
+                }
+                for (let i = 0; i < (names as string[]).length; i++) {
+                    const name = (names as string[])[i];
+                    if (typeof name !== 'string') {
                         Utils.raise(TypeError, 'expect an array of strings', _referrer, context);
                     }
-                    for (let i = 0; i < (names as string[]).length; i++) {
-                        const name = (names as string[])[i];
-                        if (typeof name !== 'string') {
-                            Utils.raise(TypeError, 'expect an array of strings', _referrer, context);
-                        }
-                        forwardVariables.add(name);
-                    }
-                    return null;
-                })
-            );
+                    forwardVariables.add(name);
+                }
+                return null;
+            });
 
             const scopeContext: ScriptContext = {
                 store: scopeStore,
@@ -92,8 +86,8 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
             }
 
             forwardVariables.forEach(name => {
-                if (scopeStore.has(name)) {
-                    context.store.set(name, scopeStore.get(name)!);
+                if (name in scopeStore) {
+                    context.store[name] = scopeStore[name];
                 }
             });
 

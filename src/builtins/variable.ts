@@ -4,25 +4,26 @@ import { createFunctionHandler } from "../function/createFunctionHandler";
 export const exist = Utils.injectHelp(
     'exist(variableName)',
     createFunctionHandler(1, 1, (args, referrer, context) => {
-        if (typeof args[0] !== 'string') {
+        const name = args[0] as string;
+        if (typeof name !== 'string') {
             Utils.raise(TypeError, 'expect a string as variable name', referrer, context);
         }
-        return context.store.has(args[0] as string);
+        return name in context.store;
     })
 );
 
 export const delete_ = Utils.injectHelp(
     'delete(variableName)',
     createFunctionHandler(1, 1, (args, referrer, context) => {
-        const name = args[0];
+        const name = args[0] as string;
         if (typeof name !== 'string') {
             Utils.raise(TypeError, 'expect a string as variable name', referrer, context);
         }
         const { store } = context;
-        if (!store.has(name as string)) {
+        if (!(name in store)) {
             Utils.raise(ReferenceError, `"${name}" is not defined`, referrer, context);
         }
-        store.delete(name as string);
+        delete store[name];
         return null;
     })
 );

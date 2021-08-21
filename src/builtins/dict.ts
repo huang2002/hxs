@@ -123,12 +123,7 @@ export const builtinDict = Utils.injectHelp(
                 const { store } = context;
                 if (loose) {
                     for (let i = 0; i < names.length; i++) {
-                        store.set(
-                            names[i],
-                            names[i] in dict
-                                ? dict[names[i]]
-                                : null
-                        );
+                        store[names[i]] = (names[i] in dict) ? dict[names[i]] : null;
                     }
                 } else {
                     for (let i = 0; i < names.length; i++) {
@@ -137,7 +132,7 @@ export const builtinDict = Utils.injectHelp(
                         }
                     }
                     for (let i = 0; i < names.length; i++) {
-                        store.set(names[i], dict[names[i]]);
+                        store[names[i]] = dict[names[i]];
                     }
                 }
                 return null;

@@ -1,6 +1,6 @@
 import { parse } from '3h-ast';
 import { builtins } from '../builtins/index';
-import { ScriptContext } from '../common';
+import { ScriptContext, Utils } from '../common';
 import { evalNodes } from './evalNodes';
 
 /**
@@ -15,7 +15,7 @@ export const evalCode = (
         Object.assign(_context, context);
     }
     if (!_context.store) {
-        _context.store = new Map(builtins);
+        _context.store = Utils.createDict(builtins);
     }
     if (!_context.source) {
         _context.source = 'unknown';

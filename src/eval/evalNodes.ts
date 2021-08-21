@@ -61,7 +61,7 @@ export const evalCompiledNodes = (
             context,
             optimizeOperators,
         );
-        context.store.set('_', lastValue);
+        context.store._ = lastValue;
     }
     return endsWithSemicolon ? null : lastValue;
 };

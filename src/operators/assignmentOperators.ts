@@ -13,13 +13,13 @@ export const assignmentOperators: OperatorDefinition[] = [{
             Utils.raise(SyntaxError, 'expect a variable name preceding', buffer[index], context);
         }
 
-        const nameNode = buffer[index - 1];
+        const nameNode = buffer[index - 1] as WordNode;
         if (nameNode.type !== 'word') {
             Utils.raise(SyntaxError, 'expect a word as variable name', buffer[index - 1], context);
         }
 
         const value = evalExpression(buffer, context, index + 1);
-        context.store.set((nameNode as WordNode).value, value);
+        context.store[nameNode.value] = value;
 
         const valueNode = Utils.createValueNode(value, nameNode);
         Utils.replaceBuffer(buffer, index - 1, buffer.length - index + 1, valueNode);

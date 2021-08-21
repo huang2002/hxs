@@ -55,11 +55,11 @@ export const createAdditionalAssignmentOperator = <
         }
 
         const name = (nameNode as WordNode).value;
-        if (!context.store.has(name)) {
+        if (!(name in context.store)) {
             Utils.raise(SyntaxError, `"${name}" is not defined`, buffer[index - 1], context);
         }
 
-        const a = context.store.get(name) as T;
+        const a = context.store[name] as T;
         if (typeA && typeof a !== typeA) {
             Utils.raise(SyntaxError, `expect a ${typeA}`, buffer[index - 1], context);
         }
@@ -70,7 +70,7 @@ export const createAdditionalAssignmentOperator = <
         }
 
         const value = handler(a, b);
-        context.store.set(name, value);
+        context.store[name] = value;
 
         const valueNode = Utils.createValueNode(value, nameNode);
         Utils.replaceBuffer(buffer, index - 1, buffer.length - index + 1, valueNode);

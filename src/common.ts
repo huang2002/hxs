@@ -16,8 +16,6 @@ export interface Dict {
     [HELP_SYMBOL]?: string;
 };
 
-export type ContextStore = Map<string, ContextValue>;
-
 export type ValueNode = ASTNodeTemplate<'value', {
     value: ContextValue;
 }>;
@@ -25,7 +23,7 @@ export type ValueNode = ASTNodeTemplate<'value', {
 export type SyntaxNode = ASTNode | ValueNode;
 
 export interface ScriptContext {
-    store: ContextStore;
+    store: Dict;
     source: string;
 }
 
@@ -187,23 +185,23 @@ export namespace Utils {
      * variables after execution.
      */
     export const injectTemp = (
-        store: ContextStore,
+        store: Dict,
         variables: Dict,
         callback: () => void,
     ) => {
         const copy = Object.create(null) as Dict;
         for (const key in variables) {
-            if (store.has(key)) {
-                copy[key] = store.get(key)!;
+            if (key in store) {
+                copy[key] = store[key];
             }
-            store.set(key, variables[key]);
+            store[key] = variables[key];
         }
         callback();
         for (const key in variables) {
             if (key in copy) {
-                store.set(key, copy[key]);
+                store[key] = copy[key];
             } else {
-                store.delete(key);
+                delete store[key];
             }
         }
     };

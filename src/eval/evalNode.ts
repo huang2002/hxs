@@ -24,10 +24,10 @@ export const evalNode = (
         case 'word': {
             const name = node.value;
             const { store } = context;
-            if (!store.has(name)) {
+            if (!(name in store)) {
                 Utils.raise(ReferenceError, `"${name}" is not defined`, node, context);
             }
-            return store.get(name)!;
+            return store[name];
         }
         default: {
             Utils.raise(SyntaxError, 'unrecognized syntax', node, context);
