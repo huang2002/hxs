@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.31.0
+
+- Add module support
+- Fix display of error messages
+
 ## 0.30.0
 
 - Add `>>>` & `>>>=`
