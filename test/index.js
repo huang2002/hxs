@@ -16,10 +16,9 @@ test(null, {
     loop: require('./builtins/loop.js'),
     error: require('./builtins/error.js'),
     class: require('./builtins/class.js'),
+    module: require('./builtins/module.js'),
     builtins: require('./builtins/builtins.js'),
 
-    hello_world: require('./cli/hello_world.js'),
+    cli: require('./cli/cli.js'),
 
-}).catch(
-    console.error
-);
+});

@@ -1,38 +1,56 @@
 // @ts-check
 const { createInterface } = require('readline');
-const { Utils, evalCode, builtins, createFunctionHandler } = /** @type {import('..')} */(
+const { enableModule: enableImport, enableModule } = require('./addons/module.js');
+const HXS = /** @type {import('..')} */(
     /** @type {unknown} */(require('../dist/hxs.umd.js'))
-);;
+);
 
-exports.createREPL = () => {
+/**
+ * @typedef REPLOptions
+ * @property {boolean} module
+ */
+
+/**
+ * @param {REPLOptions} options
+ */
+exports.createREPL = (options) => {
 
     const interface = createInterface({
         input: process.stdin,
         output: process.stdout,
     });
 
-    const store = Utils.createDict(builtins);
+    /**
+     * @type {import('..').ScriptContext}
+     */
     const context = {
-        store,
+        store: HXS.Utils.createDict(HXS.builtins),
+        exports: Object.create(null),
+        resolvedModules: Object.create(null),
         source: 'repl',
+        basePath: process.cwd(),
     };
 
-    store.__repl = Utils.injectHelp(
+    if (options.module) {
+        enableModule(context);
+    }
+
+    context.store.__repl = HXS.Utils.injectHelp(
         'REPL manager',
-        Utils.createDict({
-            setPrompt: Utils.injectHelp(
+        HXS.Utils.createDict({
+            setPrompt: HXS.Utils.injectHelp(
                 '__repl.setPrompt(str)',
-                createFunctionHandler(1, 1, (args, referer, _context) => {
+                HXS.createFunctionHandler(1, 1, (args, referer, _context) => {
                     if (typeof args[0] !== 'string') {
-                        Utils.raise(TypeError, 'expect a string as prompt', referer, _context);
+                        HXS.Utils.raise(TypeError, 'expect a string as prompt', referer, _context);
                     }
                     interface.setPrompt(/** @type {string} */(args[0]));
                     return null;
                 })
             ),
-            exit: Utils.injectHelp(
+            exit: HXS.Utils.injectHelp(
                 '__repl.exit()',
-                createFunctionHandler(0, 0, () => {
+                HXS.createFunctionHandler(0, 0, () => {
                     process.exit(0);
                 })
             ),
@@ -45,8 +63,8 @@ exports.createREPL = () => {
     interface.on('line', input => {
         try {
             console.log(
-                Utils.toDisplay(
-                    evalCode(input, context)
+                HXS.Utils.toDisplay(
+                    HXS.evalCode(input, context)
                 )
             );
             console.log();

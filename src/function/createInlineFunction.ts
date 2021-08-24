@@ -74,7 +74,10 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
 
             const scopeContext: ScriptContext = {
                 store: scopeStore,
+                exports: context.exports,
+                resolvedModules: context.resolvedModules,
                 source: context.source,
+                basePath: context.basePath,
             };
 
             try {

@@ -1,6 +1,6 @@
 import { parse } from '3h-ast';
 import { builtins } from '../builtins/index';
-import { ScriptContext, Utils } from '../common';
+import { Dict, ResolvedModules, ScriptContext, Utils } from '../common';
 import { evalNodes } from './evalNodes';
 
 /**
@@ -17,8 +17,17 @@ export const evalCode = (
     if (!_context.store) {
         _context.store = Utils.createDict(builtins);
     }
+    if (!_context.exports) {
+        _context.exports = Object.create(null) as Dict;
+    }
+    if (!_context.resolvedModules) {
+        _context.resolvedModules = Object.create(null) as ResolvedModules;
+    }
     if (!_context.source) {
         _context.source = 'unknown';
+    }
+    if (!_context.basePath) {
+        _context.basePath = '';
     }
     return evalNodes(parse(code).ast, _context);
 };

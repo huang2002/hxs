@@ -22,9 +22,17 @@ export type ValueNode = ASTNodeTemplate<'value', {
 
 export type SyntaxNode = ASTNode | ValueNode;
 
+/**
+ * absolutePath -> exports
+ */
+export type ResolvedModules = Record<string, Dict>;
+
 export interface ScriptContext {
     store: Dict;
+    exports: Dict;
+    resolvedModules: ResolvedModules;
     source: string;
+    basePath: string;
 }
 
 export type SyntaxHandler = (

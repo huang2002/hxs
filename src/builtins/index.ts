@@ -14,6 +14,7 @@ import { delete_, exist, getContextStore } from './variable';
 import { clone, includes, indexOf, lastIndexOf, print, remove, set, sizeOf, slice } from './misc';
 import { builtinRaise, builtinTry } from './error';
 import { builtinClass } from './class';
+import { export_, getExports, import_ } from './module';
 
 export const builtins = Utils.createDict({
 
@@ -59,6 +60,10 @@ export const builtins = Utils.createDict({
     indexOf,
     lastIndexOf,
     includes,
+
+    getExports,
+    export: export_,
+    import: import_,
 
     forEach: builtinArray.forEach,
     map: builtinArray.map,

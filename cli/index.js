@@ -27,6 +27,12 @@ program.option({
 });
 
 program.option({
+    name: '--module',
+    alias: '-m',
+    help: 'Enable module imports',
+});
+
+program.option({
     name: '--help',
     alias: '-h',
     help: 'Print help info',
@@ -43,36 +49,32 @@ program.parse(process.argv)
             return;
         }
 
-        if (!args.actions.length) {
-            throw new Error('no actions specified');
-        }
+        const { actions } = args;
 
-
-        switch (args.actions[0]) {
+        switch (actions[0]) {
 
             case 'exec': {
-                const { readFileSync } = require('fs');
-                const { evalCode } = /** @type {import('..')} */(
-                    /** @type {unknown} */(require('../dist/hxs.umd.js'))
-                );;
-                const encoding = /** @type {import('crypto').Encoding} */(
+                const { resolve } = require('path');
+                const { exec } = require('./exec.js');
+                const encoding = /** @type {BufferEncoding} */(
                     args.getOption('--encoding')[0] || DEFAULT_ENCODING
                 );
-                const files = args.actions;
-                for (let i = 1; i < files.length; i++) {
-                    const filePath = files[i];
-                    evalCode(
-                        readFileSync(filePath, encoding),
-                        {
-                            source: filePath,
-                        }
-                    );
+                const options = {
+                    encoding,
+                    module: args.options.has('--module'),
+                };
+                for (let i = 1; i < actions.length; i++) {
+                    const filePath = resolve(process.cwd(), actions[i]);
+                    exec(filePath, options);
                 }
                 break;
             }
 
             case 'repl': {
-                createREPL();
+                const options = {
+                    module: args.options.has('--module'),
+                };
+                createREPL(options);
                 break;
             }
 

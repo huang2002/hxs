@@ -1,0 +1,20 @@
+print('header1 start');
+
+header0 = import('./header0.hxs');
+print('header1 imported header0');
+print(sizeOf(Dict.keys(header0)));
+
+exports = getExports();
+
+set(exports, #value, 0);
+
+export({
+    #set -> @(value) {
+        set(exports, #value, value);
+    },
+    #callback -> @() {
+        print(sizeOf(Dict.keys(header0)));
+    },
+});
+
+print('header1 end');
