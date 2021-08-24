@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.30.0
+
+- Add `>>>` & `>>>=`
+
 ## 0.29.0
 
 - Add `getContextStore`
