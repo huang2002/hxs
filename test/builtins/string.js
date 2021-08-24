@@ -1,5 +1,5 @@
 // @ts-check
-const { evalCode } = require('../dist/hxs.umd.js');
+const { evalCode } = require('../../dist/hxs.umd.js');
 
 /**
  * @type {import('3h-test').TestCaseCallback}

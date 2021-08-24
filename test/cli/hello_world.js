@@ -2,7 +2,7 @@
 const { join } = require('path');
 const { execSync } = require('child_process');
 
-const CLI_PATH = join(__dirname, '../cli/index.js');
+const CLI_PATH = join(__dirname, '../../cli/index.js');
 const TEST_FILE_PATH = join(__dirname, './hello_world.hxs');
 
 /**
