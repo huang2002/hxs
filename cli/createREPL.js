@@ -1,12 +1,13 @@
 // @ts-check
 const { createInterface } = require('readline');
-const { enableModule: enableImport, enableModule } = require('./addons/module.js');
+const { enableModule } = require('./addons/module.js');
 const HXS = /** @type {import('..')} */(
     /** @type {unknown} */(require('../dist/hxs.umd.js'))
 );
 
 /**
  * @typedef REPLOptions
+ * @property {BufferEncoding} encoding
  * @property {boolean} module
  */
 
@@ -32,7 +33,7 @@ exports.createREPL = (options) => {
     };
 
     if (options.module) {
-        enableModule(context);
+        enableModule(context, options.encoding);
     }
 
     context.store.__repl = HXS.Utils.injectHelp(

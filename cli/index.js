@@ -49,6 +49,10 @@ program.parse(process.argv)
             return;
         }
 
+        const encoding = /** @type {BufferEncoding} */(
+            args.getOption('--encoding')[0] || DEFAULT_ENCODING
+        );
+
         const { actions } = args;
 
         switch (actions[0]) {
@@ -56,9 +60,6 @@ program.parse(process.argv)
             case 'exec': {
                 const { resolve } = require('path');
                 const { exec } = require('./exec.js');
-                const encoding = /** @type {BufferEncoding} */(
-                    args.getOption('--encoding')[0] || DEFAULT_ENCODING
-                );
                 const options = {
                     encoding,
                     module: args.options.has('--module'),
@@ -72,6 +73,7 @@ program.parse(process.argv)
 
             case 'repl': {
                 const options = {
+                    encoding,
                     module: args.options.has('--module'),
                 };
                 createREPL(options);

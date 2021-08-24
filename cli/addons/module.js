@@ -9,23 +9,17 @@ const DEFAULT_ENCODING = 'utf8';
 
 /**
  * @param {HXS.ScriptContext} context
+ * @param {BufferEncoding} encoding
  */
-const enableModule = (context) => {
+const enableModule = (context, encoding) => {
 
     context.store.import = HXS.Utils.injectHelp(
-        `import(path, encoding = '${DEFAULT_ENCODING}')`,
-        HXS.createFunctionHandler(1, 2, (args, referrer, _context) => {
+        `import(path)`,
+        HXS.createFunctionHandler(1, 1, (args, referrer, _context) => {
 
             const path = /** @type {string} */(args[0]);
             if (typeof path !== 'string') {
                 HXS.Utils.raise(TypeError, `expect a string as import path`, referrer, _context);
-            }
-
-            const encoding = (args.length > 1)
-                ? /** @type {BufferEncoding} */(args[1])
-                : DEFAULT_ENCODING;
-            if (typeof encoding !== 'string') {
-                HXS.Utils.raise(TypeError, `expect a string as target file encoding`, referrer, _context);
             }
 
             const modulePath = resolve(_context.basePath, path);
@@ -55,7 +49,7 @@ const enableModule = (context) => {
                 basePath: dirname(modulePath),
             };
 
-            enableModule(moduleContext);
+            enableModule(moduleContext, encoding);
             HXS.evalCode(code, moduleContext);
 
             return exports;

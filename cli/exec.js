@@ -34,7 +34,7 @@ exports.exec = (filePath, options) => {
     context.resolvedModules[filePath] = context.exports;
 
     if (options.module) {
-        enableModule(context);
+        enableModule(context, options.encoding);
     }
 
     HXS.evalCode(code, context);
