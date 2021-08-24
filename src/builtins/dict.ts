@@ -128,7 +128,7 @@ export const builtinDict = Utils.injectHelp(
                 } else {
                     for (let i = 0; i < names.length; i++) {
                         if (!(names[i] in dict)) {
-                            Utils.raise(ReferenceError, `unknown key("${names[i]}")`, referrer, context);
+                            Utils.raise(ReferenceError, `unknown key(${Utils.toDisplay(names[i])})`, referrer, context);
                         }
                     }
                     for (let i = 0; i < names.length; i++) {

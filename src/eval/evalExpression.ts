@@ -15,7 +15,7 @@ export const getOperatorNodes = (
         if (node.type === 'symbol') {
             operatorNodes.push(node);
             if (!operatorPriorities.has(node.value)) {
-                Utils.raise(SyntaxError, `unknown operator "${node.value}"`, node, context);
+                Utils.raise(SyntaxError, `unknown operator ${Utils.toDisplay(node.value)}`, node, context);
             }
         } else if (node.type === 'span') {
             if (operatorPriorities.has(node.start)) {

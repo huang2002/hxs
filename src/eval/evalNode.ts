@@ -25,7 +25,7 @@ export const evalNode = (
             const name = node.value;
             const { store } = context;
             if (!(name in store)) {
-                Utils.raise(ReferenceError, `"${name}" is not defined`, node, context);
+                Utils.raise(ReferenceError, `${Utils.toDisplay(name)} is not defined`, node, context);
             }
             return store[name];
         }

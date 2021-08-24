@@ -56,7 +56,7 @@ export const createAdditionalAssignmentOperator = <
 
         const name = (nameNode as WordNode).value;
         if (!(name in context.store)) {
-            Utils.raise(SyntaxError, `"${name}" is not defined`, buffer[index - 1], context);
+            Utils.raise(SyntaxError, `${Utils.toDisplay(name)} is not defined`, buffer[index - 1], context);
         }
 
         const a = context.store[name] as T;
