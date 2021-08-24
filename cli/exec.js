@@ -31,6 +31,8 @@ exports.exec = (filePath, options) => {
         basePath: dirname(filePath),
     };
 
+    context.resolvedModules[filePath] = context.exports;
+
     if (options.module) {
         enableModule(context);
     }
