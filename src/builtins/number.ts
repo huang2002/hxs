@@ -26,6 +26,48 @@ export const builtinNumber = Utils.injectHelp(
             })
         ),
 
+        toFixed: Utils.injectHelp(
+            'Number.toFixed(number, fractionDigits = 0)',
+            createFunctionHandler(1, 2, (args, referrer, context) => {
+                const number = args[0] as number;
+                if (typeof number !== 'number') {
+                    Utils.raise(TypeError, 'expect a number to convert', referrer, context);
+                }
+                if (args.length === 1) {
+                    return number.toFixed();
+                }
+                const fractionDigits = args[1] as number;
+                if (typeof fractionDigits !== 'number') {
+                    Utils.raise(TypeError, 'expect a number as count of fraction digits', referrer, context);
+                }
+                if (!(fractionDigits >= 0 && fractionDigits <= 20)) {
+                    Utils.raise(RangeError, 'fractionDigits must be between 0 and 20', referrer, context);
+                }
+                return number.toFixed(fractionDigits);
+            })
+        ),
+
+        toExponential: Utils.injectHelp(
+            'Number.toExponential(number, fractionDigits = 0)',
+            createFunctionHandler(1, 2, (args, referrer, context) => {
+                const number = args[0] as number;
+                if (typeof number !== 'number') {
+                    Utils.raise(TypeError, 'expect a number to convert', referrer, context);
+                }
+                if (args.length === 1) {
+                    return number.toExponential();
+                }
+                const fractionDigits = args[1] as number;
+                if (typeof fractionDigits !== 'number') {
+                    Utils.raise(TypeError, 'expect a number as count of fraction digits', referrer, context);
+                }
+                if (!(fractionDigits >= 0 && fractionDigits <= 20)) {
+                    Utils.raise(RangeError, 'fractionDigits must be between 0 and 20', referrer, context);
+                }
+                return number.toExponential(fractionDigits);
+            })
+        ),
+
         isFinite: Utils.injectHelp(
             'Number.isFinite(number)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
