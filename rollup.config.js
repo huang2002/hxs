@@ -13,9 +13,6 @@ export default [
             }),
         ],
         output: {
-            globals: {
-                '3h-ast': 'HA',
-            },
             format: 'umd',
             name: 'HXS',
             file: './dist/hxs.umd.js',
