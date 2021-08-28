@@ -27,8 +27,8 @@ module.exports = (ctx) => {
             y = 1;
             foo = @() {
                 x = 6;
-                forward([#y, #z]);
                 z = 2;
+                forward([#y, #z]);
             };
             foo();
             [x, y, z, ]
@@ -62,14 +62,16 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(
         evalCode(`
             f = @() {
-                forward([#b]);
                 b = this;
+                forward([#b]);
             };
             Function.invoke(f, null, 666);
             b
         `),
         666
     );
+
+    ctx.expectThrow(ReferenceError, evalCode, [`f = @() { forward([#x]); x = 0 }; f()`]);
 
     ctx.assertDeepEqual(
         evalCode(`

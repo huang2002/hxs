@@ -11,10 +11,10 @@ module.exports = (ctx) => {
             _id = 0;
             Animal = class({
                 #__init -> @(type = 'animal') {
-                    forward([#_id]);
                     set(this, #id, _id);
                     set(this, #type, type);
                     _id += 1;
+                    forward([#_id]);
                 },
                 #eat -> () => ('eating'),
                 #sleep -> () => ('sleeping'),

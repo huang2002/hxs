@@ -73,7 +73,6 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
             scopeStore.arguments = args;
 
             const RETURN_FLAG = Symbol('hxs-return-flag');
-            const forwardVariables = new Set<string>();
             let returnValue: ContextValue = null;
 
             scopeStore.return = createFunctionHandler(0, 1, args => {
@@ -84,16 +83,20 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
             });
 
             scopeStore.forward = createFunctionHandler(1, 1, (args, _referrer) => {
-                const names = args[0];
+                const names = args[0] as string[];
                 if (!Array.isArray(names)) {
                     Utils.raise(TypeError, 'expect an array of strings', _referrer, context);
                 }
-                for (let i = 0; i < (names as string[]).length; i++) {
-                    const name = (names as string[])[i];
+                for (let i = 0; i < names.length; i++) {
+                    const name = names[i];
                     if (typeof name !== 'string') {
                         Utils.raise(TypeError, 'expect an array of strings', _referrer, context);
                     }
-                    forwardVariables.add(name);
+                    if (name in scopeStore) {
+                        context.store[name] = scopeStore[name];
+                    } else {
+                        Utils.raise(ReferenceError, `${Utils.toDisplay(name)} is not defined`, _referrer, context);
+                    }
                 }
                 return null;
             });
@@ -105,12 +108,6 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
                     throw err;
                 }
             }
-
-            forwardVariables.forEach(name => {
-                if (name in scopeStore) {
-                    context.store[name] = scopeStore[name];
-                }
-            });
 
             return returnValue;
 

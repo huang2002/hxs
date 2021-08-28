@@ -75,9 +75,9 @@ module.exports = (ctx) => {
             c = _ + _;
             @(_) {
                 d = _;
-                forward([#d, #e]);
                 2 ** 9;
                 e = _ + _;
+                forward([#d, #e]);
             };
             _(2);
             [a, b, c, d, e, _]
