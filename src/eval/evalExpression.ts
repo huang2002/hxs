@@ -2,10 +2,15 @@ import { ContextValue, ScriptContext, SyntaxNode, Utils, OperatorNode } from '..
 import { operatorHandlers, operatorLtr, operatorPriorities } from '../operators/index';
 import { evalNode } from './evalNode';
 
-export const getOperatorNodes = (
+export type CompiledExpression = Readonly<{
+    buffer: SyntaxNode[];
+    operatorNodes: OperatorNode[];
+}>;
+
+export const compileExpression = (
     buffer: SyntaxNode[],
     context: ScriptContext,
-) => {
+): CompiledExpression => {
 
     let operatorNodes: OperatorNode[] = [];
 
@@ -63,16 +68,19 @@ export const getOperatorNodes = (
         }
     }
 
-    return operatorNodes;
+    return { buffer, operatorNodes };
 
 };
 
-export const executeOperatorNodes = (
-    buffer: SyntaxNode[],
-    operatorNodes: OperatorNode[],
+export const evalCompiledExpression = (
+    compiledExpression: CompiledExpression,
     context: ScriptContext,
-    optimizeOperators = true,
+    copyBuffers: boolean,
+    optimizeOperators: boolean,
 ): ContextValue => {
+
+    const { operatorNodes, buffer: _buffer } = compiledExpression;
+    const buffer = copyBuffers ? _buffer.slice() : _buffer;
 
     let extraOperatorIndices: Set<number> | null = null;
     if (optimizeOperators) {
@@ -127,16 +135,16 @@ export const evalExpression = (
     nodes: readonly SyntaxNode[],
     context: ScriptContext,
     begin = 0,
-    end = nodes.length
+    end = nodes.length,
 ): ContextValue => {
     if (begin >= end) {
         return null;
     }
     const buffer = nodes.slice(begin, end);
-    return executeOperatorNodes(
-        buffer,
-        getOperatorNodes(buffer, context),
+    return evalCompiledExpression(
+        compileExpression(buffer, context),
         context,
+        false,
         false,
     );
 };

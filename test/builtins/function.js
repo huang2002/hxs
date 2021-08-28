@@ -115,7 +115,7 @@ module.exports = (ctx) => {
             f = @(a, b = 1) {
                 return(a + b);
             };
-            g = (x, y = 2, z = 3) => (x + y + z);
+            g = (x, y = x + 1, z = 3) => (x + y + z);
             h = (t?) => (t);
             [
                 f(1, 2),
@@ -157,7 +157,7 @@ module.exports = (ctx) => {
 
     ctx.assertDeepEqual(
         evalCode(`
-            test = (x, y = 1, z...) => ([x, y, z]);
+            test = (x, y = x, z...) => ([x, y, z]);
             [
                 test(1),
                 test(1, 2),

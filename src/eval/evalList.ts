@@ -9,7 +9,7 @@ export const evalList = (
     context: ScriptContext,
     begin = 0,
     end = nodes.length
-) => {
+): ContextValue[] => {
     const result: ContextValue[] = [];
     if (begin >= end) {
         return result;

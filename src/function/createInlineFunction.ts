@@ -1,5 +1,6 @@
 import { SpanNode } from '3h-ast';
 import { ContextValue, SyntaxHandler, Utils, ScriptContext } from '../common';
+import { evalCompiledExpression } from '../eval/evalExpression';
 import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
 import { parseArgList } from './common';
 import { createFunctionHandler } from './createFunctionHandler';
@@ -30,25 +31,50 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
         (args, referrer, _context, thisArg) => {
 
             const scopeStore = Utils.createDict(context.store);
+
+            scopeStore._ = null;
+            scopeStore.this = thisArg;
+            scopeStore.arguments = args;
+
+            const scopeContext: ScriptContext = {
+                store: scopeStore,
+                exports: context.exports,
+                resolvedModules: context.resolvedModules,
+                source: context.source,
+                basePath: context.basePath,
+            };
+
             const argDefinitions = argList.args;
             for (let i = 0; i < argDefinitions.length; i++) {
+                const argName = argDefinitions[i].name;
                 if (i < args.length) {
-                    scopeStore[argDefinitions[i].name] = args[i];
+                    scopeStore[argName] = args[i];
                 } else {
-                    scopeStore[argDefinitions[i].name] = argDefinitions[i].default;
+                    const defaultValue = argDefinitions[i].default;
+                    if (defaultValue !== null) {
+                        scopeStore[argName] = evalCompiledExpression(
+                            defaultValue,
+                            scopeContext,
+                            true,
+                            true,
+                        );
+                    } else {
+                        scopeStore[argName] = null;
+                    }
                 }
             }
             if (argList.restArg !== null) {
                 scopeStore[argList.restArg] = args.slice(argDefinitions.length);
             }
 
-            const RETURN_FLAG = Symbol('hxs-return-flag');
-            const forwardVariables = new Set<string>();
-            let returnValue: ContextValue = null;
-
+            // rewrite
             scopeStore._ = null;
             scopeStore.this = thisArg;
             scopeStore.arguments = args;
+
+            const RETURN_FLAG = Symbol('hxs-return-flag');
+            const forwardVariables = new Set<string>();
+            let returnValue: ContextValue = null;
 
             scopeStore.return = createFunctionHandler(0, 1, args => {
                 if (args.length) {
@@ -72,16 +98,8 @@ export const createInlineFunction: SyntaxHandler = (buffer, index, context) => {
                 return null;
             });
 
-            const scopeContext: ScriptContext = {
-                store: scopeStore,
-                exports: context.exports,
-                resolvedModules: context.resolvedModules,
-                source: context.source,
-                basePath: context.basePath,
-            };
-
             try {
-                evalCompiledNodes(compiledBody, scopeContext, true);
+                evalCompiledNodes(compiledBody, scopeContext, true, true);
             } catch (err) {
                 if (err !== RETURN_FLAG) {
                     throw err;

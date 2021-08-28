@@ -1,6 +1,6 @@
 import { SymbolNode, WordNode } from '3h-ast';
 import { ContextValue, SyntaxNode, ScriptContext, Utils } from '../common';
-import { evalExpression } from '../eval/evalExpression';
+import { CompiledExpression, compileExpression } from '../eval/evalExpression';
 
 export type FunctionCallback = (
     args: ContextValue[],
@@ -13,7 +13,7 @@ export interface ArgDefinition {
     name: string;
     required: boolean;
     rest: boolean;
-    default: ContextValue;
+    default: CompiledExpression | null;
 }
 
 export interface ArgList {
@@ -68,7 +68,10 @@ export const parseArg = (
             name: firstNode.value,
             required: false,
             rest: false,
-            default: evalExpression(rawArgs, context, begin + 2, end),
+            default: compileExpression(
+                rawArgs.slice(begin + 2, end),
+                context,
+            ),
         };
     }
 };

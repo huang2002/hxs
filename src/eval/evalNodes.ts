@@ -1,9 +1,8 @@
-import { ScriptContext, SyntaxNode, OperatorNode } from '../common';
-import { getOperatorNodes, executeOperatorNodes } from './evalExpression';
+import { ContextValue, ScriptContext, SyntaxNode } from '../common';
+import { compileExpression, evalCompiledExpression, CompiledExpression } from './evalExpression';
 
 export type CompiledNodes = Readonly<{
-    buffers: readonly (SyntaxNode[])[];
-    operatorNodes: readonly (OperatorNode[])[];
+    compiledExpressions: readonly CompiledExpression[];
     endsWithSemicolon: boolean;
 }>;
 
@@ -13,12 +12,10 @@ export const compileNodes = (
     begin = 0,
     end = nodes.length,
 ): CompiledNodes => {
-    const buffers: SyntaxNode[][] = [];
-    const operatorNodes: OperatorNode[][] = [];
+    const compiledExpressions: CompiledExpression[] = [];
     if (begin >= end) {
         return {
-            buffers,
-            operatorNodes,
+            compiledExpressions,
             endsWithSemicolon: true,
         };
     }
@@ -32,9 +29,8 @@ export const compileNodes = (
             }
         }
         const buffer = nodes.slice(left, right);
-        buffers.push(buffer);
-        operatorNodes.push(
-            getOperatorNodes(buffer, context)
+        compiledExpressions.push(
+            compileExpression(buffer, context)
         );
         if (right < end - 1) {
             left = right + 1;
@@ -43,22 +39,22 @@ export const compileNodes = (
         }
     }
     const endsWithSemicolon = right < end;
-    return { buffers, operatorNodes, endsWithSemicolon };
+    return { compiledExpressions, endsWithSemicolon };
 };
 
 export const evalCompiledNodes = (
     compiledNodes: CompiledNodes,
     context: ScriptContext,
-    copyBuffers = false,
-    optimizeOperators = true,
-) => {
-    const { buffers, operatorNodes, endsWithSemicolon } = compiledNodes;
+    copyBuffers: boolean,
+    optimizeOperators: boolean,
+): ContextValue => {
+    const { compiledExpressions, endsWithSemicolon } = compiledNodes;
     let lastValue = null;
-    for (let i = 0; i < buffers.length; i++) {
-        lastValue = executeOperatorNodes(
-            copyBuffers ? buffers[i].slice() : buffers[i],
-            operatorNodes[i],
+    for (let i = 0; i < compiledExpressions.length; i++) {
+        lastValue = evalCompiledExpression(
+            compiledExpressions[i],
             context,
+            copyBuffers,
             optimizeOperators,
         );
         context.store._ = lastValue;

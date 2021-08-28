@@ -78,7 +78,7 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
 
         const compiledBody = compileNodes((buffer[index] as SpanNode).body, context);
         const callback: FunctionHandler = (args, referrer, _context) => {
-            return evalCompiledNodes(compiledBody, _context, true);
+            return evalCompiledNodes(compiledBody, _context, true, true);
         };
 
         const returnValue = (handler as FunctionHandler)(

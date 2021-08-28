@@ -1,5 +1,6 @@
 import { SpanNode } from '3h-ast';
 import { SyntaxHandler, Utils, ScriptContext } from '../common';
+import { evalCompiledExpression } from '../eval/evalExpression';
 import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
 import { parseArgList } from './common';
 import { createFunctionHandler } from './createFunctionHandler';
@@ -30,17 +31,6 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
         (args, referrer, _context, thisArg) => {
 
             const scopeStore = Utils.createDict(context.store);
-            const argDefinitions = argList.args;
-            for (let i = 0; i < argDefinitions.length; i++) {
-                if (i < args.length) {
-                    scopeStore[argDefinitions[i].name] = args[i];
-                } else {
-                    scopeStore[argDefinitions[i].name] = argDefinitions[i].default;
-                }
-            }
-            if (argList.restArg !== null) {
-                scopeStore[argList.restArg] = args.slice(argDefinitions.length);
-            }
 
             scopeStore._ = null;
             scopeStore.this = thisArg;
@@ -54,7 +44,35 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
                 basePath: context.basePath,
             };
 
-            return evalCompiledNodes(compiledBody, scopeContext, true);
+            const argDefinitions = argList.args;
+            for (let i = 0; i < argDefinitions.length; i++) {
+                const argName = argDefinitions[i].name;
+                if (i < args.length) {
+                    scopeStore[argName] = args[i];
+                } else {
+                    const defaultValue = argDefinitions[i].default;
+                    if (defaultValue !== null) {
+                        scopeStore[argName] = evalCompiledExpression(
+                            defaultValue,
+                            scopeContext,
+                            true,
+                            true,
+                        );
+                    } else {
+                        scopeStore[argName] = null;
+                    }
+                }
+            }
+            if (argList.restArg !== null) {
+                scopeStore[argList.restArg] = args.slice(argDefinitions.length);
+            }
+
+            // rewrite
+            scopeStore._ = null;
+            scopeStore.this = thisArg;
+            scopeStore.arguments = args;
+
+            return evalCompiledNodes(compiledBody, scopeContext, true, true);
 
         }
     );
