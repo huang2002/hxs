@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.32.0
+
+- Make `forward` effect immediately
+- Fix evaluation of arg defaults
+- Improve expression evaluation APIs
+
 ## 0.31.0
 
 - Add module support
