@@ -19,7 +19,7 @@ export const builtinClass = Utils.injectHelp(
 
         return (_rawArgs, _referrer, _context, _thisArg) => {
             let object = _thisArg as Dict;
-            if (!Utils.isDict(object)) { // no prototype: direct copy
+            if (!Utils.isDict(object)) { // no prototype
                 if (object !== null) {
                     Utils.raise(TypeError, 'expect only null or dict as this arg for class constructor', referrer, context);
                 }
