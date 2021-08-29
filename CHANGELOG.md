@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.33.0
+
+- Remove default `import`(a placeholder)
+- Add `JSON`
+- Add `String.repeat` & `String.codePointAt`
+
 ## 0.32.0
 
 - Make `forward` effect immediately
