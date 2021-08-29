@@ -61,4 +61,20 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`String.includes(['a', 'b', 'c'], 'a')`]);
     ctx.expectThrow(TypeError, evalCode, [`String.includes('012', 0)`]);
 
+    ctx.assertStrictEqual(evalCode(`String.repeat('abc', 2)`), 'abcabc');
+    ctx.assertStrictEqual(evalCode(`String.repeat('abc', 1)`), 'abc');
+    ctx.assertStrictEqual(evalCode(`String.repeat('abc', 0)`), '');
+    ctx.expectThrow(TypeError, evalCode, [`String.repeat(['a', 'b', 'c'], 1)`]);
+    ctx.expectThrow(RangeError, evalCode, [`String.repeat('012', -1)`]);
+    ctx.expectThrow(RangeError, evalCode, [`String.repeat('012', Infinity)`]);
+
+    ctx.assertStrictEqual(evalCode(`String.codePointAt('abc', 0)`), 'abc'.codePointAt(0));
+    ctx.assertStrictEqual(evalCode(`String.codePointAt('abc', 1)`), 'abc'.codePointAt(1));
+    ctx.assertStrictEqual(evalCode(`String.codePointAt('abc', 2)`), 'abc'.codePointAt(2));
+    ctx.assertStrictEqual(evalCode(`String.codePointAt('abc', -1)`), 'abc'.codePointAt(2));
+    ctx.assertStrictEqual(evalCode(`String.codePointAt('abc', -3)`), 'abc'.codePointAt(0));
+    ctx.expectThrow(TypeError, evalCode, [`String.codePointAt(['a', 'b', 'c'], 1)`]);
+    ctx.expectThrow(RangeError, evalCode, [`String.codePointAt('abc', 3)`]);
+    ctx.expectThrow(RangeError, evalCode, [`String.codePointAt('abc', -4)`]);
+
 };

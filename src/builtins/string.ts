@@ -116,5 +116,49 @@ export const builtinString = Utils.injectHelp(
             })
         ),
 
+        repeat: Utils.injectHelp(
+            `String.repeat(string, count)`,
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+                const string = args[0] as string;
+                if (typeof string !== 'string') {
+                    Utils.raise(TypeError, `expect a string to repeat`, referrer, context);
+                }
+                const count = args[1] as number;
+                if (typeof count !== 'number') {
+                    Utils.raise(TypeError, `expect a number as repeating count`, referrer, context);
+                }
+                if (!Number.isFinite(count) || count < 0) {
+                    Utils.raise(RangeError, `invalid count`, referrer, context);
+                }
+                return string.repeat(count);
+            })
+        ),
+
+        codePointAt: Utils.injectHelp(
+            `String.codePointAt(string, index)`,
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+                const string = args[0] as string;
+                if (typeof string !== 'string') {
+                    Utils.raise(TypeError, `expect a string`, referrer, context);
+                }
+                const index = args[1] as number;
+                if (typeof index !== 'number') {
+                    Utils.raise(TypeError, `expect a number as index`, referrer, context);
+                }
+                const normalizedIndex = Utils.normalizeIndex(
+                    index,
+                    string.length,
+                    referrer,
+                    context,
+                );
+                const result = string.codePointAt(normalizedIndex);
+                if (typeof result === 'number') {
+                    return result;
+                } else {
+                    return null;
+                }
+            })
+        ),
+
     })
 );
