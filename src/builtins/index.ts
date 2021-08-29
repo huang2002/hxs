@@ -15,6 +15,7 @@ import { clone, includes, indexOf, lastIndexOf, print, remove, set, sizeOf, slic
 import { builtinRaise, builtinTry } from './error';
 import { builtinClass } from './class';
 import { export_, getExports } from './module';
+import { builtinJSON } from './json';
 
 export const builtins = Utils.createDict({
 
@@ -38,6 +39,7 @@ export const builtins = Utils.createDict({
     Function: builtinFunction,
     Number: builtinNumber,
     Math: builtinMath,
+    JSON: builtinJSON,
 
     help,
     injectHelp,

@@ -12,6 +12,7 @@ test(null, {
     number: require('./builtins/number.js'),
     math: require('./builtins/math.js'),
     dict: require('./builtins/dict.js'),
+    json: require('./builtins/json.js'),
     if: require('./builtins/if.js'),
     loop: require('./builtins/loop.js'),
     error: require('./builtins/error.js'),
