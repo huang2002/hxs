@@ -19,11 +19,3 @@ export const export_ = Utils.injectHelp(
         return null;
     })
 );
-
-export const import_ = Utils.injectHelp(
-    'import(path)',
-    createFunctionHandler(1, 1, (args, referrer, context) => {
-        Utils.raise(ReferenceError, `import is not implemented in current context`, referrer, context);
-        return null;
-    })
-);

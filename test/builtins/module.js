@@ -7,7 +7,7 @@ const { evalCode } = require('../../dist/hxs.umd.js');
 module.exports = (ctx) => {
 
     ctx.assertDeepEqual(evalCode(`getExports()`), {});
-    ctx.expectThrow(ReferenceError, evalCode, [`import('foo')`]);
+    ctx.assertStrictEqual(evalCode(`exist(#import)`), false);
 
     ctx.assertDeepEqual(
         evalCode(`
