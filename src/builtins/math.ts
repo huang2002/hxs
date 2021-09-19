@@ -9,12 +9,12 @@ export const builtinMath = Utils.injectHelp(
         E: Math.E,
 
         random: Utils.injectHelp(
-            'random()',
+            'Math.random()',
             createFunctionHandler(0, 0, Math.random)
         ),
 
         sign: Utils.injectHelp(
-            'sign(x)',
+            'Math.sign(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -24,7 +24,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         floor: Utils.injectHelp(
-            'floor(x)',
+            'Math.floor(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -34,7 +34,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         ceil: Utils.injectHelp(
-            'ceil(x)',
+            'Math.ceil(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -44,7 +44,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         round: Utils.injectHelp(
-            'round(x)',
+            'Math.round(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -54,7 +54,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         sqrt: Utils.injectHelp(
-            'sqrt(x)',
+            'Math.sqrt(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 const x = args[0] as number;
                 if (typeof x !== 'number') {
@@ -68,7 +68,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         min: Utils.injectHelp(
-            'min(numbers)',
+            'Math.min(numbers)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 const numbers = args[0] as number[];
                 if (!Array.isArray(numbers)) {
@@ -88,7 +88,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         max: Utils.injectHelp(
-            'max(numbers)',
+            'Math.max(numbers)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 const numbers = args[0] as number[];
                 if (!Array.isArray(numbers)) {
@@ -108,7 +108,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         sum: Utils.injectHelp(
-            'sum(numbers)',
+            'Math.sum(numbers)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 const numbers = args[0] as number[];
                 if (!Array.isArray(numbers)) {
@@ -126,7 +126,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         mean: Utils.injectHelp(
-            'mean(numbers)',
+            'Math.mean(numbers)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 const numbers = args[0] as number[];
                 if (!Array.isArray(numbers)) {
@@ -147,7 +147,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         log: Utils.injectHelp(
-            'log(a, b)',
+            'Math.log(a, b)',
             createFunctionHandler(2, 2, (args, referrer, context) => {
                 const a = args[0] as number;
                 if (typeof args[0] !== 'number') {
@@ -168,7 +168,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         ln: Utils.injectHelp(
-            'ln(x)',
+            'Math.ln(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 const x = args[0] as number;
                 if (typeof x !== 'number') {
@@ -182,7 +182,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         lg: Utils.injectHelp(
-            'lg(x)',
+            'Math.lg(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 const x = args[0] as number;
                 if (typeof x !== 'number') {
@@ -196,7 +196,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         sin: Utils.injectHelp(
-            'sin(x)',
+            'Math.sin(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -206,7 +206,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         cos: Utils.injectHelp(
-            'cos(x)',
+            'Math.cos(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -216,7 +216,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         tan: Utils.injectHelp(
-            'tan(x)',
+            'Math.tan(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -226,7 +226,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         csc: Utils.injectHelp(
-            'csc(x)',
+            'Math.csc(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -236,7 +236,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         sec: Utils.injectHelp(
-            'sec(x)',
+            'Math.sec(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -246,7 +246,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         cot: Utils.injectHelp(
-            'cot(x)',
+            'Math.cot(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -256,7 +256,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         asin: Utils.injectHelp(
-            'asin(x)',
+            'Math.asin(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -266,7 +266,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         acos: Utils.injectHelp(
-            'acos(x)',
+            'Math.acos(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -276,7 +276,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         atan: Utils.injectHelp(
-            'atan(x)',
+            'Math.atan(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -286,7 +286,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         acsc: Utils.injectHelp(
-            'acsc(x)',
+            'Math.acsc(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -296,7 +296,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         asec: Utils.injectHelp(
-            'asec(x)',
+            'Math.asec(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -306,7 +306,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         acot: Utils.injectHelp(
-            'acot(x)',
+            'Math.acot(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -316,7 +316,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         sinh: Utils.injectHelp(
-            'sinh(x)',
+            'Math.sinh(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -326,7 +326,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         cosh: Utils.injectHelp(
-            'cosh(x)',
+            'Math.cosh(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -336,7 +336,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         tanh: Utils.injectHelp(
-            'tanh(x)',
+            'Math.tanh(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -346,7 +346,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         csch: Utils.injectHelp(
-            'csch(x)',
+            'Math.csch(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -356,7 +356,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         sech: Utils.injectHelp(
-            'sech(x)',
+            'Math.sech(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -366,7 +366,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         coth: Utils.injectHelp(
-            'coth(x)',
+            'Math.coth(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -376,7 +376,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         asinh: Utils.injectHelp(
-            'asinh(x)',
+            'Math.asinh(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -386,7 +386,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         acosh: Utils.injectHelp(
-            'acosh(x)',
+            'Math.acosh(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -396,7 +396,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         atanh: Utils.injectHelp(
-            'atanh(x)',
+            'Math.atanh(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -406,7 +406,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         acsch: Utils.injectHelp(
-            'acsch(x)',
+            'Math.acsch(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -416,7 +416,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         asech: Utils.injectHelp(
-            'asech(x)',
+            'Math.asech(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
@@ -426,7 +426,7 @@ export const builtinMath = Utils.injectHelp(
         ),
 
         acoth: Utils.injectHelp(
-            'acoth(x)',
+            'Math.acoth(x)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'number') {
                     Utils.raise(TypeError, `expect a number as argument`, referrer, context);
