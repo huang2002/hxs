@@ -214,6 +214,17 @@ export namespace Utils {
         }
     };
 
+    export const extendContext = (
+        context: ScriptContext,
+        store: Dict,
+    ): ScriptContext => ({
+        store,
+        exports: context.exports,
+        resolvedModules: context.resolvedModules,
+        source: context.source,
+        basePath: context.basePath,
+    });
+
     export const injectHelp = <T>(helpInfo: string, target: T) => {
         (target as any)[HELP_SYMBOL] = helpInfo;
         return target;

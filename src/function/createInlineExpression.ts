@@ -1,5 +1,5 @@
 import { SpanNode } from '3h-ast';
-import { SyntaxHandler, Utils, ScriptContext } from '../common';
+import { SyntaxHandler, Utils } from '../common';
 import { evalCompiledExpression } from '../eval/evalExpression';
 import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
 import { parseArgList } from './common';
@@ -36,13 +36,7 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
             scopeStore.this = thisArg;
             scopeStore.arguments = args;
 
-            const scopeContext: ScriptContext = {
-                store: scopeStore,
-                exports: context.exports,
-                resolvedModules: context.resolvedModules,
-                source: context.source,
-                basePath: context.basePath,
-            };
+            const scopeContext = Utils.extendContext(context, scopeStore);
 
             const argDefinitions = argList.args;
             for (let i = 0; i < argDefinitions.length; i++) {
