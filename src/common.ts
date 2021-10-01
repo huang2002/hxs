@@ -329,7 +329,7 @@ export namespace Utils {
     export const diffDict = (target: Dict, reference: Dict) => {
         const result = Object.create(null) as Dict;
         for (const key in target) {
-            if (target[key] !== reference[key]) {
+            if (!Object.is(target[key], reference[key])) {
                 result[key] = target[key];
             }
         }
