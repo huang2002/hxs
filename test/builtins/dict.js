@@ -239,6 +239,12 @@ module.exports = (ctx) => {
     );
     ctx.assertDeepEqual(
         evalCode(`
+            Dict.diff({ #a -> NaN }, { #a -> NaN })
+        `),
+        {}
+    );
+    ctx.assertDeepEqual(
+        evalCode(`
             Dict.diff({ #a -> 0, #b -> 1 }, { #b -> 1 })
         `),
         { a: 0 }
