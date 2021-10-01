@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.34.0
+
+- Add `Dict.diff`
+- Add `Utils.extendContext` & `Utils.diffDict`
+- Fix help info
+
 ## 0.33.0
 
 - Remove default `import`(a placeholder)
