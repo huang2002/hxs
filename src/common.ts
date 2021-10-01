@@ -326,4 +326,14 @@ export namespace Utils {
         node.type === 'symbol' ? node.value : node.start
     );
 
+    export const diffDict = (target: Dict, reference: Dict) => {
+        const result = Object.create(null) as Dict;
+        for (const key in target) {
+            if (target[key] !== reference[key]) {
+                result[key] = target[key];
+            }
+        }
+        return result;
+    };
+
 }
