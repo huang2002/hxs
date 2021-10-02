@@ -20,12 +20,14 @@ module.exports = (ctx) => {
         evalCode(`
             key_a = 'baz';
             b = true;
+            c = 666;
             {
                 key_a -> 0,
                 #b -> b,
+                #c,
             }
         `),
-        { baz: 0, b: true }
+        { baz: 0, b: true, c: 666 }
     );
 
     ctx.assertDeepEqual(

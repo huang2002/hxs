@@ -36,7 +36,7 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
 
                 Object.assign(result, props);
 
-            } else { // `key -> value` entries
+            } else { // insert
 
                 let j;
                 for (j = left; j < right; j++) {
@@ -45,17 +45,30 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
                         break;
                     }
                 }
-                if (j === right) {
-                    Utils.raise(SyntaxError, 'invalid dict creation', nodes[left], context);
-                }
 
-                const name = evalExpression(nodes, context, left, j);
-                if (typeof name !== 'string') {
-                    Utils.raise(TypeError, 'expect a string', nodes[left], context);
-                }
+                if (j === right) { // shortcut
 
-                const value = evalExpression(nodes, context, j + 1, right);
-                result[name as string] = value;
+                    const name = evalExpression(nodes, context, left, right) as string;
+                    if (typeof name !== 'string') {
+                        Utils.raise(TypeError, 'expect a string as key', nodes[left], context);
+                    }
+                    if (!(name in context.store)) {
+                        Utils.raise(ReferenceError, `${Utils.toDisplay(name)} is not defined`, nodes[left], context);
+                    }
+
+                    result[name] = context.store[name];
+
+                } else { // key -> value
+
+                    const name = evalExpression(nodes, context, left, j) as string;
+                    if (typeof name !== 'string') {
+                        Utils.raise(TypeError, 'expect a string as key', nodes[left], context);
+                    }
+
+                    const value = evalExpression(nodes, context, j + 1, right);
+                    result[name] = value;
+
+                }
 
             }
 
