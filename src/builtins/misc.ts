@@ -13,6 +13,13 @@ export const print = Utils.injectHelp(
     })
 );
 
+export const same = Utils.injectHelp(
+    'same(a, b)',
+    createFunctionHandler(2, 2, (args, referrer, context) => {
+        return Object.is(args[0], args[1]);
+    })
+);
+
 export const set = Utils.injectHelp(
     'set(arrayOrDict, indexOrKey, value)',
     createFunctionHandler(3, 3, (args, referrer, context) => {
