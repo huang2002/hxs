@@ -5,8 +5,6 @@ const HXS = /** @type {import('../..')} */(
     /** @type {unknown} */(require('../../dist/hxs.umd.js'))
 );
 
-const DEFAULT_ENCODING = 'utf8';
-
 /**
  * @param {HXS.ScriptContext} context
  * @param {BufferEncoding} encoding
