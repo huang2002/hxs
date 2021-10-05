@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.35.0
+
+- Add invocable type
+- Add shortcut syntax to dict creation
+- Add `same`
+
 ## 0.34.0
 
 - Add `Dict.diff`
