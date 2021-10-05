@@ -14,7 +14,7 @@ export const builtinFunction = Utils.injectHelp(
         ),
 
         invoke: Utils.injectHelp(
-            'Function.invoke(function, args = null, thisArg = null)',
+            'Function.invoke(invocable, args = null, thisArg = null)',
             createFunctionHandler(1, 3, (args, referrer, context) => {
                 const fn = args[0];
                 if (!Utils.isInvocable(fn)) {
@@ -48,7 +48,7 @@ export const builtinFunction = Utils.injectHelp(
         ),
 
         bind: Utils.injectHelp(
-            'Function.bind(function, thisArg)',
+            'Function.bind(invocable, thisArg)',
             createFunctionHandler(2, 2, (args, referrer, context) => {
                 const fn = args[0];
                 if (!Utils.isInvocable(fn)) {
