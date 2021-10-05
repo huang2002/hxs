@@ -90,8 +90,8 @@ export const miscOperators: OperatorDefinition[] = [{
             callback = null;
         }
 
-        if (typeof callback !== 'function') {
-            Utils.raise(TypeError, 'expect a function', buffer[index], context);
+        if (!Utils.isInvocable(callback)) {
+            Utils.raise(TypeError, 'expect an invocable', buffer[index], context);
         }
 
         const COMMA_NODE: SymbolNode = {
@@ -103,7 +103,8 @@ export const miscOperators: OperatorDefinition[] = [{
         };
 
         const handler: FunctionHandler = (rawArgs, referrer, _context, thisArg) => {
-            return (callback as FunctionHandler)(
+            return Utils.invoke(
+                callback,
                 [
                     Utils.createValueNode(target, referrer),
                     COMMA_NODE,

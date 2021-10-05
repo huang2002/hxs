@@ -85,8 +85,8 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
     } else { // callback invocation
 
         const handler = evalNode(buffer[index - 1], context);
-        if (typeof handler !== 'function') {
-            Utils.raise(TypeError, 'expect a function', buffer[index], context);
+        if (!Utils.isInvocable(handler)) {
+            Utils.raise(TypeError, 'expect an invocable', buffer[index], context);
         }
 
         const compiledBody = compileNodes((buffer[index] as SpanNode).body, context);
@@ -94,7 +94,8 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
             return evalCompiledNodes(compiledBody, _context, true, true);
         };
 
-        const returnValue = (handler as FunctionHandler)(
+        const returnValue = Utils.invoke(
+            handler,
             [Utils.createValueNode(callback, buffer[index])],
             buffer[index],
             context,

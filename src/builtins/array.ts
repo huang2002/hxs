@@ -1,5 +1,5 @@
 import { SymbolNode } from '3h-ast';
-import { ContextValue, FunctionHandler, Utils } from '../common';
+import { ContextValue, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
 
 export const builtinArray = Utils.injectHelp(
@@ -372,11 +372,11 @@ export const builtinArray = Utils.injectHelp(
                 }
 
                 const compareFn = args[1];
-                if (args.length > 1 && typeof compareFn !== 'function') {
-                    Utils.raise(TypeError, 'expect a function as the second argument', referrer, context);
+                let _compareFn;
+                if (args.length > 1 && !Utils.isInvocable(compareFn)) {
+                    Utils.raise(TypeError, 'expect an invocable as compare function', referrer, context);
                 }
 
-                let _compareFn;
                 if (compareFn) {
                     _compareFn = (a: ContextValue, b: ContextValue) => {
                         const COMMA_NODE: SymbolNode = {
@@ -386,7 +386,8 @@ export const builtinArray = Utils.injectHelp(
                             column: referrer.column,
                             offset: referrer.offset,
                         };
-                        return (compareFn as FunctionHandler<number>)(
+                        return Utils.invoke(
+                            compareFn,
                             [
                                 Utils.createValueNode(a, referrer),
                                 COMMA_NODE,
@@ -395,7 +396,7 @@ export const builtinArray = Utils.injectHelp(
                             referrer,
                             context,
                             null,
-                        );
+                        ) as number;
                     };
                 }
 
@@ -413,9 +414,9 @@ export const builtinArray = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
                 }
 
-                const callback = args[1] as FunctionHandler;
-                if (args.length > 1 && typeof callback !== 'function') {
-                    Utils.raise(TypeError, 'expect a function as callback', referrer, context);
+                const callback = args[1];
+                if (!Utils.isInvocable(callback)) {
+                    Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
                 }
 
                 const COMMA_NODE: SymbolNode = {
@@ -426,7 +427,7 @@ export const builtinArray = Utils.injectHelp(
                     offset: referrer.offset,
                 };
                 for (let i = 0; i < array.length; i++) {
-                    callback(
+                    Utils.invoke(callback,
                         [
                             Utils.createValueNode(array[i], referrer),
                             COMMA_NODE,
@@ -454,9 +455,9 @@ export const builtinArray = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
                 }
 
-                const callback = args[1] as FunctionHandler;
-                if (args.length > 1 && typeof callback !== 'function') {
-                    Utils.raise(TypeError, 'expect a function as callback', referrer, context);
+                const callback = args[1];
+                if (!Utils.isInvocable(callback)) {
+                    Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
                 }
 
                 const COMMA_NODE: SymbolNode = {
@@ -467,7 +468,8 @@ export const builtinArray = Utils.injectHelp(
                     offset: referrer.offset,
                 };
                 return array.map((element, index) => (
-                    callback(
+                    Utils.invoke(
+                        callback,
                         [
                             Utils.createValueNode(element, referrer),
                             COMMA_NODE,
@@ -493,9 +495,9 @@ export const builtinArray = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
                 }
 
-                const callback = args[1] as FunctionHandler;
-                if (args.length > 1 && typeof callback !== 'function') {
-                    Utils.raise(TypeError, 'expect a function as callback', referrer, context);
+                const callback = args[1];
+                if (!Utils.isInvocable(callback)) {
+                    Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
                 }
 
                 const COMMA_NODE: SymbolNode = {
@@ -506,7 +508,8 @@ export const builtinArray = Utils.injectHelp(
                     offset: referrer.offset,
                 };
                 return array.filter((element, index) => (
-                    callback(
+                    Utils.invoke(
+                        callback,
                         [
                             Utils.createValueNode(element, referrer),
                             COMMA_NODE,

@@ -336,4 +336,29 @@ export namespace Utils {
         return result;
     };
 
+    export const isInvocable = (target: ContextValue) => (
+        (typeof target === 'function')
+        || (isDict(target) && ('__invoke' in target))
+    );
+
+    export const invoke = (
+        target: ContextValue,
+        rawArgs: readonly SyntaxNode[],
+        referrer: SyntaxNode,
+        context: ScriptContext,
+        thisArg: ContextValue,
+    ): ContextValue => {
+        if (typeof target === 'function') {
+            return target(rawArgs, referrer, context, thisArg);
+        } else if (isDict(target) && ('__invoke' in target)) {
+            if (typeof target.__invoke !== 'function') {
+                raise(TypeError, 'expect `__invoke` to be a function', referrer, context);
+            }
+            return (target.__invoke as FunctionHandler)(rawArgs, referrer, context, thisArg);
+        } else {
+            raise(TypeError, 'expect a function or dict with proper `__invoke`', referrer, context);
+            return null; // for type checking
+        }
+    };
+
 }

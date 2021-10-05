@@ -1,5 +1,5 @@
 import { SpanNode } from '3h-ast';
-import { FunctionHandler, SyntaxHandler, Utils } from '../common';
+import { SyntaxHandler, Utils } from '../common';
 import { evalExpression } from "../eval/evalExpression";
 import { evalNode } from "../eval/evalNode";
 
@@ -13,11 +13,12 @@ export const parathesisHandler: SyntaxHandler = (buffer, index, context) => {
     } else { // function call
 
         const handler = evalNode(buffer[index - 1], context);
-        if (typeof handler !== 'function') {
-            Utils.raise(TypeError, 'expect a function', buffer[index], context);
+        if (!Utils.isInvocable(handler)) {
+            Utils.raise(TypeError, 'expect an invocable', buffer[index], context);
         }
 
-        const value = (handler as FunctionHandler)(
+        const value = Utils.invoke(
+            handler,
             (buffer[index] as SpanNode).body,
             buffer[index],
             context,

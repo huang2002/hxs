@@ -37,8 +37,8 @@ export const builtinFor: FunctionHandler = Utils.injectHelp(
         return createFunctionHandler(1, 1, (_args, _referrer, _context) => {
 
             const callback = _args[0];
-            if (typeof callback !== 'function') {
-                Utils.raise(TypeError, 'expect a callback', _referrer, _context);
+            if (!Utils.isInvocable(callback)) {
+                Utils.raise(TypeError, 'expect an invocable as callback', _referrer, _context);
             }
 
             const BREAK_FLAG = Symbol('hxs-break-flag');
@@ -59,7 +59,7 @@ export const builtinFor: FunctionHandler = Utils.injectHelp(
                         for (let iterator = begin; iterator < end; iterator += step) {
                             try {
                                 _context.store[iteratorName] = iterator;
-                                (callback as FunctionHandler)([], referrer, _context, null);
+                                Utils.invoke(callback, [], referrer, _context, null);
                             } catch (error) {
                                 if (error === BREAK_FLAG) {
                                     break;
@@ -72,7 +72,7 @@ export const builtinFor: FunctionHandler = Utils.injectHelp(
                         for (let iterator = begin; iterator > end; iterator += step) {
                             try {
                                 _context.store[iteratorName] = iterator;
-                                (callback as FunctionHandler)([], referrer, _context, null);
+                                Utils.invoke(callback, [], referrer, _context, null);
                             } catch (error) {
                                 if (error === BREAK_FLAG) {
                                     break;

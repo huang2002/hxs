@@ -20,9 +20,11 @@ module.exports = (ctx) => {
                 #sleep -> () => ('sleeping'),
             });
             Person = class({
-                #__init -> @(name) {
-                    invoke(Animal, ['people'], this);
-                    set(this, #name, name);
+                #__init -> {
+                    #__invoke -> @(name) {
+                        invoke(Animal, ['people'], this);
+                        set(this, #name, name);
+                    },
                 },
                 #speak -> (sign) => (
                     join('This is ', this.name, sign)

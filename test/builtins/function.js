@@ -87,7 +87,9 @@ module.exports = (ctx) => {
             foo = @() {
                 return(this);
             };
-            bar = () => (this);
+            bar = {
+                #__invoke -> () => (this),
+            };
             _foo = Function.bind(foo, 0);
             _bar = Function.bind(bar, 1);
             [
@@ -180,5 +182,30 @@ module.exports = (ctx) => {
 
     ctx.expectThrow(SyntaxError, evalCode, [`print(...{}) => ()`]);
     ctx.expectThrow(SyntaxError, evalCode, [`print(...'') => ()`]);
+
+    ctx.assertDeepEqual(
+        evalCode(`
+            [
+                f = @() {},
+                g = () => (),
+                { #__invoke -> f },
+                { #__invoke -> g },
+                { #__invoke -> null },
+                {},
+                [],
+                'funcion',
+            ]:map((v) => (Function.isInvocable(v)))
+        `),
+        [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+        ]
+    );
 
 };

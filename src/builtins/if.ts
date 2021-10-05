@@ -10,11 +10,11 @@ const createIf = (ended: boolean): FunctionHandler => Utils.injectHelp(
         }
         return createFunctionHandler(1, 1, (_args, referrer, context) => {
             const callback = _args[0];
-            if (typeof callback !== 'function') {
-                Utils.raise(TypeError, 'expect a callback', referrer, context);
+            if (!Utils.isInvocable(callback)) {
+                Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
             }
             if (!ended && condition) {
-                (callback as FunctionHandler)([], referrer, context, null);
+                Utils.invoke(callback, [], referrer, context, null);
                 return createIf(true);
             } else {
                 return createIf(false);

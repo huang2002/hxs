@@ -1,4 +1,4 @@
-import { Dict, FunctionHandler, Utils } from '../common';
+import { Dict, Utils } from '../common';
 import { createFunctionHandler } from '../function/createFunctionHandler';
 
 export const builtinClass = Utils.injectHelp(
@@ -10,11 +10,8 @@ export const builtinClass = Utils.injectHelp(
             Utils.raise(TypeError, 'expect a dict as class description', referrer, context);
         }
 
-        if (
-            '__init' in description
-            && typeof description.__init !== 'function'
-        ) {
-            Utils.raise(TypeError, 'expect a function as initializer (__init)', referrer, context);
+        if (('__init' in description) && !Utils.isInvocable(description.__init)) {
+            Utils.raise(TypeError, 'expect an invocable as initializer', referrer, context);
         }
 
         return (_rawArgs, _referrer, _context, _thisArg) => {
@@ -39,7 +36,7 @@ export const builtinClass = Utils.injectHelp(
                 }
             }
             if (description.__init) {
-                (description.__init as FunctionHandler)(_rawArgs, _referrer, _context, object);
+                Utils.invoke(description.__init, _rawArgs, _referrer, _context, object);
             }
             return object;
         };

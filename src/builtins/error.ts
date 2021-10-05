@@ -17,9 +17,9 @@ export const builtinTry = Utils.injectHelp(
     'try { ... } (error) { ... }',
     createFunctionHandler(1, 1, (args, referrer, context, thisArg): FunctionHandler => {
 
-        const tryBody = args[0] as FunctionHandler;
-        if (typeof tryBody !== 'function') {
-            Utils.raise(TypeError, 'expect a callback to execute', referrer, context);
+        const tryBody = args[0];
+        if (!Utils.isInvocable(tryBody)) {
+            Utils.raise(TypeError, 'expect an invocable to try', referrer, context);
         }
 
         return (rawArgs) => {
@@ -31,13 +31,13 @@ export const builtinTry = Utils.injectHelp(
 
             return createFunctionHandler(1, 1, (_args, _referrer, _context, _thisArg) => {
 
-                const catchBody = _args[0] as FunctionHandler;
-                if (typeof catchBody !== 'function') {
-                    Utils.raise(TypeError, 'expect a callback as error handler', referrer, context);
+                const catchBody = _args[0];
+                if (!Utils.isInvocable(catchBody)) {
+                    Utils.raise(TypeError, 'expect an invocable as error handler', referrer, context);
                 }
 
                 try {
-                    tryBody([], referrer, context, thisArg);
+                    Utils.invoke(tryBody, [], referrer, context, thisArg);
                 } catch (error) {
                     if (typeof error === 'symbol') {
                         throw error;
@@ -45,7 +45,7 @@ export const builtinTry = Utils.injectHelp(
                     Utils.injectTemp(_context.store, {
                         [errName]: String(error),
                     }, () => {
-                        catchBody([], _referrer, _context, _thisArg);
+                        Utils.invoke(catchBody, [], _referrer, _context, _thisArg);
                     });
                 }
 
