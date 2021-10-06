@@ -44,36 +44,36 @@ module.exports = (ctx) => {
 
     ctx.expectThrow(TypeError, evalCode, [`{ 0 -> 1 }`]);
 
-    ctx.assertShallowEqual(evalCode('Dict.create()'), {});
-    ctx.expectThrow(TypeError, evalCode, ['Dict.create([])']);
+    ctx.assertShallowEqual(evalCode('Dict()'), {});
+    ctx.assertShallowEqual(evalCode('Dict([])'), {});
+    ctx.assertShallowEqual(evalCode("Dict([['a', 1], [`b`, '2']])"), { a: 1, b: '2' });
+    ctx.expectThrow(TypeError, evalCode, ['Dict(6)']);
+    ctx.expectThrow(TypeError, evalCode, ['Dict([6])']);
+    ctx.expectThrow(TypeError, evalCode, ['Dict([0, 1])']);
+    ctx.expectThrow(TypeError, evalCode, [`Dict([[#foo, 'bar'], [2, '3']])`]);
 
-    ctx.assertShallowEqual(evalCode('Dict.from([])'), {});
-    ctx.assertShallowEqual(evalCode("Dict.from([['a', 1], [`b`, '2']])"), { a: 1, b: '2' });
-    ctx.expectThrow(TypeError, evalCode, ['Dict.from(6)']);
-    ctx.expectThrow(TypeError, evalCode, ['Dict.from([6])']);
-
-    ctx.assertShallowEqual(evalCode("Dict.clone(Dict.from([['foo', 4]]))"), { foo: 4 });
+    ctx.assertShallowEqual(evalCode("Dict.clone(Dict([['foo', 4]]))"), { foo: 4 });
     ctx.expectThrow(TypeError, evalCode, ['Dict.clone([])']);
 
-    ctx.assertShallowEqual(evalCode("Dict.keys(Dict.create())"), []);
-    ctx.assertShallowEqual(evalCode("Dict.keys(Dict.from([['foo', 4]]))"), ['foo']);
-    ctx.assertShallowEqual(evalCode("Dict.keys(Dict.from([[#a, 0], [#b, 1]]))"), ['a', 'b']);
+    ctx.assertShallowEqual(evalCode("Dict.keys(Dict())"), []);
+    ctx.assertShallowEqual(evalCode("Dict.keys(Dict([['foo', 4]]))"), ['foo']);
+    ctx.assertShallowEqual(evalCode("Dict.keys(Dict([[#a, 0], [#b, 1]]))"), ['a', 'b']);
     ctx.expectThrow(TypeError, evalCode, ['Dict.keys([])']);
 
-    ctx.assertDeepEqual(evalCode("Dict.entries(Dict.create())"), []);
-    ctx.assertDeepEqual(evalCode("Dict.entries(Dict.from([['foo', 4]]))"), [['foo', 4]]);
-    ctx.assertDeepEqual(evalCode("Dict.entries(Dict.from([[#a, 0], [#b, 1]]))"), [['a', 0], ['b', 1]]);
+    ctx.assertDeepEqual(evalCode("Dict.entries(Dict())"), []);
+    ctx.assertDeepEqual(evalCode("Dict.entries(Dict([['foo', 4]]))"), [['foo', 4]]);
+    ctx.assertDeepEqual(evalCode("Dict.entries(Dict([[#a, 0], [#b, 1]]))"), [['a', 0], ['b', 1]]);
     ctx.expectThrow(TypeError, evalCode, ['Dict.entries([])']);
 
-    ctx.assertStrictEqual(evalCode("Dict.has(Dict.create(), 'foo')"), false);
-    ctx.assertStrictEqual(evalCode("Dict.has(Dict.from([[#bar, 'baz']]), 'foo')"), false);
-    ctx.assertStrictEqual(evalCode("Dict.has(Dict.from([[#foo, 'bar']]), 'foo')"), true);
+    ctx.assertStrictEqual(evalCode("Dict.has(Dict(), 'foo')"), false);
+    ctx.assertStrictEqual(evalCode("Dict.has(Dict([[#bar, 'baz']]), 'foo')"), false);
+    ctx.assertStrictEqual(evalCode("Dict.has(Dict([[#foo, 'bar']]), 'foo')"), true);
     ctx.expectThrow(TypeError, evalCode, ["Dict.has([0], 0)"]);
-    ctx.expectThrow(TypeError, evalCode, ["Dict.has(Dict.from([['0', 1]]), 0)"]);
+    ctx.expectThrow(TypeError, evalCode, ["Dict.has(Dict([['0', 1]]), 0)"]);
 
     ctx.assertShallowEqual(
         evalCode(`
-            dict = Dict.create();
+            dict = Dict();
             Dict.set(dict, 'bar', 8);
             dict
         `),
@@ -82,7 +82,7 @@ module.exports = (ctx) => {
 
     ctx.assertStrictEqual(
         evalCode(`
-            a = Dict.create();
+            a = Dict();
             Dict.set(a, 'b', 'c');
             a['b']
         `),
@@ -91,7 +91,7 @@ module.exports = (ctx) => {
 
     ctx.assertStrictEqual(
         evalCode(`
-            a = Dict.create();
+            a = Dict();
             Dict.set(a, 't', 2);
             a.t
         `),
@@ -104,7 +104,7 @@ module.exports = (ctx) => {
     ctx.assertShallowEqual(
         evalCode(`
             Dict.unpack(
-                Dict.from([
+                Dict([
                     ['a', 1],
                     ['b', '2']
                 ]),
@@ -118,7 +118,7 @@ module.exports = (ctx) => {
     ctx.assertShallowEqual(
         evalCode(`
             Dict.unpack(
-                Dict.from([['a', 0]]),
+                Dict([['a', 0]]),
                 ['a', 'b'],
                 true
             );

@@ -5,6 +5,17 @@ export const builtinString = Utils.injectHelp(
     'A dict providing methods for string manipulations.',
     Utils.createDict({
 
+        __invoke: Utils.injectHelp(
+            `String.__invoke(parts...)`,
+            createFunctionHandler(1, Infinity, (args, referrer, context) => {
+                let result = '';
+                for (let i = 0; i < args.length; i++) {
+                    result += Utils.toString(args[i]);
+                }
+                return result;
+            })
+        ),
+
         sizeOf: Utils.injectHelp(
             'String.sizeOf(string)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
@@ -13,17 +24,6 @@ export const builtinString = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect a string', referrer, context);
                 }
                 return (string as string).length;
-            })
-        ),
-
-        join: Utils.injectHelp(
-            `String.join(parts...)`,
-            createFunctionHandler(1, Infinity, (args, referrer, context) => {
-                let result = '';
-                for (let i = 0; i < args.length; i++) {
-                    result += Utils.toString(args[i]);
-                }
-                return result;
             })
         ),
 

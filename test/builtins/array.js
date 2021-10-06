@@ -16,6 +16,12 @@ module.exports = (ctx) => {
     ctx.expectThrow(RangeError, evalCode, [`[0, [1]][2]`]);
     ctx.expectThrow(RangeError, evalCode, [`[0, [1]][-3]`]);
 
+    ctx.assertDeepEqual(evalCode(`Array()`), []);
+    ctx.assertDeepEqual(evalCode(`Array(0)`), [0]);
+    ctx.assertDeepEqual(evalCode(`Array(1)`), [1]);
+    ctx.assertDeepEqual(evalCode(`Array(0, 1)`), [0, 1]);
+    ctx.assertDeepEqual(evalCode(`Array(0, Array(1))`), [0, [1]]);
+
     ctx.assertShallowEqual(evalCode('Array.create()'), []);
     ctx.assertShallowEqual(evalCode('Array.create(0)'), []);
     ctx.assertShallowEqual(evalCode('Array.create(1)'), [null]);

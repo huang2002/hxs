@@ -27,7 +27,7 @@ module.exports = (ctx) => {
                     },
                 },
                 #speak -> (sign) => (
-                    join('This is ', this.name, sign)
+                    String('This is ', this.name, sign)
                 ),
                 #sleep -> () => ('zzzzz'),
             });

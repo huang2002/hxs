@@ -5,23 +5,25 @@ export const builtinDict = Utils.injectHelp(
     'A dict providing methods for dict manipulations.',
     Utils.createDict({
 
-        create: Utils.injectHelp(
-            'Dict.create()',
-            createFunctionHandler(0, 0, (args, referrer, context) => {
-                return Object.create(null);
-            })
-        ),
+        __invoke: Utils.injectHelp(
+            'Dict.__invoke(entries?)',
+            createFunctionHandler(0, 1, (args, referrer, context) => {
 
-        from: Utils.injectHelp(
-            'Dict.from(entries)',
-            createFunctionHandler(1, 1, (args, referrer, context) => {
-                const entries = args[0];
+                const dict = Object.create(null) as Dict;
+
+                if (args.length === 0) {
+                    return dict;
+                }
+
+                const entries = args[0] as [string, ContextValue][];
                 if (!Array.isArray(entries)) {
                     Utils.raise(TypeError, `expect an array of arrays as entries`, referrer, context);
                 }
-                const dict = Object.create(null);
-                for (let i = 0; i < (entries as unknown[]).length; i++) {
-                    const entry = (entries as unknown[])[i];
+
+                for (let i = 0; i < entries.length; i++) {
+
+                    const entry = entries[i];
+
                     if (
                         !Array.isArray(entry)
                         || entry.length !== 2
@@ -29,10 +31,13 @@ export const builtinDict = Utils.injectHelp(
                     ) {
                         Utils.raise(TypeError, `invalid dict entry`, referrer, context);
                     }
-                    type DictEntry = [string, ContextValue];
-                    dict[(entry as DictEntry)[0]] = (entry as DictEntry)[1];
+
+                    dict[entry[0]] = entry[1];
+
                 }
+
                 return dict;
+
             })
         ),
 

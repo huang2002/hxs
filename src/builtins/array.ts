@@ -6,6 +6,13 @@ export const builtinArray = Utils.injectHelp(
     'A dict providing methods for array manipulations.',
     Utils.createDict({
 
+        __invoke: Utils.injectHelp(
+            'Array.__invoke(data...)',
+            createFunctionHandler(0, Infinity, (args) => (
+                args.slice()
+            ))
+        ),
+
         create: Utils.injectHelp(
             'Array.create(size = 0, init = null)',
             createFunctionHandler(0, 2, (args, referrer, context) => {

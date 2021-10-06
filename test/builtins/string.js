@@ -22,8 +22,8 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`String.sizeOf('abc')`), 3);
     ctx.expectThrow(TypeError, evalCode, [`String.sizeOf(['foo', 'bar'])`]);
 
-    ctx.assertStrictEqual(evalCode(`String.join('a', 'b', 'c')`), 'abc');
-    ctx.assertStrictEqual(evalCode(`String.join('abc', 123, true)`), 'abc123true');
+    ctx.assertStrictEqual(evalCode(`String('a', 'b', 'c')`), 'abc');
+    ctx.assertStrictEqual(evalCode(`String('abc', 123, true)`), 'abc123true');
 
     ctx.assertStrictEqual(evalCode(`String.toLowerCase('LowerCase')`), 'lowercase');
     ctx.expectThrow(TypeError, evalCode, ['String.toLowerCase(123)']);

@@ -155,8 +155,8 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`forEach`), evalCode(`Array.forEach`));
     ctx.assertStrictEqual(evalCode(`map`), evalCode(`Array.map`));
     ctx.assertStrictEqual(evalCode(`filter`), evalCode(`Array.filter`));
-    ctx.assertStrictEqual(evalCode(`join`), evalCode(`String.join`));
     ctx.assertStrictEqual(evalCode(`keys`), evalCode(`Dict.keys`));
+    ctx.assertStrictEqual(evalCode(`isInvocable`), evalCode(`Function.isInvocable`));
     ctx.assertStrictEqual(evalCode(`invoke`), evalCode(`Function.invoke`));
     ctx.assertStrictEqual(evalCode(`bind`), evalCode(`Function.bind`));
     ctx.assertStrictEqual(evalCode(`isNaN`), evalCode(`Number.isNaN`));
