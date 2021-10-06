@@ -10,21 +10,21 @@ module.exports = (ctx) => {
         evalCode(`
             _id = 0;
             Animal = class({
-                #__init -> @(type = 'animal') {
-                    set(this, #id, _id);
-                    set(this, #type, type);
-                    _id += 1;
-                    forward([#_id]);
+                #__init -> {
+                    #__invoke -> @(type = 'animal') {
+                        set(this, #id, _id);
+                        set(this, #type, type);
+                        _id += 1;
+                        forward([#_id]);
+                    },
                 },
                 #eat -> () => ('eating'),
                 #sleep -> () => ('sleeping'),
             });
             Person = class({
-                #__init -> {
-                    #__invoke -> @(name) {
-                        invoke(Animal, ['people'], this);
-                        set(this, #name, name);
-                    },
+                #__init -> @(name) {
+                    invoke(Animal, ['people'], this);
+                    set(this, #name, name);
                 },
                 #speak -> (sign) => (
                     String('This is ', this.name, sign)
