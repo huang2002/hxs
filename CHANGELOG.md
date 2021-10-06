@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.36.0
+
+- Add `String.__invoke`
+- Add `Array.__invoke`
+- Add `Dict.__invoke`
+- Remove `String.join` & `join`
+- Remove `Dict.create` & `Dict.from`
+
 ## 0.35.0
 
 - Add invocable type
