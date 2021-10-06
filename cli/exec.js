@@ -1,20 +1,14 @@
 // @ts-check
 const { readFileSync } = require('fs');
 const { dirname } = require('path');
-const { enableModule } = require('./addons/module.js');
+const { enableAddons } = require('./enableAddons.js');
 const HXS = /** @type {import('..')} */ (
     /** @type {unknown} */ (require('../dist/hxs.umd.js'))
 );
 
 /**
- * @typedef ExecOptions
- * @property {BufferEncoding} encoding
- * @property {boolean} module
- */
-
-/**
  * @param {string} filePath
- * @param {ExecOptions} options
+ * @param {import('./enableAddons').AddonOptions} options
  */
 exports.exec = (filePath, options) => {
 
@@ -33,9 +27,7 @@ exports.exec = (filePath, options) => {
 
     context.resolvedModules[filePath] = context.exports;
 
-    if (options.module) {
-        enableModule(context, options.encoding);
-    }
+    enableAddons(context, options);
 
     HXS.evalCode(code, context);
 

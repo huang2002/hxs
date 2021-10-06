@@ -1,6 +1,6 @@
 // @ts-check
 const { createInterface } = require('readline');
-const { enableModule } = require('./addons/module.js');
+const { enableAddons } = require('./enableAddons.js');
 const HXS = /** @type {import('..')} */(
     /** @type {unknown} */(require('../dist/hxs.umd.js'))
 );
@@ -32,9 +32,7 @@ exports.createREPL = (options) => {
         basePath: process.cwd(),
     };
 
-    if (options.module) {
-        enableModule(context, options.encoding);
-    }
+    enableAddons(context, options);
 
     context.store.__repl = HXS.Utils.injectHelp(
         'REPL manager',

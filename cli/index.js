@@ -54,29 +54,25 @@ program.parse(process.argv)
         );
 
         const { actions } = args;
+        const addonOptions = {
+            encoding,
+            module: args.options.has('--module'),
+        };
 
         switch (actions[0]) {
 
             case 'exec': {
                 const { resolve } = require('path');
                 const { exec } = require('./exec.js');
-                const options = {
-                    encoding,
-                    module: args.options.has('--module'),
-                };
                 for (let i = 1; i < actions.length; i++) {
                     const filePath = resolve(process.cwd(), actions[i]);
-                    exec(filePath, options);
+                    exec(filePath, addonOptions);
                 }
                 break;
             }
 
             case 'repl': {
-                const options = {
-                    encoding,
-                    module: args.options.has('--module'),
-                };
-                createREPL(options);
+                createREPL(addonOptions);
                 break;
             }
 
