@@ -1,4 +1,3 @@
-import { SymbolNode } from '3h-ast';
 import { ContextValue, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
 
@@ -385,26 +384,15 @@ export const builtinArray = Utils.injectHelp(
                 }
 
                 if (compareFn) {
-                    _compareFn = (a: ContextValue, b: ContextValue) => {
-                        const COMMA_NODE: SymbolNode = {
-                            type: 'symbol',
-                            value: ',',
-                            line: referrer.line,
-                            column: referrer.column,
-                            offset: referrer.offset,
-                        };
-                        return Utils.invoke(
+                    _compareFn = (a: ContextValue, b: ContextValue) => (
+                        Utils.invoke(
                             compareFn,
-                            [
-                                Utils.createValueNode(a, referrer),
-                                COMMA_NODE,
-                                Utils.createValueNode(b, referrer),
-                            ],
+                            Utils.createRawArray([a, b], referrer),
                             referrer,
                             context,
                             null,
-                        ) as number;
-                    };
+                        ) as number
+                    );
                 }
 
                 return (array as ContextValue[]).sort(_compareFn);
@@ -426,22 +414,9 @@ export const builtinArray = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
                 }
 
-                const COMMA_NODE: SymbolNode = {
-                    type: 'symbol',
-                    value: ',',
-                    line: referrer.line,
-                    column: referrer.column,
-                    offset: referrer.offset,
-                };
                 for (let i = 0; i < array.length; i++) {
                     Utils.invoke(callback,
-                        [
-                            Utils.createValueNode(array[i], referrer),
-                            COMMA_NODE,
-                            Utils.createValueNode(i, referrer),
-                            COMMA_NODE,
-                            Utils.createValueNode(array, referrer),
-                        ],
+                        Utils.createRawArray([array[i], i, array], referrer),
                         referrer,
                         context,
                         null,
@@ -467,23 +442,10 @@ export const builtinArray = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
                 }
 
-                const COMMA_NODE: SymbolNode = {
-                    type: 'symbol',
-                    value: ',',
-                    line: referrer.line,
-                    column: referrer.column,
-                    offset: referrer.offset,
-                };
                 return array.map((element, index) => (
                     Utils.invoke(
                         callback,
-                        [
-                            Utils.createValueNode(element, referrer),
-                            COMMA_NODE,
-                            Utils.createValueNode(index, referrer),
-                            COMMA_NODE,
-                            Utils.createValueNode(array, referrer),
-                        ],
+                        Utils.createRawArray([element, index, array], referrer),
                         referrer,
                         context,
                         null,
@@ -507,23 +469,10 @@ export const builtinArray = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
                 }
 
-                const COMMA_NODE: SymbolNode = {
-                    type: 'symbol',
-                    value: ',',
-                    line: referrer.line,
-                    column: referrer.column,
-                    offset: referrer.offset,
-                };
                 return array.filter((element, index) => (
                     Utils.invoke(
                         callback,
-                        [
-                            Utils.createValueNode(element, referrer),
-                            COMMA_NODE,
-                            Utils.createValueNode(index, referrer),
-                            COMMA_NODE,
-                            Utils.createValueNode(array, referrer),
-                        ],
+                        Utils.createRawArray([element, index, array], referrer),
                         referrer,
                         context,
                         null,

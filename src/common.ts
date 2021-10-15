@@ -175,6 +175,29 @@ export namespace Utils {
         value,
     });
 
+    export const createRawArray = (
+        array: ContextValue[],
+        referrer: SyntaxNode,
+    ) => {
+        const COMMA_NODE: SymbolNode = {
+            type: 'symbol',
+            value: ',',
+            line: referrer.line,
+            column: referrer.column,
+            offset: referrer.offset,
+        };
+        const rawArray: SyntaxNode[] = [];
+        for (let i = 0; i < array.length; i++) {
+            if (i) {
+                rawArray.push(COMMA_NODE);
+            }
+            rawArray.push(
+                createValueNode(array[i], referrer)
+            );
+        }
+        return rawArray;
+    };
+
     export const replaceBuffer = (
         buffer: SyntaxNode[],
         start: number,
