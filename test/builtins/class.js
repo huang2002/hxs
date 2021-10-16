@@ -9,7 +9,8 @@ module.exports = (ctx) => {
     ctx.assertDeepEqual(
         evalCode(`
             _id = 0;
-            Animal = class({
+
+            Animal = Class({
                 #__init -> {
                     #__invoke -> @(type = 'animal') {
                         set(this, #id, _id);
@@ -21,9 +22,9 @@ module.exports = (ctx) => {
                 #eat -> () => ('eating'),
                 #sleep -> () => ('sleeping'),
             });
-            Person = class({
+
+            Human = Class.extend(Animal, ['people'])({
                 #__init -> @(name) {
-                    invoke(Animal, ['people'], this);
                     set(this, #name, name);
                 },
                 #speak -> (sign) => (
@@ -31,38 +32,50 @@ module.exports = (ctx) => {
                 ),
                 #sleep -> () => ('zzzzz'),
             });
+
             animal = Animal();
             Tom = Animal('cat');
-            Peter = Person('Peter');
+            Peter = Human('Peter');
+
             [
                 animal.id,
                 animal.type,
+                getConstructorOf(animal) == Animal,
                 Tom.id,
                 Tom.type,
                 Tom.eat(),
                 Tom.sleep(),
+                isInstanceOf(Animal, Tom),
                 Peter.id,
                 Peter.type,
                 Peter.name,
                 Peter.eat(),
                 Peter.sleep(),
                 Peter.speak('!'),
+                getConstructorOf(Peter) == Human,
+                isInstanceOf(Animal, Peter),
             ]
         `),
         [
             0,
             'animal',
+            true,
             1,
             'cat',
             'eating',
             'sleeping',
+            true,
             2,
             'people',
             'Peter',
             'eating',
             'zzzzz',
-            'This is Peter!'
+            'This is Peter!',
+            true,
+            true,
         ]
     );
+
+    ctx.assertStrictEqual(evalCode(`isInstanceOf(null, {})`), true);
 
 };

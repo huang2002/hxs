@@ -31,8 +31,8 @@ export const builtins = Utils.createDict({
     for: builtinFor,
     raise: builtinRaise,
     try: builtinTry,
-    class: builtinClass,
 
+    Class: builtinClass,
     Array: builtinArray,
     String: builtinString,
     Dict: builtinDict,
@@ -76,5 +76,7 @@ export const builtins = Utils.createDict({
     invoke: builtinFunction.invoke,
     bind: builtinFunction.bind,
     isNaN: builtinNumber.isNaN,
+    getConstructorOf: builtinClass.getConstructorOf,
+    isInstanceOf: builtinClass.isInstanceOf,
 
 });
