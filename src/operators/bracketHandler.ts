@@ -3,6 +3,7 @@ import { Dict, FunctionHandler, SyntaxHandler, Utils } from '../common';
 import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
 import { evalExpression } from "../eval/evalExpression";
 import { evalNode } from "../eval/evalNode";
+import { invoke, isInvocable } from '../function/common';
 
 export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
 
@@ -85,7 +86,7 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
     } else { // callback invocation
 
         const handler = evalNode(buffer[index - 1], context);
-        if (!Utils.isInvocable(handler)) {
+        if (!isInvocable(handler)) {
             Utils.raise(TypeError, 'expect an invocable', buffer[index], context);
         }
 
@@ -94,7 +95,7 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
             return evalCompiledNodes(compiledBody, _context, true, true);
         };
 
-        const returnValue = Utils.invoke(
+        const returnValue = invoke(
             handler,
             [Utils.createValueNode(callback, buffer[index])],
             buffer[index],

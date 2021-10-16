@@ -1,5 +1,6 @@
-import { ContextValue, ScriptContext, SyntaxNode, Utils, OperatorNode } from '../common';
+import { ContextValue, ScriptContext, SyntaxNode, Utils } from '../common';
 import { operatorHandlers, operatorLtr, operatorPriorities } from '../operators/index';
+import { getOperatorSymbol, OperatorNode } from './common';
 import { evalNode } from './evalNode';
 
 export type CompiledExpression = Readonly<{
@@ -32,10 +33,10 @@ export const compileExpression = (
     // sort operators in order of priority (high->low)
     Utils.sort(operatorNodes, (nodeA, nodeB) => {
         const priorityA = operatorPriorities.get(
-            Utils.getOperatorSymbol(nodeA)
+            getOperatorSymbol(nodeA)
         )!;
         const priorityB = operatorPriorities.get(
-            Utils.getOperatorSymbol(nodeB)
+            getOperatorSymbol(nodeB)
         )!;
         return priorityA - priorityB;
     });
@@ -43,11 +44,11 @@ export const compileExpression = (
     let p = 0;
     let t;
     while (p < operatorNodes.length) {
-        let symbol = Utils.getOperatorSymbol(operatorNodes[p]);
+        let symbol = getOperatorSymbol(operatorNodes[p]);
         for (let q = p + 1; q <= operatorNodes.length; q++) {
             if (
                 q < operatorNodes.length
-                && Utils.getOperatorSymbol(operatorNodes[q]) === symbol
+                && getOperatorSymbol(operatorNodes[q]) === symbol
             ) {
                 continue;
             }

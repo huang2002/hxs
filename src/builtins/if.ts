@@ -1,5 +1,6 @@
 import { FunctionHandler, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
+import { invoke, isInvocable } from '../function/common';
 
 const createIf = (ended: boolean): FunctionHandler => Utils.injectHelp(
     'if (condition0) { ... } (condition1) { ... } ...',
@@ -10,11 +11,11 @@ const createIf = (ended: boolean): FunctionHandler => Utils.injectHelp(
         }
         return createFunctionHandler(1, 1, (_args, referrer, context) => {
             const callback = _args[0];
-            if (!Utils.isInvocable(callback)) {
+            if (!isInvocable(callback)) {
                 Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
             }
             if (!ended && condition) {
-                Utils.invoke(callback, [], referrer, context, null);
+                invoke(callback, [], referrer, context, null);
                 return createIf(true);
             } else {
                 return createIf(false);

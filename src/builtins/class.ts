@@ -1,5 +1,7 @@
-import { BASE_SYMBOL, ContextValue, Dict, FunctionHandler, Utils } from '../common';
+import { ContextValue, Dict, FunctionHandler, Utils } from '../common';
 import { createFunctionHandler } from '../function/createFunctionHandler';
+import { invoke, isInvocable } from '../function/common';
+import { createClass, BASE_SYMBOL, getConstructorOf, isInstanceOf } from './common';
 
 export const builtinClass = Utils.injectHelp(
     'A dict providing class APIs.',
@@ -14,11 +16,11 @@ export const builtinClass = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect a dict as class description', referrer, context);
                 }
 
-                if (('__init' in description) && !Utils.isInvocable(description.__init)) {
+                if (('__init' in description) && !isInvocable(description.__init)) {
                     Utils.raise(TypeError, 'expect an invocable as initializer', referrer, context);
                 }
 
-                return Utils.createClass(description, referrer, context);
+                return createClass(description, referrer, context);
 
             })
         ),
@@ -28,7 +30,7 @@ export const builtinClass = Utils.injectHelp(
             createFunctionHandler(1, 2, (args, referrer, context) => {
 
                 const baseClass = args[0] as Dict;
-                if (!Utils.isInvocable(baseClass)) {
+                if (!isInvocable(baseClass)) {
                     Utils.raise(TypeError, 'expect an invocable as base class', referrer, context);
                 }
 
@@ -44,7 +46,7 @@ export const builtinClass = Utils.injectHelp(
                         Utils.raise(TypeError, 'expect a dict as class description', referrer, context);
                     }
 
-                    if (('__init' in description) && !Utils.isInvocable(description.__init)) {
+                    if (('__init' in description) && !isInvocable(description.__init)) {
                         Utils.raise(TypeError, 'expect an invocable as initializer', referrer, context);
                     }
 
@@ -52,14 +54,14 @@ export const builtinClass = Utils.injectHelp(
 
                         const oldInit = description.__init as FunctionHandler;
                         const newInit: FunctionHandler = (rawArgs, ref, ctx, thisArg) => {
-                            Utils.invoke(
+                            invoke(
                                 baseClass,
                                 Utils.createRawArray(baseArgs, ref),
                                 referrer,
                                 context,
                                 thisArg,
                             );
-                            return Utils.invoke(oldInit, rawArgs, ref, ctx, thisArg);
+                            return invoke(oldInit, rawArgs, ref, ctx, thisArg);
                         };
 
                         description.__init = newInit;
@@ -67,7 +69,7 @@ export const builtinClass = Utils.injectHelp(
                     } else {
 
                         const init: FunctionHandler = (rawArgs, ref, ctx, thisArg) => {
-                            Utils.invoke(
+                            invoke(
                                 baseClass,
                                 Utils.createRawArray(baseArgs, ref),
                                 referrer,
@@ -81,7 +83,7 @@ export const builtinClass = Utils.injectHelp(
 
                     }
 
-                    const constructor = Utils.createClass(description, _referrer, _context);
+                    const constructor = createClass(description, _referrer, _context);
                     constructor[BASE_SYMBOL] = baseClass;
 
                     return constructor;
@@ -98,7 +100,7 @@ export const builtinClass = Utils.injectHelp(
                 if (!Utils.isDict(dict)) {
                     Utils.raise(TypeError, 'expect a dict', referrer, context);
                 }
-                return Utils.getConstructorOf(dict);
+                return getConstructorOf(dict);
             })
         ),
 
@@ -109,7 +111,7 @@ export const builtinClass = Utils.injectHelp(
                 if (!Utils.isDict(dict)) {
                     Utils.raise(TypeError, 'expect a dict to check', referrer, context);
                 }
-                return Utils.isInstanceOf(args[0], dict);
+                return isInstanceOf(args[0], dict);
             })
         ),
 

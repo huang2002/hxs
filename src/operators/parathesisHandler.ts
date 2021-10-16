@@ -2,6 +2,7 @@ import { SpanNode } from '3h-ast';
 import { SyntaxHandler, Utils } from '../common';
 import { evalExpression } from "../eval/evalExpression";
 import { evalNode } from "../eval/evalNode";
+import { invoke, isInvocable } from '../function/common';
 
 export const parathesisHandler: SyntaxHandler = (buffer, index, context) => {
 
@@ -13,11 +14,11 @@ export const parathesisHandler: SyntaxHandler = (buffer, index, context) => {
     } else { // function call
 
         const handler = evalNode(buffer[index - 1], context);
-        if (!Utils.isInvocable(handler)) {
+        if (!isInvocable(handler)) {
             Utils.raise(TypeError, 'expect an invocable', buffer[index], context);
         }
 
-        const value = Utils.invoke(
+        const value = invoke(
             handler,
             (buffer[index] as SpanNode).body,
             buffer[index],

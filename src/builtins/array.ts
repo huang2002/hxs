@@ -1,5 +1,6 @@
 import { ContextValue, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
+import { invoke, isInvocable } from '../function/common';
 
 export const builtinArray = Utils.injectHelp(
     'A dict providing methods for array manipulations.',
@@ -379,13 +380,13 @@ export const builtinArray = Utils.injectHelp(
 
                 const compareFn = args[1];
                 let _compareFn;
-                if (args.length > 1 && !Utils.isInvocable(compareFn)) {
+                if (args.length > 1 && !isInvocable(compareFn)) {
                     Utils.raise(TypeError, 'expect an invocable as compare function', referrer, context);
                 }
 
                 if (compareFn) {
                     _compareFn = (a: ContextValue, b: ContextValue) => (
-                        Utils.invoke(
+                        invoke(
                             compareFn,
                             Utils.createRawArray([a, b], referrer),
                             referrer,
@@ -410,12 +411,12 @@ export const builtinArray = Utils.injectHelp(
                 }
 
                 const callback = args[1];
-                if (!Utils.isInvocable(callback)) {
+                if (!isInvocable(callback)) {
                     Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
                 }
 
                 for (let i = 0; i < array.length; i++) {
-                    Utils.invoke(callback,
+                    invoke(callback,
                         Utils.createRawArray([array[i], i, array], referrer),
                         referrer,
                         context,
@@ -438,12 +439,12 @@ export const builtinArray = Utils.injectHelp(
                 }
 
                 const callback = args[1];
-                if (!Utils.isInvocable(callback)) {
+                if (!isInvocable(callback)) {
                     Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
                 }
 
                 return array.map((element, index) => (
-                    Utils.invoke(
+                    invoke(
                         callback,
                         Utils.createRawArray([element, index, array], referrer),
                         referrer,
@@ -465,12 +466,12 @@ export const builtinArray = Utils.injectHelp(
                 }
 
                 const callback = args[1];
-                if (!Utils.isInvocable(callback)) {
+                if (!isInvocable(callback)) {
                     Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
                 }
 
                 return array.filter((element, index) => (
-                    Utils.invoke(
+                    invoke(
                         callback,
                         Utils.createRawArray([element, index, array], referrer),
                         referrer,

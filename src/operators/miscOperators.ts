@@ -6,6 +6,7 @@ import { builtinNumber } from '../builtins/number';
 import { builtinString } from '../builtins/string';
 import { ContextValue, Dict, FunctionHandler, Utils } from '../common';
 import { evalBufferNode } from "../eval/evalBufferNode";
+import { invoke, isInvocable } from '../function/common';
 import { createBinaryOperator, OperatorDefinition } from './common';
 
 export const miscOperators: OperatorDefinition[] = [{
@@ -90,7 +91,7 @@ export const miscOperators: OperatorDefinition[] = [{
             callback = null;
         }
 
-        if (!Utils.isInvocable(callback)) {
+        if (!isInvocable(callback)) {
             Utils.raise(TypeError, 'expect an invocable', buffer[index], context);
         }
 
@@ -103,7 +104,7 @@ export const miscOperators: OperatorDefinition[] = [{
         };
 
         const handler: FunctionHandler = (rawArgs, referrer, _context, thisArg) => {
-            return Utils.invoke(
+            return invoke(
                 callback,
                 [
                     Utils.createValueNode(target, referrer),

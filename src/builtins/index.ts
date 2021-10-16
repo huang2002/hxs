@@ -17,6 +17,8 @@ import { builtinClass } from './class';
 import { export_, getExports } from './module';
 import { builtinJSON } from './json';
 
+export * from './common';
+
 export const builtins = Utils.createDict({
 
     true: true,

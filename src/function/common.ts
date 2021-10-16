@@ -1,5 +1,5 @@
 import { SymbolNode, WordNode } from '3h-ast';
-import { ContextValue, SyntaxNode, ScriptContext, Utils } from '../common';
+import { ContextValue, SyntaxNode, ScriptContext, Utils, FunctionHandler } from '../common';
 import { CompiledExpression, compileExpression } from '../eval/evalExpression';
 
 export type FunctionCallback = (
@@ -124,4 +124,29 @@ export const parseArgList = (
         }
     }
     return { args, requiredCount, restArg };
+};
+
+export const isInvocable = (target: ContextValue) => (
+    (typeof target === 'function')
+    || (Utils.isDict(target) && ('__invoke' in target))
+);
+
+export const invoke = (
+    target: ContextValue,
+    rawArgs: readonly SyntaxNode[],
+    referrer: SyntaxNode,
+    context: ScriptContext,
+    thisArg: ContextValue,
+): ContextValue => {
+    if (typeof target === 'function') {
+        return target(rawArgs, referrer, context, thisArg);
+    } else if (Utils.isDict(target) && ('__invoke' in target)) {
+        if (typeof target.__invoke !== 'function') {
+            Utils.raise(TypeError, 'expect `__invoke` to be a function', referrer, context);
+        }
+        return (target.__invoke as FunctionHandler)(rawArgs, referrer, context, thisArg);
+    } else {
+        Utils.raise(TypeError, 'expect a function or dict with proper `__invoke`', referrer, context);
+        return null; // for type checking
+    }
 };

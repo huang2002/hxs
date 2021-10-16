@@ -1,6 +1,7 @@
 import { WordNode } from '3h-ast';
 import { FunctionHandler, Utils } from '../common';
 import { createFunctionHandler } from '../function/createFunctionHandler';
+import { invoke, isInvocable } from '../function/common';
 
 export const builtinRaise = Utils.injectHelp(
     'raise(error_message)',
@@ -18,7 +19,7 @@ export const builtinTry = Utils.injectHelp(
     createFunctionHandler(1, 1, (args, referrer, context, thisArg): FunctionHandler => {
 
         const tryBody = args[0];
-        if (!Utils.isInvocable(tryBody)) {
+        if (!isInvocable(tryBody)) {
             Utils.raise(TypeError, 'expect an invocable to try', referrer, context);
         }
 
@@ -32,12 +33,12 @@ export const builtinTry = Utils.injectHelp(
             return createFunctionHandler(1, 1, (_args, _referrer, _context, _thisArg) => {
 
                 const catchBody = _args[0];
-                if (!Utils.isInvocable(catchBody)) {
+                if (!isInvocable(catchBody)) {
                     Utils.raise(TypeError, 'expect an invocable as error handler', referrer, context);
                 }
 
                 try {
-                    Utils.invoke(tryBody, [], referrer, context, thisArg);
+                    invoke(tryBody, [], referrer, context, thisArg);
                 } catch (error) {
                     if (typeof error === 'symbol') {
                         throw error;
@@ -45,7 +46,7 @@ export const builtinTry = Utils.injectHelp(
                     Utils.injectTemp(_context.store, {
                         [errName]: String(error),
                     }, () => {
-                        Utils.invoke(catchBody, [], _referrer, _context, _thisArg);
+                        invoke(catchBody, [], _referrer, _context, _thisArg);
                     });
                 }
 

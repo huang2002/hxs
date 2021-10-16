@@ -1,5 +1,6 @@
 import { ContextValue, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
+import { invoke, isInvocable } from '../index';
 
 export const builtinFunction = Utils.injectHelp(
     'A dict providing methods for function manipulations.',
@@ -8,7 +9,7 @@ export const builtinFunction = Utils.injectHelp(
         isInvocable: Utils.injectHelp(
             'Function.isInvocable(target)',
             createFunctionHandler(1, 1, (args, referrer, context) => (
-                Utils.isInvocable(args[0])
+                isInvocable(args[0])
             ))
         ),
 
@@ -16,7 +17,7 @@ export const builtinFunction = Utils.injectHelp(
             'Function.invoke(invocable, args = null, thisArg = null)',
             createFunctionHandler(1, 3, (args, referrer, context) => {
                 const fn = args[0];
-                if (!Utils.isInvocable(fn)) {
+                if (!isInvocable(fn)) {
                     Utils.raise(TypeError, 'expect an invocable to invoke', referrer, context);
                 }
                 const fnArgs = args.length > 1
@@ -26,7 +27,7 @@ export const builtinFunction = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect an array or null as arguments', referrer, context);
                 }
                 const thisArg = args.length === 3 ? args[2] : null;
-                return Utils.invoke(
+                return invoke(
                     fn,
                     fnArgs ? Utils.createRawArray(fnArgs, referrer) : [],
                     referrer,
@@ -40,11 +41,11 @@ export const builtinFunction = Utils.injectHelp(
             'Function.bind(invocable, thisArg)',
             createFunctionHandler(2, 2, (args, referrer, context) => {
                 const fn = args[0];
-                if (!Utils.isInvocable(fn)) {
+                if (!isInvocable(fn)) {
                     Utils.raise(TypeError, 'expect an invocable to bind', referrer, context);
                 }
                 return (_args, _referrer, _context) => {
-                    return Utils.invoke(fn, _args, _referrer, _context, args[1]);
+                    return invoke(fn, _args, _referrer, _context, args[1]);
                 };
             })
         ),

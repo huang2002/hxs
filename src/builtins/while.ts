@@ -1,6 +1,7 @@
 import { FunctionHandler, Utils } from '../common';
 import { evalExpression } from "../eval/evalExpression";
 import { createFunctionHandler } from "../function/createFunctionHandler";
+import { invoke, isInvocable } from '../function/common';
 
 export const builtinWhile: FunctionHandler = Utils.injectHelp(
     'while (condition) { ... }',
@@ -9,7 +10,7 @@ export const builtinWhile: FunctionHandler = Utils.injectHelp(
         createFunctionHandler(1, 1, (_args, _referrer, _context) => {
 
             const callback = _args[0];
-            if (!Utils.isInvocable(callback)) {
+            if (!isInvocable(callback)) {
                 Utils.raise(TypeError, 'expect an invocable as callback', _referrer, _context);
             }
 
@@ -40,7 +41,7 @@ export const builtinWhile: FunctionHandler = Utils.injectHelp(
                         }
 
                         try {
-                            Utils.invoke(callback, [], referrer, _context, null);
+                            invoke(callback, [], referrer, _context, null);
                         } catch (error) {
                             if (error === BREAK_FLAG) {
                                 break;
