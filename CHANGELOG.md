@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.37.0
+
+- Refactor Class APIs
+- Refactor internal APIs
+
 ## 0.36.0
 
 - Add `String.__invoke`
