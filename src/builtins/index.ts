@@ -74,11 +74,11 @@ export const builtins = Utils.createDict({
     filter: builtinArray.filter,
     keys: builtinDict.keys,
     assign: builtinDict.assign,
+    getConstructorOf: builtinDict.getConstructorOf,
+    isInstanceOf: builtinDict.isInstanceOf,
     isInvocable: builtinFunction.isInvocable,
     invoke: builtinFunction.invoke,
     bind: builtinFunction.bind,
     isNaN: builtinNumber.isNaN,
-    getConstructorOf: builtinClass.getConstructorOf,
-    isInstanceOf: builtinClass.isInstanceOf,
 
 });

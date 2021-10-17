@@ -45,15 +45,15 @@ module.exports = (ctx) => {
                 Tom.type,
                 Tom.eat(),
                 Tom.sleep(),
-                isInstanceOf(Animal, Tom),
+                isInstanceOf(Tom, Animal),
                 Peter.id,
                 Peter.type,
                 Peter.name,
                 Peter.eat(),
                 Peter.sleep(),
                 Peter.speak('!'),
-                getConstructorOf(Peter) == Human,
-                isInstanceOf(Animal, Peter),
+                Peter:getConstructorOf() == Human,
+                Peter:isInstanceOf(Animal),
             ]
         `),
         [
@@ -76,6 +76,6 @@ module.exports = (ctx) => {
         ]
     );
 
-    ctx.assertStrictEqual(evalCode(`isInstanceOf(null, {})`), true);
+    ctx.assertStrictEqual(evalCode(`{}:isInstanceOf(null)`), true);
 
 };

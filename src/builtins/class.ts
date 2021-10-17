@@ -1,7 +1,7 @@
 import { ContextValue, Dict, FunctionHandler, Utils } from '../common';
 import { createFunctionHandler } from '../function/createFunctionHandler';
 import { invoke, isInvocable } from '../function/common';
-import { createClass, BASE_SYMBOL, getConstructorOf, isInstanceOf } from './common';
+import { createClass, BASE_SYMBOL } from './common';
 
 export const builtinClass = Utils.injectHelp(
     'A dict providing class APIs.',
@@ -90,28 +90,6 @@ export const builtinClass = Utils.injectHelp(
 
                 });
 
-            })
-        ),
-
-        getConstructorOf: Utils.injectHelp(
-            'Class.getConstructorOf(dict)',
-            createFunctionHandler(1, 1, (args, referrer, context) => {
-                const dict = args[0] as Dict;
-                if (!Utils.isDict(dict)) {
-                    Utils.raise(TypeError, 'expect a dict', referrer, context);
-                }
-                return getConstructorOf(dict);
-            })
-        ),
-
-        isInstanceOf: Utils.injectHelp(
-            'Class.isInstanceOf(class, dict)',
-            createFunctionHandler(2, 2, (args, referrer, context) => {
-                const dict = args[1] as Dict;
-                if (!Utils.isDict(dict)) {
-                    Utils.raise(TypeError, 'expect a dict to check', referrer, context);
-                }
-                return isInstanceOf(args[0], dict);
             })
         ),
 

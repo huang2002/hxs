@@ -1,5 +1,6 @@
 import { ContextValue, Dict, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
+import { getConstructorOf, isInstanceOf } from './common';
 
 export const builtinDict = Utils.injectHelp(
     'A dict providing methods for dict manipulations.',
@@ -200,6 +201,28 @@ export const builtinDict = Utils.injectHelp(
                     Utils.raise(TypeError, `expect a dict as reference`, referrer, context);
                 }
                 return Utils.diffDict(target, reference);
+            })
+        ),
+
+        getConstructorOf: Utils.injectHelp(
+            'Dict.getConstructorOf(dict)',
+            createFunctionHandler(1, 1, (args, referrer, context) => {
+                const dict = args[0] as Dict;
+                if (!Utils.isDict(dict)) {
+                    Utils.raise(TypeError, 'expect a dict', referrer, context);
+                }
+                return getConstructorOf(dict);
+            })
+        ),
+
+        isInstanceOf: Utils.injectHelp(
+            'Dict.isInstanceOf(dict, class)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+                const dict = args[0] as Dict;
+                if (!Utils.isDict(dict)) {
+                    Utils.raise(TypeError, 'expect a dict to check', referrer, context);
+                }
+                return isInstanceOf(args[1], dict);
             })
         ),
 
