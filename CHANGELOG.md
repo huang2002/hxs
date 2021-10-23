@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.38.0
+
+- Add magic methods for operators
+- Refactor `getConstructorOf` & `isInstanceOf`
+
 ## 0.37.0
 
 - Refactor Class APIs
