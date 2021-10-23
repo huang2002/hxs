@@ -52,7 +52,7 @@ export const createClass = (
 
 };
 
-export const getConstructorOf = (dict: Dict) => (
+export const getConstructorOf = (dict: Dict): ContextValue => (
     (CONSTRUCTOR_SYMBOL in dict)
         ? dict[CONSTRUCTOR_SYMBOL]!
         : null
