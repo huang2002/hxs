@@ -1,24 +1,21 @@
-import { Utils } from '../common';
-import { evalBufferNode } from "../eval/evalBufferNode";
+import { createUnaryOperator } from '../index';
 import { createBinaryOperator, OperatorDefinition } from './common';
 
 export const booleanOperators: OperatorDefinition[] = [{
     symbol: '!',
     priority: 2,
     ltr: false,
-    handler(buffer, index, context) {
-        const operand = evalBufferNode(buffer, index + 1, buffer[index], context);
-        if (typeof operand !== 'boolean') {
-            Utils.raise(TypeError, 'expect a boolean following', buffer[index + 1], context);
-        }
-        const valueNode = Utils.createValueNode(!operand, buffer[index]);
-        Utils.replaceBuffer(buffer, index, 2, valueNode);
-    },
+    handler: createUnaryOperator<boolean>(
+        '__not',
+        'boolean',
+        (x) => (!x)
+    ),
 }, {
     symbol: '&&',
     priority: 11,
     ltr: true,
     handler: createBinaryOperator<boolean, boolean>(
+        '__and',
         'boolean',
         'boolean',
         (a, b) => (a && b)
@@ -28,6 +25,7 @@ export const booleanOperators: OperatorDefinition[] = [{
     priority: 12,
     ltr: true,
     handler: createBinaryOperator<boolean, boolean>(
+        '__or',
         'boolean',
         'boolean',
         (a, b) => (a || b)

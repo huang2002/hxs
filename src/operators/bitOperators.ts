@@ -1,24 +1,21 @@
-import { Utils } from '../common';
-import { evalBufferNode } from "../eval/evalBufferNode";
+import { createUnaryOperator } from '../index';
 import { createBinaryOperator, OperatorDefinition } from './common';
 
 export const bitOperators: OperatorDefinition[] = [{
     symbol: '~',
     priority: 2,
     ltr: false,
-    handler(buffer, index, context) {
-        const operand = evalBufferNode(buffer, index + 1, buffer[index], context);
-        if (typeof operand !== 'number') {
-            Utils.raise(TypeError, 'expect a number', buffer[index + 1], context);
-        }
-        const valueNode = Utils.createValueNode(~(operand as number), buffer[index]);
-        Utils.replaceBuffer(buffer, index, 2, valueNode);
-    },
+    handler: createUnaryOperator<number>(
+        '__bitNot',
+        'number',
+        (x) => (~x)
+    ),
 }, {
     symbol: '<<',
     priority: 5,
     ltr: true,
     handler: createBinaryOperator<number, number>(
+        '__leftShift',
         'number',
         'number',
         (a, b) => (a << b)
@@ -28,6 +25,7 @@ export const bitOperators: OperatorDefinition[] = [{
     priority: 5,
     ltr: true,
     handler: createBinaryOperator<number, number>(
+        '__rightShift',
         'number',
         'number',
         (a, b) => (a >> b)
@@ -37,6 +35,7 @@ export const bitOperators: OperatorDefinition[] = [{
     priority: 5,
     ltr: true,
     handler: createBinaryOperator<number, number>(
+        '__unsignedRightShift',
         'number',
         'number',
         (a, b) => (a >>> b)
@@ -46,6 +45,7 @@ export const bitOperators: OperatorDefinition[] = [{
     priority: 8,
     ltr: true,
     handler: createBinaryOperator<number, number>(
+        '__bitAnd',
         'number',
         'number',
         (a, b) => (a & b)
@@ -55,6 +55,7 @@ export const bitOperators: OperatorDefinition[] = [{
     priority: 9,
     ltr: true,
     handler: createBinaryOperator<number, number>(
+        '__bitXor',
         'number',
         'number',
         (a, b) => (a ^ b)
@@ -64,6 +65,7 @@ export const bitOperators: OperatorDefinition[] = [{
     priority: 10,
     ltr: true,
     handler: createBinaryOperator<number, number>(
+        '__bitOr',
         'number',
         'number',
         (a, b) => (a | b)

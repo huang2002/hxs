@@ -20,6 +20,7 @@ test(null, {
     module: require('./builtins/module.js'),
     builtins: require('./builtins/builtins.js'),
 
+    magicMethods: require('./magicMethods.js'),
     cli: require('./cli/cli.js'),
 
 });

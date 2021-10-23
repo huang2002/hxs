@@ -126,6 +126,7 @@ export const miscOperators: OperatorDefinition[] = [{
     priority: 12,
     ltr: true,
     handler: createBinaryOperator<ContextValue, ContextValue>(
+        '__nullOr',
         null,
         null,
         (a, b) => (a ?? b)

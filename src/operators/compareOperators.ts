@@ -7,6 +7,7 @@ export const compareOperators: OperatorDefinition[] = [{
     priority: 6,
     ltr: true,
     handler: createBinaryOperator<number, number>(
+        '__lt',
         'number',
         'number',
         (a, b) => (a < b)
@@ -16,6 +17,7 @@ export const compareOperators: OperatorDefinition[] = [{
     priority: 6,
     ltr: true,
     handler: createBinaryOperator<number, number>(
+        '__gt',
         'number',
         'number',
         (a, b) => (a > b)
@@ -25,6 +27,7 @@ export const compareOperators: OperatorDefinition[] = [{
     priority: 6,
     ltr: true,
     handler: createBinaryOperator<number, number>(
+        '__lte',
         'number',
         'number',
         (a, b) => (a <= b)
@@ -34,12 +37,33 @@ export const compareOperators: OperatorDefinition[] = [{
     priority: 6,
     ltr: true,
     handler: createBinaryOperator<number, number>(
+        '__gte',
         'number',
         'number',
         (a, b) => (a >= b)
     ),
 }, {
     symbol: '==',
+    priority: 7,
+    ltr: true,
+    handler: createBinaryOperator(
+        '__equal',
+        null,
+        null,
+        (a, b) => (a === b)
+    ),
+}, {
+    symbol: '!=',
+    priority: 7,
+    ltr: true,
+    handler: createBinaryOperator(
+        '__notEqual',
+        null,
+        null,
+        (a, b) => (a !== b)
+    ),
+}, {
+    symbol: '===',
     priority: 7,
     ltr: true,
     handler(buffer, index, context) {
@@ -49,7 +73,7 @@ export const compareOperators: OperatorDefinition[] = [{
         Utils.replaceBuffer(buffer, index - 1, 3, valueNode);
     },
 }, {
-    symbol: '!=',
+    symbol: '!==',
     priority: 7,
     ltr: true,
     handler(buffer, index, context) {

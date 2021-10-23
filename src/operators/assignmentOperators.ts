@@ -30,6 +30,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__plus',
         'number',
         'number',
         (a, b) => (a + b)
@@ -39,6 +40,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__minus',
         'number',
         'number',
         (a, b) => (a - b)
@@ -48,6 +50,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__multiply',
         'number',
         'number',
         (a, b) => (a * b)
@@ -57,6 +60,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__divide',
         'number',
         'number',
         (a, b) => (a / b)
@@ -66,6 +70,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__mod',
         'number',
         'number',
         (a, b) => (a % b)
@@ -75,6 +80,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__pow',
         'number',
         'number',
         (a, b) => (a ** b)
@@ -84,6 +90,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__bitAnd',
         'number',
         'number',
         (a, b) => (a & b)
@@ -93,6 +100,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__bitXor',
         'number',
         'number',
         (a, b) => (a ^ b)
@@ -102,6 +110,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__bitOr',
         'number',
         'number',
         (a, b) => (a | b)
@@ -111,6 +120,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__leftShift',
         'number',
         'number',
         (a, b) => (a << b)
@@ -120,6 +130,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__rightShift',
         'number',
         'number',
         (a, b) => (a >> b)
@@ -129,6 +140,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<number, number>(
+        '__unsignedRightShift',
         'number',
         'number',
         (a, b) => (a >>> b)
@@ -138,6 +150,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<boolean, boolean>(
+        '__and',
         'boolean',
         'boolean',
         (a, b) => (a && b)
@@ -147,6 +160,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<boolean, boolean>(
+        '__or',
         'boolean',
         'boolean',
         (a, b) => (a || b)
@@ -156,6 +170,7 @@ export const assignmentOperators: OperatorDefinition[] = [{
     priority: Infinity,
     ltr: false,
     handler: createAdditionalAssignmentOperator<ContextValue, ContextValue>(
+        '__nullOr',
         null,
         null,
         (a, b) => (a ?? b)
