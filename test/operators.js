@@ -46,7 +46,9 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`1 <= 2`), true);
 
     ctx.assertStrictEqual(evalCode(`1 == 2`), false);
+    ctx.assertStrictEqual(evalCode(`1 === 2`), false);
     ctx.assertStrictEqual(evalCode(`1 != 2`), true);
+    ctx.assertStrictEqual(evalCode(`1 !== 2`), true);
 
     ctx.assertStrictEqual(evalCode(`1011B & 1001B`), 0b1001);
     ctx.assertStrictEqual(evalCode(`1011B ^ 1001B`), 0b0010);
@@ -68,8 +70,8 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`null ?? 0`), 0);
 
     ctx.assertStrictEqual(evalCode(`2002:toString(2)`), (2002).toString(2));
-    ctx.assertStrictEqual(evalCode(`'abcdef':slice(1, -1)`), 'bcde');
-    ctx.assertStrictEqual(evalCode(`'abcdef':slice:invoke([1, -1])`), 'bcde');
+    ctx.assertStrictEqual(evalCode(`'abcde':slice(1, -1)`), 'bcd');
+    ctx.assertStrictEqual(evalCode(`'abcde':slice:invoke([1, -1])`), 'bcd');
     ctx.assertDeepEqual(evalCode(`[0, 1, 2, 3]:slice(1, -1)`), [1, 2]);
     ctx.assertDeepEqual(evalCode(`o = {}; o:set(#foo, 'bar'); o`), { foo: 'bar' });
     ctx.assertStrictEqual(evalCode(`1 + 'abcdef':indexOf('c')`), 1 + 2);
