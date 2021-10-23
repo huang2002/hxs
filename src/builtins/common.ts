@@ -11,7 +11,7 @@ export const createClass = (
     context: ScriptContext,
 ) => {
 
-    const constructor: Dict = {
+    const constructor: Dict = Utils.createDict({
 
         __invoke(_rawArgs, _referrer, _context, _thisArg) {
 
@@ -23,7 +23,6 @@ export const createClass = (
                 object = Object.create(null);
                 object[CONSTRUCTOR_SYMBOL] = constructor;
             }
-
 
             for (const key in description) {
                 if (key in object) {
@@ -47,7 +46,7 @@ export const createClass = (
 
         },
 
-    };
+    });
 
     return constructor;
 
