@@ -13,17 +13,17 @@ export interface OperatorDefinition {
 
 export const evalBinaryOperation = <
     T extends ContextValue,
-    U extends ContextValue,
-    >(
-        a: ContextValue,
-        b: ContextValue,
-        magicName: string | null,
-        typeA: string | null,
-        typeB: string | null,
-        defaultHandler: (a: T, b: U) => ContextValue,
-        buffer: SyntaxNode[],
-        index: number,
-        context: ScriptContext,
+    U extends ContextValue
+>(
+    a: ContextValue,
+    b: ContextValue,
+    magicName: string | null,
+    typeA: string | null,
+    typeB: string | null,
+    defaultHandler: (a: T, b: U) => ContextValue,
+    buffer: SyntaxNode[],
+    index: number,
+    context: ScriptContext,
 ) => {
 
     if (magicName) {
