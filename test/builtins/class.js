@@ -77,5 +77,6 @@ module.exports = (ctx) => {
     );
 
     ctx.assertStrictEqual(evalCode(`{}:isInstanceOf(null)`), true);
+    ctx.assertStrictEqual(evalCode(`{}:getConstructorOf()`), null);
 
 };
