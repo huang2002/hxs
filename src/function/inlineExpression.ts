@@ -2,13 +2,18 @@ import { SpanNode } from '3h-ast';
 import { SyntaxHandler, Utils } from '../common';
 import { evalCompiledExpression } from '../eval/evalExpression';
 import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
+import { FunctionHandler, ScriptContext, SyntaxNode } from '../index';
 import { parseArgList } from './common';
 import { createFunctionHandler } from './createFunctionHandler';
 
 /**
  * Create an expression from source code.
  */
-export const createInlineExpression: SyntaxHandler = (buffer, index, context) => {
+export const createInlineExpression = (
+    buffer: SyntaxNode[],
+    index: number,
+    context: ScriptContext,
+): FunctionHandler => {
 
     const argSpan = buffer[index - 1];
     const bodySpan = buffer[index + 1];
@@ -25,7 +30,7 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
     const body = (bodySpan as SpanNode).body;
     const compiledBody = compileNodes(body, context);
 
-    const func = createFunctionHandler(
+    return createFunctionHandler(
         argList.requiredCount,
         Infinity,
         (args, referrer, _context, thisArg) => {
@@ -71,7 +76,10 @@ export const createInlineExpression: SyntaxHandler = (buffer, index, context) =>
         }
     );
 
+};
+
+export const inlineExpressionHandler: SyntaxHandler = (buffer, index, context) => {
+    const func = createInlineExpression(buffer, index, context);
     const valueNode = Utils.createValueNode(func, buffer[index]);
     Utils.replaceBuffer(buffer, index - 1, 3, valueNode);
-
 };

@@ -1,6 +1,6 @@
 import { SyntaxHandler } from '../common';
-import { createInlineExpression } from '../function/createInlineExpression';
-import { createInlineFunction } from '../function/createInlineFunction';
+import { inlineExpressionHandler } from '../function/inlineExpression';
+import { inlineFunctionHandler } from '../function/inlineFunction';
 import { assignmentOperators } from './assignmentOperators';
 import { bitOperators } from './bitOperators';
 import { booleanOperators } from './booleanOperators';
@@ -28,13 +28,13 @@ export const operators: readonly OperatorDefinition[] = [
         symbol: '@',
         priority: 0,
         ltr: true,
-        handler: createInlineFunction,
+        handler: inlineFunctionHandler,
     },
     {
         symbol: '=>',
         priority: 0,
         ltr: true,
-        handler: createInlineExpression,
+        handler: inlineExpressionHandler,
     },
     {
         symbol: '[',

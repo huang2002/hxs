@@ -1,3 +1,4 @@
 export * from './common';
 export * from './createFunctionHandler';
-export * from './createInlineFunction';
+export * from './inlineFunction';
+export * from './inlineExpression';
