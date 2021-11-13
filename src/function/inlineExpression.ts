@@ -10,7 +10,7 @@ import { createFunctionHandler } from './createFunctionHandler';
  * Create an expression from source code.
  */
 export const createInlineExpression = (
-    buffer: SyntaxNode[],
+    buffer: readonly SyntaxNode[],
     index: number,
     context: ScriptContext,
 ): FunctionHandler => {

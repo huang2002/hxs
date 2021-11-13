@@ -10,7 +10,7 @@ import { createFunctionHandler } from './createFunctionHandler';
  * Create a function from source code.
  */
 export const createInlineFunction = (
-    buffer: SyntaxNode[],
+    buffer: readonly SyntaxNode[],
     index: number,
     context: ScriptContext,
 ): FunctionHandler => {
