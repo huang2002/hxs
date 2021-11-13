@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.39.0
+
+- Add simpler function declaration syntax
+- Refactor internal function APIs
+
 ## 0.38.0
 
 - Add magic methods for operators
