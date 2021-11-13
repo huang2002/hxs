@@ -208,4 +208,14 @@ module.exports = (ctx) => {
         ]
     );
 
+    ctx.assertStrictEqual(
+        evalCode(`
+            dict = {
+                @func() {},
+            };
+            exist(#func)
+        `),
+        false
+    );
+
 };
