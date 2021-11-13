@@ -5,13 +5,13 @@ print('header0 imported header1');
 print(sizeOf(Dict.keys(header1)));
 
 export({
-    #get -> @() {
+    @get() {
         return(header1.value);
     },
-    #set -> @(value) {
+    @set(value) {
         header1.set(value);
     },
-    #callback -> @() {
+    @callback() {
         header1.callback();
     },
 });

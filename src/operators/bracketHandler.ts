@@ -1,9 +1,10 @@
-import { SpanNode, SymbolNode } from '3h-ast';
+import { SpanNode, SymbolNode, WordNode } from '3h-ast';
 import { Dict, FunctionHandler, SyntaxHandler, Utils } from '../common';
 import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
 import { evalExpression } from "../eval/evalExpression";
 import { evalNode } from "../eval/evalNode";
 import { invoke, isInvocable } from '../function/common';
+import { createInlineFunction } from '../index';
 
 export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
 
@@ -49,21 +50,40 @@ export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
 
                 if (j === right) { // shortcut
 
-                    const name = evalExpression(nodes, context, left, right) as string;
-                    if (typeof name !== 'string') {
-                        Utils.raise(TypeError, 'expect a string as key', nodes[left], context);
-                    }
-                    if (!(name in context.store)) {
-                        Utils.raise(ReferenceError, `${Utils.toDisplay(name)} is not defined`, nodes[left], context);
-                    }
+                    if (firstNode.type === 'symbol' && firstNode.value === '@') { // function
 
-                    result[name] = context.store[name];
+                        if (right < left + 3) {
+                            Utils.raise(SyntaxError, 'invalid function declaration', firstNode, context);
+                        }
+
+                        const nameNode = nodes[left + 1];
+                        if (nameNode.type !== 'word') {
+                            Utils.raise(SyntaxError, 'invalid function declaration', firstNode, context);
+                        }
+
+                        const name = (nameNode as WordNode).value;
+                        const func = createInlineFunction(nodes, left + 1, context);
+                        result[name] = func;
+
+                    } else { // variable
+
+                        const name = evalExpression(nodes, context, left, right) as string;
+                        if (typeof name !== 'string') {
+                            Utils.raise(TypeError, 'expect a string as key', firstNode, context);
+                        }
+                        if (!(name in context.store)) {
+                            Utils.raise(ReferenceError, `${Utils.toDisplay(name)} is not defined`, firstNode, context);
+                        }
+
+                        result[name] = context.store[name];
+
+                    }
 
                 } else { // key -> value
 
                     const name = evalExpression(nodes, context, left, j) as string;
                     if (typeof name !== 'string') {
-                        Utils.raise(TypeError, 'expect a string as key', nodes[left], context);
+                        Utils.raise(TypeError, 'expect a string as key', firstNode, context);
                     }
 
                     const value = evalExpression(nodes, context, j + 1, right);

@@ -13,7 +13,7 @@ module.exports = (ctx) => {
 
     ctx.assertStrictEqual(
         evalCode(`
-            minus = @(a, b) {
+            @minus(a, b) {
                 return(a - b);
             };
             minus(1, 2)
@@ -25,7 +25,7 @@ module.exports = (ctx) => {
         evalCode(`
             x = 0;
             y = 1;
-            foo = @() {
+            @foo() {
                 x = 6;
                 z = 2;
                 forward([#y, #z]);
@@ -38,7 +38,7 @@ module.exports = (ctx) => {
 
     ctx.assertShallowEqual(
         evalCode(`
-            list = @() { return(arguments) };
+            @list() { return(arguments) };
             list(0, 1, 10, 11)
         `),
         [0, 1, 10, 11]
@@ -46,7 +46,7 @@ module.exports = (ctx) => {
 
     ctx.assertStrictEqual(
         evalCode(`
-            sum = @(x) { "sum(x0, x1, ...)";
+            @sum(x) { "sum(x0, x1, ...)";
                 s = x;
                 more = Array.slice(arguments, 1);
                 if (Array.sizeOf(more) > 0) {
@@ -71,7 +71,7 @@ module.exports = (ctx) => {
         666
     );
 
-    ctx.expectThrow(ReferenceError, evalCode, [`f = @() { forward([#x]); x = 0 }; f()`]);
+    ctx.expectThrow(ReferenceError, evalCode, [`@f() { forward([#x]); x = 0 }; f()`]);
 
     ctx.assertDeepEqual(
         evalCode(`
@@ -104,7 +104,7 @@ module.exports = (ctx) => {
 
     ctx.assertDeepEqual(
         evalCode(`
-            f = @() {
+            @f() {
                 g = () => ([this, that]);
                 that = this;
                 return(invoke(g, null, 0));
@@ -116,7 +116,7 @@ module.exports = (ctx) => {
 
     ctx.assertDeepEqual(
         evalCode(`
-            f = @(a, b = 1) {
+            @f(a, b = 1) {
                 return(a + b);
             };
             g = (x, y = x + 1, z = 3) => (x + y + z);
@@ -147,7 +147,7 @@ module.exports = (ctx) => {
 
     ctx.assertStrictEqual(
         evalCode(`
-            product = @(x, y...) { "product(x0, x1...)";
+            @product(x, y...) { "product(x0, x1...)";
                 p = x;
                 if (Array.sizeOf(y) > 0) {
                     p *= product(...y);
@@ -186,7 +186,7 @@ module.exports = (ctx) => {
     ctx.assertDeepEqual(
         evalCode(`
             [
-                f = @() {},
+                @f() {},
                 g = () => (),
                 { #__invoke -> f },
                 { #__invoke -> g },

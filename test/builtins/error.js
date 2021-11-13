@@ -8,10 +8,10 @@ module.exports = (ctx) => {
 
     ctx.assertStrictEqual(
         evalCode(`
-            foo = @() {
+            @foo() {
                 raise('blahblah');
             };
-            bar = @() {
+            @bar() {
                 try {
                     foo();
                 } (err) {

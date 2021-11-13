@@ -116,7 +116,25 @@ export const createInlineFunction = (
 };
 
 export const inlineFunctionHandler: SyntaxHandler = (buffer, index, context) => {
-    const func = createInlineFunction(buffer, index, context);
-    const valueNode = Utils.createValueNode(func, buffer[index]);
-    Utils.replaceBuffer(buffer, index, 3, valueNode);
+
+    const secondNode = buffer[index + 1];
+
+    if (secondNode.type === 'word') { // named
+
+        const name = secondNode.value;
+        const func = createInlineFunction(buffer, index + 1, context);
+
+        context.store[name] = func;
+
+        const valueNode = Utils.createValueNode(func, buffer[index]);
+        Utils.replaceBuffer(buffer, index, 4, valueNode);
+
+    } else { // anonymous
+
+        const func = createInlineFunction(buffer, index, context);
+
+        const valueNode = Utils.createValueNode(func, buffer[index]);
+        Utils.replaceBuffer(buffer, index, 3, valueNode);
+
+    }
 };

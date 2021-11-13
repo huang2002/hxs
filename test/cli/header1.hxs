@@ -9,10 +9,10 @@ exports = getExports();
 set(exports, #value, 0);
 
 export({
-    #set -> @(value) {
+    @set(value) {
         set(exports, #value, value);
     },
-    #callback -> @() {
+    @callback() {
         print(sizeOf(Dict.keys(header0)));
     },
 });

@@ -8,18 +8,18 @@ module.exports = (ctx) => {
 
     ctx.assertStrictEqual(
         evalCode(`
-            assert = @(a, b) {
+            @assert(a, b) {
                 if (a !== b) {
                     raise(String('assertion failed: ', a, ' !== ', b));
                 };
             };
 
             V = Class({
-                #__init -> @(value) {
+                @__init(value) {
                     this:set(#_v, value);
                 },
                 #__plus -> (value) => (this._v + value),
-                #__minus -> @(value, reverse) {
+                @__minus(value, reverse) {
                     if (reverse) {
                         return(value - this._v);
                     } (true) {
@@ -27,21 +27,21 @@ module.exports = (ctx) => {
                     };
                 },
                 #__multiply -> (value) => (this._v * value),
-                #__divide -> @(value, reverse) {
+                @__divide(value, reverse) {
                     if (reverse) {
                         return(value / this._v);
                     } (true) {
                         return(this._v / value);
                     };
                 },
-                #__mod -> @(value, reverse) {
+                @__mod(value, reverse) {
                     if (reverse) {
                         return(value % this._v);
                     } (true) {
                         return(this._v % value);
                     };
                 },
-                #__pow -> @(value, reverse) {
+                @__pow(value, reverse) {
                     if (reverse) {
                         return(value ** this._v);
                     } (true) {
@@ -53,21 +53,21 @@ module.exports = (ctx) => {
                 #__bitOr -> (value) => (this._v | value),
                 #__bitXor -> (value) => (this._v ^ value),
                 #__bitNot -> () => (~this._v),
-                #__leftShift -> @(value, reverse) {
+                @__leftShift(value, reverse) {
                     if (reverse) {
                         return(value << this._v);
                     } (true) {
                         return(this._v << value);
                     };
                 },
-                #__rightShift -> @(value, reverse) {
+                @__rightShift(value, reverse) {
                     if (reverse) {
                         return(value >> this._v);
                     } (true) {
                         return(this._v >> value);
                     };
                 },
-                #__unsignedRightShift -> @(value, reverse) {
+                @__unsignedRightShift(value, reverse) {
                     if (reverse) {
                         return(value >>> this._v);
                     } (true) {
@@ -77,35 +77,35 @@ module.exports = (ctx) => {
                 #__and -> (value) => (this._v && value),
                 #__or -> (value) => (this._v || value),
                 #__not -> () => (!this._v),
-                #__nullOr -> @(value, reverse) {
+                @__nullOr(value, reverse) {
                     if (reverse) {
                         return(value ?? this._v);
                     } (true) {
                         return(this._v ?? value);
                     };
                 },
-                #__gt -> @(value, reverse) {
+                @__gt(value, reverse) {
                     if (reverse) {
                         return(value > this._v);
                     } (true) {
                         return(this._v > value);
                     };
                 },
-                #__gte -> @(value, reverse) {
+                @__gte(value, reverse) {
                     if (reverse) {
                         return(value >= this._v);
                     } (true) {
                         return(this._v >= value);
                     };
                 },
-                #__lt -> @(value, reverse) {
+                @__lt(value, reverse) {
                     if (reverse) {
                         return(value < this._v);
                     } (true) {
                         return(this._v < value);
                     };
                 },
-                #__lte -> @(value, reverse) {
+                @__lte(value, reverse) {
                     if (reverse) {
                         return(value <= this._v);
                     } (true) {
