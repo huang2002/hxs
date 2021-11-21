@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.40.0
+
+- Add property assignment syntax
+- Add magic methods: `__set`, `__get`, `__remove`, `__has` & `__keys`
+- Add `Dict.get`
+- Remove `Array.set`, `Dict.diff` & `set`
+- Refactor property related APIs
+
 ## 0.39.0
 
 - Add simpler function declaration syntax
