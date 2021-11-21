@@ -1,6 +1,6 @@
-import { ContextValue, Utils } from '../common';
+import { ContextValue, Dict, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
-import { removeProperty } from './common';
+import { getKeysOf, removeProperty } from './common';
 
 export const print = Utils.injectHelp(
     'print(message...)',
@@ -18,6 +18,17 @@ export const same = Utils.injectHelp(
     'same(a, b)',
     createFunctionHandler(2, 2, (args, referrer, context) => {
         return Object.is(args[0], args[1]);
+    })
+);
+
+export const keys = Utils.injectHelp(
+    'keys(dict)',
+    createFunctionHandler(1, 1, (args, referrer, context) => {
+        const dict = args[0] as Dict;
+        if (!Utils.isDict(dict)) {
+            Utils.raise(TypeError, 'expect a dict', referrer, context);
+        }
+        return getKeysOf(dict, referrer, context);
     })
 );
 

@@ -7,13 +7,10 @@ export const getKeysOf = (
     context: ScriptContext,
 ) => {
     const keys = isInvocable(dict.__keys)
-        ? invoke(dict.__keys, [], referrer, context, null) as string[]
+        ? invoke(dict.__keys, [], referrer, context, null) as ContextValue[]
         : Object.keys(dict);
-    if (
-        !Array.isArray(keys)
-        || keys.some(key => (typeof key !== 'string'))
-    ) {
-        Utils.raise(TypeError, '`__keys` should return an array of strings', referrer, context);
+    if (!Array.isArray(keys)) {
+        Utils.raise(TypeError, '`__keys` should return an array', referrer, context);
     }
     return keys;
 };

@@ -93,6 +93,10 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`same({}, {})`), false);
     ctx.assertStrictEqual(evalCode(`same(same, same)`), true);
 
+    ctx.assertDeepEqual(evalCode(`keys({ #a -> 0, @b() {} })`), ['a', 'b']);
+    ctx.expectThrow(TypeError, evalCode, [`keys(['0', '1', '2'])`]);
+    ctx.expectThrow(TypeError, evalCode, [`keys('012')`]);
+
     ctx.assertDeepEqual(evalCode(`a = [0, 1, 2]; remove(a, 1); a`), [0, 2]);
     ctx.assertDeepEqual(evalCode(`o = { #a -> 0, #b -> 1 }; remove(o, #b); o`), { a: 0 });
     ctx.expectThrow(TypeError, evalCode, [`remove('012', 1)`]);
@@ -150,7 +154,6 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`forEach`), evalCode(`Array.forEach`));
     ctx.assertStrictEqual(evalCode(`map`), evalCode(`Array.map`));
     ctx.assertStrictEqual(evalCode(`filter`), evalCode(`Array.filter`));
-    ctx.assertStrictEqual(evalCode(`keys`), evalCode(`Dict.keys`));
     ctx.assertStrictEqual(evalCode(`isInvocable`), evalCode(`Function.isInvocable`));
     ctx.assertStrictEqual(evalCode(`invoke`), evalCode(`Function.invoke`));
     ctx.assertStrictEqual(evalCode(`bind`), evalCode(`Function.bind`));

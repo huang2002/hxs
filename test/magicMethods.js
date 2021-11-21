@@ -272,13 +272,21 @@ module.exports = (ctx) => {
             assert(map:has(#a), false);
             assert(map:has(#c), false);
             assert(map:keys():sizeOf(), 8);
+            assert(keys(map):sizeOf(), 3);
 
             map.a = 2;
             assert(map[#a], 2);
 
-            a = {};
+            a = {
+                @__set(key, value) {
+                    if (typeOf(key) === 'string') {
+                        a:set(key, value);
+                    };
+                },
+            };
             b = Map();
             b[#foo] = 'bar';
+            b[a] = b;
             a:assign(b);
             assert(a.foo, 'bar');
 
