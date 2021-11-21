@@ -53,28 +53,6 @@ export const builtinArray = Utils.injectHelp(
             })
         ),
 
-        set: Utils.injectHelp(
-            'Array.set(array, index, value)',
-            createFunctionHandler(3, 3, (args, referrer, context) => {
-                const array = args[0];
-                if (!Array.isArray(array)) {
-                    Utils.raise(TypeError, 'expect an array to modify', referrer, context);
-                }
-                const index = args[1];
-                if (typeof index !== 'number') {
-                    Utils.raise(TypeError, 'expect a number as index', referrer, context);
-                }
-                const normalizedIndex = Utils.normalizeIndex(
-                    index as number,
-                    (array as ContextValue[]).length,
-                    referrer,
-                    context,
-                );
-                (array as ContextValue[])[normalizedIndex] = args[2];
-                return null;
-            })
-        ),
-
         push: Utils.injectHelp(
             'Array.push(array, data...)',
             createFunctionHandler(2, Infinity, (args, referrer, context) => {

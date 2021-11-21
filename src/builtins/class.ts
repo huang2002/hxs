@@ -1,7 +1,7 @@
-import { ContextValue, Dict, FunctionHandler, Utils } from '../common';
+import { ContextValue, Dict, FunctionHandler, Utils, BASE_SYMBOL } from '../common';
 import { createFunctionHandler } from '../function/createFunctionHandler';
 import { invoke, isInvocable } from '../function/common';
-import { createClass, BASE_SYMBOL } from './common';
+import { createClass } from './common';
 
 export const builtinClass = Utils.injectHelp(
     'A dict providing class APIs.',

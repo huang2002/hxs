@@ -1,5 +1,6 @@
 import { ContextValue, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
+import { removeProperty } from './common';
 
 export const print = Utils.injectHelp(
     'print(message...)',
@@ -20,81 +21,11 @@ export const same = Utils.injectHelp(
     })
 );
 
-export const set = Utils.injectHelp(
-    'set(arrayOrDict, indexOrKey, value)',
-    createFunctionHandler(3, 3, (args, referrer, context) => {
-
-        const target = args[0];
-        const index = args[1];
-
-        if (Array.isArray(target)) {
-
-            if (typeof index !== 'number') {
-                Utils.raise(TypeError, 'expect a number as index', referrer, context);
-            }
-
-            const normalizedIndex = Utils.normalizeIndex(
-                index as number,
-                target.length,
-                referrer,
-                context,
-            );
-
-            target[normalizedIndex] = args[2];
-
-        } else if (Utils.isDict(target)) {
-
-            if (typeof index !== 'string') {
-                Utils.raise(TypeError, `expect a string as key`, referrer, context);
-            }
-
-            target[index as string] = args[2];
-
-        } else {
-            Utils.raise(TypeError, `expect an array or dict to modify`, referrer, context);
-        }
-
-        return null;
-
-    })
-);
-
 export const remove = Utils.injectHelp(
     'remove(arrayOrDict, indexOrKey)',
     createFunctionHandler(2, 2, (args, referrer, context) => {
-
-        const target = args[0];
-        const index = args[1];
-
-        if (Array.isArray(target)) {
-
-            if (typeof index !== 'number') {
-                Utils.raise(TypeError, 'expect a number as index', referrer, context);
-            }
-
-            const normalizedIndex = Utils.normalizeIndex(
-                index as number,
-                target.length,
-                referrer,
-                context,
-            );
-
-            Utils.removeElements(target, normalizedIndex, 1);
-
-        } else if (Utils.isDict(target)) {
-
-            if (typeof index !== 'string') {
-                Utils.raise(TypeError, `expect a string as key`, referrer, context);
-            }
-
-            delete target[index as string];
-
-        } else {
-            Utils.raise(TypeError, `expect an array or dict to modify`, referrer, context);
-        }
-
+        removeProperty(args[0], args[1], referrer, referrer, context);
         return null;
-
     })
 );
 

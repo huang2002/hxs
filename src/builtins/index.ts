@@ -11,7 +11,7 @@ import { builtinNumber } from './number';
 import { boolean, number, string, typeOf } from './types';
 import { help, injectHelp } from './help';
 import { delete_, exist, getContextStore } from './variable';
-import { clone, same, includes, indexOf, lastIndexOf, print, remove, set, sizeOf, slice } from './misc';
+import { clone, same, includes, indexOf, lastIndexOf, print, remove, sizeOf, slice } from './misc';
 import { builtinRaise, builtinTry } from './error';
 import { builtinClass } from './class';
 import { export_, getExports } from './module';
@@ -57,7 +57,6 @@ export const builtins = Utils.createDict({
 
     print,
     same,
-    set,
     remove,
     sizeOf,
     slice,

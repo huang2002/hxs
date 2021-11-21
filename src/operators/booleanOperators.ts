@@ -1,5 +1,4 @@
-import { createUnaryOperator } from '../index';
-import { createBinaryOperator, OperatorDefinition } from './common';
+import { createUnaryOperator, createBinaryOperator, OperatorDefinition } from './common';
 
 export const booleanOperators: OperatorDefinition[] = [{
     symbol: '!',

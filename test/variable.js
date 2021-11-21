@@ -76,9 +76,9 @@ module.exports = (ctx) => {
             b = 1;
             c = 2;
             store = getContextStore();
-            set(store, #a, 10);
+            store.a = 10;
             f = @() {
-                set(store, #b, 11);
+                store.b += 10;
             };
             f();
             [a, b, c]

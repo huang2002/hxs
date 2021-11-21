@@ -13,8 +13,8 @@ module.exports = (ctx) => {
             Animal = Class({
                 #__init -> {
                     @__invoke(type = 'animal') {
-                        set(this, #id, _id);
-                        set(this, #type, type);
+                        this.id = _id;
+                        this.type = type;
                         _id += 1;
                         forward([#_id]);
                     },
@@ -25,7 +25,7 @@ module.exports = (ctx) => {
 
             Human = Class.extend(Animal, ['people'])({
                 @__init(name) {
-                    set(this, #name, name);
+                    this.name = name;
                 },
                 #speak -> (sign) => (
                     String('This is ', this.name, sign)

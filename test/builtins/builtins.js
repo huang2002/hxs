@@ -93,11 +93,6 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`same({}, {})`), false);
     ctx.assertStrictEqual(evalCode(`same(same, same)`), true);
 
-    ctx.assertDeepEqual(evalCode(`a = [0, 1, 2]; set(a, 1, 10); a`), [0, 10, 2]);
-    ctx.assertDeepEqual(evalCode(`o = { #a -> 0 }; set(o, #b, 1); o`), { a: 0, b: 1 });
-    ctx.expectThrow(TypeError, evalCode, [`set('012', 1, '10')`]);
-    ctx.expectThrow(TypeError, evalCode, [`set([], '0', '10')`]);
-
     ctx.assertDeepEqual(evalCode(`a = [0, 1, 2]; remove(a, 1); a`), [0, 2]);
     ctx.assertDeepEqual(evalCode(`o = { #a -> 0, #b -> 1 }; remove(o, #b); o`), { a: 0 });
     ctx.expectThrow(TypeError, evalCode, [`remove('012', 1)`]);

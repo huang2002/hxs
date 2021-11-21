@@ -1,6 +1,6 @@
 import { Utils } from '../common';
 import { evalBufferNode } from "../eval/evalBufferNode";
-import { evalBinaryOperation, evalUnaryOperation } from '../index';
+import { evalBinaryOperation, evalUnaryOperation } from '../operators/common';
 import { createBinaryOperator, OperatorDefinition } from './common';
 
 export const mathOperators: OperatorDefinition[] = [{

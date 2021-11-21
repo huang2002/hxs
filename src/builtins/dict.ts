@@ -1,6 +1,6 @@
 import { ContextValue, Dict, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
-import { getConstructorOf, isInstanceOf } from './common';
+import { getConstructorOf, isInstanceOf, getKeysOf, getProperty, hasProperty, setProperty } from './common';
 
 export const builtinDict = Utils.injectHelp(
     'A dict providing methods for dict manipulations.',
@@ -53,56 +53,93 @@ export const builtinDict = Utils.injectHelp(
             })
         ),
 
-        keys: Utils.injectHelp(
-            'Dict.keys(dict)',
-            createFunctionHandler(1, 1, (args, referrer, context) => {
-                const dict = args[0];
-                if (!Utils.isDict(dict)) {
-                    Utils.raise(TypeError, `expect a dict`, referrer, context);
-                }
-                return Object.keys(dict as Dict);
-            })
-        ),
-
-        entries: Utils.injectHelp(
-            'Dict.entries(dict)',
-            createFunctionHandler(1, 1, (args, referrer, context) => {
-                const dict = args[0];
-                if (!Utils.isDict(dict)) {
-                    Utils.raise(TypeError, `expect a dict`, referrer, context);
-                }
-                return Object.entries(dict as Dict);
-            })
-        ),
-
         has: Utils.injectHelp(
             'Dict.has(dict, key)',
             createFunctionHandler(2, 2, (args, referrer, context) => {
-                const dict = args[0];
+                const dict = args[0] as Dict;
                 if (!Utils.isDict(dict)) {
                     Utils.raise(TypeError, `expect a dict to check`, referrer, context);
                 }
-                const key = args[1];
+                const key = args[1] as string;
                 if (typeof key !== 'string') {
-                    Utils.raise(TypeError, `expect a string as key`, referrer, context);
+                    Utils.raise(TypeError, 'expect a string as key', referrer, context);
                 }
-                return (key as string) in (dict as Dict);
+                return (key in dict);
+            })
+        ),
+
+        remove: Utils.injectHelp(
+            'Dict.remove(dict, key)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+                const dict = args[0] as Dict;
+                if (!Utils.isDict(dict)) {
+                    Utils.raise(TypeError, `expect a dict`, referrer, context);
+                }
+                const key = args[1] as string;
+                if (typeof key !== 'string') {
+                    Utils.raise(TypeError, 'expect a string as key', referrer, context);
+                }
+                if (key in dict) { // Don't use `hasProperty` here!
+                    delete dict[key];
+                }
+                return null;
+            })
+        ),
+
+        get: Utils.injectHelp(
+            'Dict.get(dict, key)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+                const dict = args[0] as Dict;
+                if (!Utils.isDict(dict)) {
+                    Utils.raise(TypeError, `expect a dict`, referrer, context);
+                }
+                const key = args[1] as string;
+                if (typeof key !== 'string') {
+                    Utils.raise(TypeError, 'expect a string as key', referrer, context);
+                }
+                if (key in dict) { // Don't use `hasProperty` here!
+                    return dict[key];
+                } else {
+                    return null;
+                }
             })
         ),
 
         set: Utils.injectHelp(
             'Dict.set(dict, key, value)',
             createFunctionHandler(3, 3, (args, referrer, context) => {
-                const dict = args[0];
+                const dict = args[0] as Dict;
                 if (!Utils.isDict(dict)) {
                     Utils.raise(TypeError, `expect a dict`, referrer, context);
                 }
-                const key = args[1];
+                const key = args[1] as string;
                 if (typeof key !== 'string') {
-                    Utils.raise(TypeError, `expect a string as key`, referrer, context);
+                    Utils.raise(TypeError, 'expect a string as key', referrer, context);
                 }
-                (dict as Dict)[key as string] = args[2];
+                dict[key] = args[2];
                 return null;
+            })
+        ),
+
+        keys: Utils.injectHelp(
+            'Dict.keys(dict)',
+            createFunctionHandler(1, 1, (args, referrer, context) => {
+                const dict = args[0] as Dict;
+                if (!Utils.isDict(dict)) {
+                    Utils.raise(TypeError, `expect a dict`, referrer, context);
+                }
+                return Object.keys(dict);
+            })
+        ),
+
+        entries: Utils.injectHelp(
+            'Dict.entries(dict)',
+            createFunctionHandler(1, 1, (args, referrer, context) => {
+                const dict = args[0] as Dict;
+                if (!Utils.isDict(dict)) {
+                    Utils.raise(TypeError, `expect a dict`, referrer, context);
+                }
+                return Object.entries(dict);
             })
         ),
 
@@ -129,34 +166,34 @@ export const builtinDict = Utils.injectHelp(
                 const { store } = context;
                 if (loose) {
                     for (let i = 0; i < names.length; i++) {
-                        store[names[i]] = (names[i] in dict) ? dict[names[i]] : null;
+                        if (hasProperty(dict, names[i], referrer, referrer, context)) {
+                            store[names[i]] = getProperty(
+                                dict,
+                                names[i],
+                                referrer,
+                                referrer,
+                                context,
+                            );
+                        } else {
+                            store[names[i]] = null;
+                        }
                     }
                 } else {
                     for (let i = 0; i < names.length; i++) {
-                        if (!(names[i] in dict)) {
+                        if (!hasProperty(dict, names[i], referrer, referrer, context)) {
                             Utils.raise(ReferenceError, `unknown key(${Utils.toDisplay(names[i])})`, referrer, context);
                         }
                     }
                     for (let i = 0; i < names.length; i++) {
-                        store[names[i]] = dict[names[i]];
+                        store[names[i]] = getProperty(
+                            dict,
+                            names[i],
+                            referrer,
+                            referrer,
+                            context,
+                        );
                     }
                 }
-                return null;
-            })
-        ),
-
-        remove: Utils.injectHelp(
-            'Dict.remove(dict, key)',
-            createFunctionHandler(2, 2, (args, referrer, context) => {
-                const dict = args[0] as Dict;
-                if (!Utils.isDict(dict)) {
-                    Utils.raise(TypeError, `expect a dict`, referrer, context);
-                }
-                const key = args[1] as string;
-                if (typeof key !== 'string') {
-                    Utils.raise(TypeError, `expect a string as key`, referrer, context);
-                }
-                delete dict[key];
                 return null;
             })
         ),
@@ -164,28 +201,48 @@ export const builtinDict = Utils.injectHelp(
         assign: Utils.injectHelp(
             'Dict.assign(dict, props, allowOverwrite = true)',
             createFunctionHandler(2, 3, (args, referrer, context) => {
+
                 const dict = args[0] as Dict;
                 if (!Utils.isDict(dict)) {
                     Utils.raise(TypeError, `expect a dict to modify`, referrer, context);
                 }
+
                 const props = args[1] as Dict;
                 if (!Utils.isDict(props)) {
                     Utils.raise(TypeError, `expect another dict as props`, referrer, context);
                 }
+
                 const allowOverwrite = args.length === 3 ? args[2] as boolean : true;
                 if (typeof allowOverwrite !== 'boolean') {
                     Utils.raise(TypeError, `expect a boolean as overwrite option`, referrer, context);
                 }
-                if (allowOverwrite) {
-                    return Object.assign(dict, props);
-                } else {
-                    for (const key in props) {
-                        if (!(key in dict)) {
-                            dict[key] = props[key];
-                        }
+
+                getKeysOf(props, referrer, context).forEach(key => {
+                    if (
+                        !allowOverwrite
+                        && hasProperty(dict, key, referrer, referrer, context)
+                    ) {
+                        return;
                     }
-                    return dict;
-                }
+                    const value = getProperty(
+                        props,
+                        key,
+                        referrer,
+                        referrer,
+                        context,
+                    );
+                    setProperty(
+                        dict,
+                        key,
+                        value,
+                        referrer,
+                        referrer,
+                        context,
+                    );
+                });
+
+                return dict;
+
             })
         ),
 

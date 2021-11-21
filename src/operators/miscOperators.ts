@@ -4,6 +4,7 @@ import { builtinDict } from '../builtins/dict';
 import { builtinFunction } from '../builtins/function';
 import { builtinNumber } from '../builtins/number';
 import { builtinString } from '../builtins/string';
+import { getProperty } from '../builtins/common';
 import { ContextValue, Dict, FunctionHandler, Utils } from '../common';
 import { evalBufferNode } from "../eval/evalBufferNode";
 import { invoke, isInvocable } from '../function/common';
@@ -26,12 +27,13 @@ export const miscOperators: OperatorDefinition[] = [{
         }
 
         const name = (nameNode as WordNode).value;
-        let value: ContextValue;
-        if (name in (target as Dict)) {
-            value = (target as Dict)[name];
-        } else {
-            value = null;
-        }
+        const value = getProperty(
+            target,
+            name,
+            buffer[index + 1],
+            buffer[index - 1],
+            context,
+        );
 
         const valueNode = Utils.createValueNode(value, buffer[index]);
         Utils.replaceBuffer(buffer, index - 1, 3, valueNode);

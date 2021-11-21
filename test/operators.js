@@ -73,7 +73,7 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`'abcde':slice(1, -1)`), 'bcd');
     ctx.assertStrictEqual(evalCode(`'abcde':slice:invoke([1, -1])`), 'bcd');
     ctx.assertDeepEqual(evalCode(`[0, 1, 2, 3]:slice(1, -1)`), [1, 2]);
-    ctx.assertDeepEqual(evalCode(`o = {}; o:set(#foo, 'bar'); o`), { foo: 'bar' });
+    ctx.assertDeepEqual(evalCode(`o = {}; o.foo = 'bar'; o`), { foo: 'bar' });
     ctx.assertStrictEqual(evalCode(`1 + 'abcdef':indexOf('c')`), 1 + 2);
     ctx.expectThrow(TypeError, evalCode, [`null:toString()`]);
     ctx.expectThrow(TypeError, evalCode, [`true:toString()`]);

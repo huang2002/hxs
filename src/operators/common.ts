@@ -1,8 +1,9 @@
-import { WordNode } from '3h-ast';
-import { ContextValue, SyntaxHandler, Utils } from '../common';
+import { SymbolNode } from '3h-ast';
+import { ContextValue, SyntaxHandler, Utils, ScriptContext, SyntaxNode } from '../common';
 import { evalBufferNode } from "../eval/evalBufferNode";
 import { evalExpression } from '../eval/evalExpression';
-import { invoke, isInvocable, ScriptContext, SyntaxNode } from '../index';
+import { getProperty, setProperty } from '../builtins/common';
+import { invoke, isInvocable } from "../function/common";
 
 export interface OperatorDefinition {
     symbol: string;
@@ -164,21 +165,66 @@ export const createAdditionalAssignmentOperator = <
 ): SyntaxHandler => (
     (buffer, index, context) => {
 
+        const operationReferrer = buffer[index];
+
         if (index === 0) {
-            Utils.raise(SyntaxError, 'expect a variable name preceding', buffer[index], context);
+            Utils.raise(SyntaxError, 'expect a variable preceding', operationReferrer, context);
         }
 
-        const nameNode = buffer[index - 1];
-        if (nameNode.type !== 'word') {
-            Utils.raise(SyntaxError, 'expect a word as variable name', buffer[index - 1], context);
+        const precedingNode = buffer[index - 1];
+        let target: ContextValue = null;
+        let key: ContextValue = null;
+
+        if (precedingNode.type === 'word') { // a = b or a.b = c
+
+            if (index === 1) { // a = b
+
+                const name = precedingNode.value;
+                if (!(name in context.store)) {
+                    Utils.raise(SyntaxError, `${Utils.toDisplay(name)} is not defined`, precedingNode, context);
+                }
+
+                target = context.store;
+                key = precedingNode.value;
+
+            } else { // a.b = c
+
+                if (
+                    index === 2
+                    || buffer[index - 2].type !== 'symbol'
+                    || (buffer[index - 2] as SymbolNode).value !== '.'
+                ) {
+                    Utils.raise(SyntaxError, 'invalid assignment', operationReferrer, context);
+                }
+
+                target = evalExpression(buffer, context, 0, index - 2);
+                if (!Utils.isDict(target)) {
+                    Utils.raise(TypeError, 'expect a dict as assignment target', buffer[0], context);
+                }
+
+                key = precedingNode.value;
+
+            }
+
+        } else if (
+            precedingNode.type === 'span'
+            && precedingNode.start === '['
+        ) { // a[b] = c
+
+            target = evalExpression(buffer, context, 0, index - 1);
+            key = evalExpression(precedingNode.body, context);
+
+        } else {
+            Utils.raise(SyntaxError, 'invalid assignment', operationReferrer, context);
         }
 
-        const name = (nameNode as WordNode).value;
-        if (!(name in context.store)) {
-            Utils.raise(SyntaxError, `${Utils.toDisplay(name)} is not defined`, buffer[index - 1], context);
-        }
-
-        const a = context.store[name];
+        const a = getProperty(
+            target,
+            key,
+            precedingNode,
+            operationReferrer,
+            context,
+        );
         const b = evalExpression(buffer, context, index + 1);
 
         const value = evalBinaryOperation(
@@ -193,10 +239,17 @@ export const createAdditionalAssignmentOperator = <
             context,
         );
 
-        context.store[name] = value;
+        setProperty(
+            target,
+            key,
+            value,
+            precedingNode,
+            operationReferrer,
+            context,
+        );
 
-        const valueNode = Utils.createValueNode(value, nameNode);
-        Utils.replaceBuffer(buffer, index - 1, buffer.length - index + 1, valueNode);
+        const valueNode = Utils.createValueNode(value, precedingNode);
+        Utils.replaceBuffer(buffer, 0, buffer.length, valueNode);
 
     }
 );

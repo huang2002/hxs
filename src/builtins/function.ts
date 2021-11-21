@@ -1,6 +1,6 @@
 import { ContextValue, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
-import { invoke, isInvocable } from '../index';
+import { invoke, isInvocable } from '../function/common';
 
 export const builtinFunction = Utils.injectHelp(
     'A dict providing methods for function manipulations.',

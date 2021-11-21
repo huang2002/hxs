@@ -4,7 +4,7 @@ import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
 import { evalExpression } from "../eval/evalExpression";
 import { evalNode } from "../eval/evalNode";
 import { invoke, isInvocable } from '../function/common';
-import { createInlineFunction } from '../index';
+import { createInlineFunction } from '../function/inlineFunction';
 
 export const bracketHandler: SyntaxHandler = (buffer, index, context) => {
 

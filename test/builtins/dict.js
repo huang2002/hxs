@@ -74,7 +74,7 @@ module.exports = (ctx) => {
     ctx.assertShallowEqual(
         evalCode(`
             dict = Dict();
-            Dict.set(dict, 'bar', 8);
+            dict[#bar] = 8;
             dict
         `),
         { bar: 8 }
@@ -83,7 +83,7 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(
         evalCode(`
             a = Dict();
-            Dict.set(a, 'b', 'c');
+            a[#b] = 'c';
             a['b']
         `),
         'c'
@@ -92,14 +92,11 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(
         evalCode(`
             a = Dict();
-            Dict.set(a, 't', 2);
+            a.t = 2;
             a.t
         `),
         2
     );
-
-    ctx.expectThrow(TypeError, evalCode, [`Dict.set([], 'a', 0)`]);
-    ctx.expectThrow(TypeError, evalCode, [`Dict.set([], 0, '1')`]);
 
     ctx.assertShallowEqual(
         evalCode(`

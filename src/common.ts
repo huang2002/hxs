@@ -1,5 +1,8 @@
 import { ASTNode, ASTNodeTemplate, NumberNode, SymbolNode } from '3h-ast';
-import { BASE_SYMBOL, CONSTRUCTOR_SYMBOL, HELP_SYMBOL } from './builtins/common';
+
+export const HELP_SYMBOL = Symbol('hxs-help-symbol');
+export const CONSTRUCTOR_SYMBOL = Symbol('hxs-constructor-symbol');
+export const BASE_SYMBOL = Symbol('hxs-base-symbol');
 
 export type ContextValue =
     | null

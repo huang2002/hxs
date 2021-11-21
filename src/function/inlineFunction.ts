@@ -1,8 +1,7 @@
 import { SpanNode } from '3h-ast';
-import { ContextValue, SyntaxHandler, Utils } from '../common';
+import { FunctionHandler, ScriptContext, SyntaxNode, ContextValue, SyntaxHandler, Utils } from '../common';
 import { evalCompiledExpression } from '../eval/evalExpression';
 import { compileNodes, evalCompiledNodes } from "../eval/evalNodes";
-import { FunctionHandler, ScriptContext, SyntaxNode } from '../index';
 import { parseArgList } from './common';
 import { createFunctionHandler } from './createFunctionHandler';
 

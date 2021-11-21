@@ -16,7 +16,7 @@ module.exports = (ctx) => {
 
             V = Class({
                 @__init(value) {
-                    this:set(#_v, value);
+                    this._v = value;
                 },
                 #__plus -> (value) => (this._v + value),
                 @__minus(value, reverse) {
@@ -214,6 +214,76 @@ module.exports = (ctx) => {
             assert(V(2) !== 6, true);
             assert(V(2) !== V(2), true);
             assert(2 !== V(6), true);
+
+            Map = Class({
+                @__init() {
+                    this:set(#keys, []);
+                    this:set(#values, []);
+                },
+                #__keys -> () => (this.keys),
+                @__has(key) {
+                    return(this.keys:includes(key));
+                },
+                @__remove(key) {
+                    index = this.keys:indexOf(key);
+                    if (index !== -1) {
+                        this.keys:remove(index);
+                        this.values:remove(index);
+                    };
+                },
+                @__get(key) {
+                    if (key === #keys || key === #values) {
+                        return(this:get(key));
+                    };
+                    index = this.keys:indexOf(key);
+                    if (index === -1) {
+                        return(null);
+                    } (true) {
+                        return(this.values[index]);
+                    };
+                },
+                @__set(key, value) {
+                    index = this.keys:indexOf(key);
+                    if (index === -1) {
+                        this.keys:push(key);
+                        this.values:push(value);
+                    } (true) {
+                        this.values[index] = value;
+                    };
+                },
+            });
+
+            map = Map();
+            o = {};
+
+            assert(typeOf(map.keys), 'array');
+
+            map.a = 0;
+            map[#b] = 1;
+            map[o] = 6;
+
+            assert(map[#a], 0);
+            assert(map.b, 1);
+            assert(map.c, null);
+            assert(map.o, null);
+            assert(map[o], 6);
+            assert(map[{}], null);
+
+            assert(map:has(#a), false);
+            assert(map:has(#c), false);
+            assert(map:keys():sizeOf(), 8);
+
+            map.a = 2;
+            assert(map[#a], 2);
+
+            a = {};
+            b = Map();
+            b[#foo] = 'bar';
+            a:assign(b);
+            assert(a.foo, 'bar');
+
+            b:unpack([#foo]);
+            assert(foo, 'bar');
 
             666
         `),

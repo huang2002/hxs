@@ -1,6 +1,5 @@
-import { Dict, FunctionHandler, Utils } from '../common';
+import { Dict, FunctionHandler, Utils, HELP_SYMBOL } from '../common';
 import { createFunctionHandler } from '../function/createFunctionHandler';
-import { HELP_SYMBOL } from './index';
 
 export const help = Utils.injectHelp(
     'help(target)',
