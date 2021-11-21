@@ -212,49 +212,4 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`{ ...[] }`]);
     ctx.expectThrow(TypeError, evalCode, [`{ ...'abc' }`]);
 
-    ctx.assertDeepEqual(
-        evalCode(`
-            Dict.diff({}, {})
-        `),
-        {}
-    );
-    ctx.assertDeepEqual(
-        evalCode(`
-            Dict.diff({ #a -> 0 }, {})
-        `),
-        { a: 0 }
-    );
-    ctx.assertDeepEqual(
-        evalCode(`
-            Dict.diff({}, { #a -> 0 })
-        `),
-        {}
-    );
-    ctx.assertDeepEqual(
-        evalCode(`
-            Dict.diff({ #a -> 0 }, { #b -> 1 })
-        `),
-        { a: 0 }
-    );
-    ctx.assertDeepEqual(
-        evalCode(`
-            Dict.diff({ #a -> NaN }, { #a -> NaN })
-        `),
-        {}
-    );
-    ctx.assertDeepEqual(
-        evalCode(`
-            Dict.diff({ #a -> 0, #b -> 1 }, { #b -> 1 })
-        `),
-        { a: 0 }
-    );
-    ctx.assertDeepEqual(
-        evalCode(`
-            Dict.diff({ #a -> 0, #b -> 1 }, { #b -> 2 })
-        `),
-        { a: 0, b: 1 }
-    );
-    ctx.expectThrow(TypeError, evalCode, [`Dict.diff([], {})`]);
-    ctx.expectThrow(TypeError, evalCode, [`Dict.diff({}, [])`]);
-
 };

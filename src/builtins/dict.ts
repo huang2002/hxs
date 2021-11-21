@@ -246,21 +246,6 @@ export const builtinDict = Utils.injectHelp(
             })
         ),
 
-        diff: Utils.injectHelp(
-            'Dict.diff(target, reference)',
-            createFunctionHandler(2, 2, (args, referrer, context) => {
-                const target = args[0] as Dict;
-                const reference = args[1] as Dict;
-                if (!Utils.isDict(target)) {
-                    Utils.raise(TypeError, `expect a dict as target`, referrer, context);
-                }
-                if (!Utils.isDict(reference)) {
-                    Utils.raise(TypeError, `expect a dict as reference`, referrer, context);
-                }
-                return Utils.diffDict(target, reference);
-            })
-        ),
-
         getConstructorOf: Utils.injectHelp(
             'Dict.getConstructorOf(dict)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
