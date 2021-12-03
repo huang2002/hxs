@@ -138,13 +138,20 @@ export const invoke = (
     context: ScriptContext,
     thisArg: ContextValue,
 ): ContextValue => {
+    context.stack.push(
+        Utils.formatFrameString(referrer, context)
+    );
     if (typeof target === 'function') {
-        return target(rawArgs, referrer, context, thisArg);
+        const returnValue = target(rawArgs, referrer, context, thisArg);
+        context.stack.pop();
+        return returnValue;
     } else if (Utils.isDict(target) && ('__invoke' in target)) {
         if (typeof target.__invoke !== 'function') {
             Utils.raise(TypeError, 'expect `__invoke` to be a function', referrer, context);
         }
-        return (target.__invoke as FunctionHandler)(rawArgs, referrer, context, thisArg);
+        const returnValue = (target.__invoke as FunctionHandler)(rawArgs, referrer, context, thisArg);
+        context.stack.pop();
+        return returnValue;
     } else {
         Utils.raise(TypeError, 'expect a function or dict with proper `__invoke`', referrer, context);
         return null; // for type checking

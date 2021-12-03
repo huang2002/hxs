@@ -10,7 +10,8 @@ export const builtinRaise = Utils.injectHelp(
         if (typeof message !== 'string') {
             Utils.raise(TypeError, 'expect a string as error message', referrer, context);
         }
-        throw message;
+        Utils.raise(Error, message, referrer, context);
+        return null;
     })
 );
 
@@ -23,6 +24,7 @@ export const builtinTry = Utils.injectHelp(
             Utils.raise(TypeError, 'expect an invocable to try', referrer, context);
         }
 
+        // catch
         return (rawArgs) => {
 
             if (rawArgs.length > 1 || rawArgs[0].type !== 'word') {
@@ -37,6 +39,8 @@ export const builtinTry = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect an invocable as error handler', referrer, context);
                 }
 
+                const tryStackLength = context.stack.length;
+
                 try {
                     invoke(tryBody, [], referrer, context, thisArg);
                 } catch (error) {
@@ -46,6 +50,7 @@ export const builtinTry = Utils.injectHelp(
                     Utils.injectTemp(_context.store, {
                         [errName]: String(error),
                     }, () => {
+                        context.stack.length = tryStackLength;
                         invoke(catchBody, [], _referrer, _context, _thisArg);
                     });
                 }

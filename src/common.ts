@@ -37,6 +37,7 @@ export interface ScriptContext {
     resolvedModules: ResolvedModules;
     source: string;
     basePath: string;
+    stack: string[];
 }
 
 export type SyntaxHandler = (
@@ -109,6 +110,13 @@ export namespace Utils {
         return normalizedIndex;
     };
 
+    export const formatFrameString = (
+        referrer: SyntaxNode,
+        context: ScriptContext,
+    ) => (
+        `  at ${context.source} (Ln ${referrer.line}, Col ${referrer.column})`
+    );
+
     /**
      * Throw a specific error with environment info appended.
      */
@@ -118,11 +126,16 @@ export namespace Utils {
         referrer: SyntaxNode,
         context: ScriptContext,
     ) => {
-        const { line, column } = referrer;
-        const { source } = context;
-        throw new constructor(
-            `${message} (Ln ${line}, Col ${column} @${source})`
-        );
+        const currentFrame = Utils.formatFrameString(referrer, context);
+        const { stack } = context;
+        let errorMessage = message;
+        if (stack[stack.length - 1] !== currentFrame) {
+            errorMessage += '\n' + currentFrame;
+        }
+        for (let i = stack.length - 1; i >= 0; i--) {
+            errorMessage += '\n' + stack[i];
+        }
+        throw new constructor(errorMessage);
     };
 
     export const parseNumber = (
@@ -248,6 +261,7 @@ export namespace Utils {
         resolvedModules: context.resolvedModules,
         source: context.source,
         basePath: context.basePath,
+        stack: context.stack,
     });
 
     export const injectHelp = <T>(helpInfo: string, target: T) => {

@@ -13,6 +13,7 @@ module.exports = (ctx) => {
             };
             @bar() {
                 try {
+                    baz();
                     foo();
                 } (err) {
                     try {
@@ -22,9 +23,15 @@ module.exports = (ctx) => {
                     }
                 }
             };
+            @baz() {};
             bar()
         `),
-        'blahblah'
+        'Error: blahblah\n'
+        + '  at unknown (Ln 3, Col 22)\n'
+        + '  at unknown (Ln 8, Col 24)\n'
+        + '  at unknown (Ln 6, Col 21)\n'
+        + '  at unknown (Ln 9, Col 25)\n'
+        + '  at unknown (Ln 18, Col 16)'
     );
 
 };

@@ -30,6 +30,7 @@ exports.createREPL = (options) => {
         resolvedModules: Object.create(null),
         source: 'repl',
         basePath: process.cwd(),
+        stack: [],
     };
 
     enableAddons(context, options);
@@ -66,11 +67,11 @@ exports.createREPL = (options) => {
                     HXS.evalCode(input, context)
                 )
             );
-            console.log();
         } catch (error) {
-            console.error('Error: ' + error.message);
-            console.error();
+            console.error(String(error));
+            context.stack.length = 0;
         }
+        console.log();
         interface.prompt();
     });
 

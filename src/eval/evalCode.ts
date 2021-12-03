@@ -29,5 +29,8 @@ export const evalCode = (
     if (!_context.basePath) {
         _context.basePath = '';
     }
+    if (!_context.stack) {
+        _context.stack = [];
+    }
     return evalNodes(parse(code).ast, _context);
 };
