@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.0
+
+- Add `scriptContext.stack`
+- Fix CLI error display
+- Bump `3h-ast` to `0.13.0`
+
 ## 0.40.0
 
 - Add property assignment syntax
