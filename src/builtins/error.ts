@@ -27,7 +27,7 @@ export const builtinTry = Utils.injectHelp(
         // catch
         return (rawArgs) => {
 
-            if (rawArgs.length > 1 || rawArgs[0].type !== 'word') {
+            if (rawArgs.length !== 1 || rawArgs[0].type !== 'word') {
                 Utils.raise(TypeError, 'expect a word as the name for error', referrer, context);
             }
             const errName = (rawArgs[0] as WordNode).value;
