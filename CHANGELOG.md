@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.41.1
+
+- Fix line end escaping
+
 ## 0.41.0
 
 - Add `scriptContext.stack`
