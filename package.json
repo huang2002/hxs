@@ -1,6 +1,6 @@
 {
   "name": "hxs",
-  "version": "0.41.0",
+  "version": "0.41.1",
   "description": "A simple programming language written in JavaScript.",
   "module": "./dist/hxs.min.js",
   "main": "./dist/hxs.umd.min.js",
