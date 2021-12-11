@@ -5,8 +5,8 @@
 ## Introduction
 
 *hxs* is an experimental language written in JavaScript.
-It is NOT ready for production use,
-but you can give it a try if you are interested in programming languages.
+You can give it a try if you are interested in programming languages,
+but it is NOT ready for production use.
 
 ## Links
 
