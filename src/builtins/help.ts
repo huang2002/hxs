@@ -13,7 +13,6 @@ export const help = Utils.injectHelp(
                 }
                 break;
             }
-            // TODO: case 'string': { /* search help */ }
         }
         return 'no help available';
     })
