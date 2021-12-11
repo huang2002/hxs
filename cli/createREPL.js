@@ -62,11 +62,9 @@ exports.createREPL = (options) => {
     interface.prompt();
     interface.on('line', input => {
         try {
-            console.log(
-                HXS.Utils.toDisplay(
-                    HXS.evalCode(input, context)
-                )
-            );
+            const result = HXS.evalCode(input, context);
+            const resultDisplay = HXS.Utils.toDisplay(result);
+            console.log(`REPL Result: ${resultDisplay}`);
         } catch (error) {
             console.error(String(error));
             context.stack.length = 0;
