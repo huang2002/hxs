@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.41.2
+
+- Improve REPL displaying
+- Improve introduction
+
 ## 0.41.1
 
 - Fix line end escaping
