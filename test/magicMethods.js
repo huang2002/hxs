@@ -217,8 +217,8 @@ module.exports = (ctx) => {
 
             Map = Class({
                 @__init() {
-                    this:set(#keys, []);
-                    this:set(#values, []);
+                    this.keys = [];
+                    this.values = [];
                 },
                 #__keys -> () => (this.keys),
                 @__has(key) {
@@ -232,9 +232,6 @@ module.exports = (ctx) => {
                     };
                 },
                 @__get(key) {
-                    if (key === #keys || key === #values) {
-                        return(this:get(key));
-                    };
                     index = this.keys:indexOf(key);
                     if (index === -1) {
                         return(null);
@@ -262,19 +259,23 @@ module.exports = (ctx) => {
             map[#b] = 1;
             map[o] = 6;
 
-            assert(map[#a], 0);
-            assert(map.b, 1);
+            assert(map.a, 0);
+            assert(map[#a], null);
+            assert(map.b, null);
+            assert(map[#b], 1);
             assert(map.c, null);
+            assert(map[#c], null);
             assert(map.o, null);
             assert(map[o], 6);
             assert(map[{}], null);
 
-            assert(map:has(#a), false);
+            assert(map:has(#a), true);
             assert(map:has(#c), false);
-            assert(map:keys():sizeOf(), 8);
-            assert(keys(map):sizeOf(), 3);
+            assert(map:keys():sizeOf(), 9);
+            assert(keys(map):sizeOf(), 2);
 
-            map.a = 2;
+            map[#a] = 2;
+            assert(map.a, 0);
             assert(map[#a], 2);
 
             a = {

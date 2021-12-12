@@ -89,6 +89,7 @@ export const removeProperty = (
 export const getProperty = (
     target: ContextValue,
     key: ContextValue,
+    allowMagic: boolean,
     keyReferrer: SyntaxNode,
     operationReferrer: SyntaxNode,
     context: ScriptContext,
@@ -110,7 +111,7 @@ export const getProperty = (
 
     } else if (Utils.isDict(target)) {
 
-        if (isInvocable(target.__get)) {
+        if (allowMagic && isInvocable(target.__get)) {
             return invoke(
                 target.__get,
                 [Utils.createValueNode(key, keyReferrer)],
@@ -140,6 +141,7 @@ export const setProperty = (
     target: ContextValue,
     key: ContextValue,
     value: ContextValue,
+    allowMagic: boolean,
     keyReferrer: SyntaxNode,
     operationReferrer: SyntaxNode,
     context: ScriptContext,
@@ -161,7 +163,7 @@ export const setProperty = (
 
     } else if (Utils.isDict(target)) {
 
-        if (isInvocable(target.__set)) {
+        if (allowMagic && isInvocable(target.__set)) {
             invoke(
                 target.__set,
                 Utils.createRawArray([key, value], operationReferrer),

@@ -174,6 +174,7 @@ export const createAdditionalAssignmentOperator = <
         const precedingNode = buffer[index - 1];
         let target: ContextValue = null;
         let key: ContextValue = null;
+        let allowMagic = false;
 
         if (precedingNode.type === 'word') { // a = b or a.b = c
 
@@ -213,6 +214,7 @@ export const createAdditionalAssignmentOperator = <
 
             target = evalExpression(buffer, context, 0, index - 1);
             key = evalExpression(precedingNode.body, context);
+            allowMagic = true;
 
         } else {
             Utils.raise(SyntaxError, 'invalid assignment', operationReferrer, context);
@@ -221,6 +223,7 @@ export const createAdditionalAssignmentOperator = <
         const a = getProperty(
             target,
             key,
+            allowMagic,
             precedingNode,
             operationReferrer,
             context,
@@ -243,6 +246,7 @@ export const createAdditionalAssignmentOperator = <
             target,
             key,
             value,
+            allowMagic,
             precedingNode,
             operationReferrer,
             context,

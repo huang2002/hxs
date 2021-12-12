@@ -170,6 +170,7 @@ export const builtinDict = Utils.injectHelp(
                             store[names[i]] = getProperty(
                                 dict,
                                 names[i],
+                                true,
                                 referrer,
                                 referrer,
                                 context,
@@ -188,6 +189,7 @@ export const builtinDict = Utils.injectHelp(
                         store[names[i]] = getProperty(
                             dict,
                             names[i],
+                            true,
                             referrer,
                             referrer,
                             context,
@@ -227,6 +229,7 @@ export const builtinDict = Utils.injectHelp(
                     const value = getProperty(
                         props,
                         key,
+                        true,
                         referrer,
                         referrer,
                         context,
@@ -235,6 +238,7 @@ export const builtinDict = Utils.injectHelp(
                         dict,
                         key,
                         value,
+                        true,
                         referrer,
                         referrer,
                         context,

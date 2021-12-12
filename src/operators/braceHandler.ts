@@ -19,6 +19,7 @@ export const braceHandler: SyntaxHandler = (buffer, index, context) => {
         const value = getProperty(
             target,
             key,
+            true,
             buffer[index - 1],
             buffer[index],
             context,

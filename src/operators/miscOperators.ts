@@ -30,6 +30,7 @@ export const miscOperators: OperatorDefinition[] = [{
         const value = getProperty(
             target,
             name,
+            false,
             buffer[index + 1],
             buffer[index - 1],
             context,
