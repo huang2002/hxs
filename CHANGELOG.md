@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.42.0
+
+- Restrict conditions of property magic methods
+- Fix stack tracing
+
 ## 0.41.2
 
 - Improve REPL displaying
