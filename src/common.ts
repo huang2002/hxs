@@ -114,7 +114,7 @@ export namespace Utils {
         referrer: SyntaxNode,
         context: ScriptContext,
     ) => (
-        `  at ${context.source} (Ln ${referrer.line}, Col ${referrer.column})`
+        `    at ${context.source} (Ln ${referrer.line}, Col ${referrer.column})`
     );
 
     /**
