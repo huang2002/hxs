@@ -37,6 +37,9 @@ export interface ScriptContext {
     resolvedModules: ResolvedModules;
     source: string;
     basePath: string;
+    /**
+     * [old, ..., new]
+     */
     stack: string[];
 }
 
