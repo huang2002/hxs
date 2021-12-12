@@ -40,7 +40,11 @@ export const createInlineFunction = (
             scopeStore.this = thisArg;
             scopeStore.arguments = args;
 
-            const scopeContext = Utils.extendContext(context, scopeStore);
+            const scopeContext = Utils.extendContext(
+                context,
+                scopeStore,
+                _context.stack.slice(),
+            );
 
             const argDefinitions = argList.args;
             for (let i = 0; i < argDefinitions.length; i++) {

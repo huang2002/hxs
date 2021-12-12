@@ -255,13 +255,14 @@ export namespace Utils {
     export const extendContext = (
         context: ScriptContext,
         store: Dict,
+        stack: string[],
     ): ScriptContext => ({
         store,
         exports: context.exports,
         resolvedModules: context.resolvedModules,
         source: context.source,
         basePath: context.basePath,
-        stack: context.stack,
+        stack,
     });
 
     export const injectHelp = <T>(helpInfo: string, target: T) => {

@@ -44,14 +44,17 @@ export const builtinFor: FunctionHandler = Utils.injectHelp(
 
             const BREAK_FLAG = Symbol('hxs-break-flag');
             const CONTINUE_FLAG = Symbol('hxs-break-flag');
+            const scopeStackLength = _context.stack.length;
 
             Utils.injectTemp(
                 _context.store,
                 {
                     break: createFunctionHandler(0, 0, () => {
+                        _context.stack.length = scopeStackLength;
                         throw BREAK_FLAG;
                     }),
                     continue: createFunctionHandler(0, 0, () => {
+                        _context.stack.length = scopeStackLength;
                         throw CONTINUE_FLAG;
                     }),
                 },
