@@ -9,7 +9,12 @@ export default [
         plugins: [
             nodeResolve(),
             babel({
-                babelHelpers: 'bundled'
+                presets: [
+                    ['@babel/preset-env', {
+                        loose: true,
+                    }],
+                ],
+                babelHelpers: 'bundled',
             }),
         ],
         output: {
