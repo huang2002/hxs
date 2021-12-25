@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.42.1
+
+- Fix babel config
+
 ## 0.42.0
 
 - Restrict conditions of property magic methods
