@@ -126,17 +126,19 @@ export namespace Utils {
     export const raise = (
         constructor: ErrorConstructor,
         message: string,
-        referrer: SyntaxNode,
-        context: ScriptContext,
+        referrer: SyntaxNode | null,
+        context: ScriptContext | null,
     ) => {
-        const currentFrame = Utils.formatFrameString(referrer, context);
-        const { stack } = context;
         let errorMessage = message;
-        if (stack[stack.length - 1] !== currentFrame) {
-            errorMessage += '\n' + currentFrame;
-        }
-        for (let i = stack.length - 1; i >= 0; i--) {
-            errorMessage += '\n' + stack[i];
+        if (referrer && context) {
+            const currentFrame = Utils.formatFrameString(referrer, context);
+            const { stack } = context;
+            if (stack[stack.length - 1] !== currentFrame) {
+                errorMessage += '\n' + currentFrame;
+            }
+            for (let i = stack.length - 1; i >= 0; i--) {
+                errorMessage += '\n' + stack[i];
+            }
         }
         throw new constructor(errorMessage);
     };
