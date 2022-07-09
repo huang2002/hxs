@@ -186,8 +186,8 @@ export const setProperty = (
 
 export const createClass = (
     description: Dict,
-    referrer: SyntaxNode,
-    context: ScriptContext,
+    referrer: SyntaxNode | null,
+    context: ScriptContext | null,
 ) => {
 
     const constructor: Dict = Utils.createDict({
