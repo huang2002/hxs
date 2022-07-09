@@ -45,6 +45,7 @@ const enableModule = (context, encoding) => {
                 resolvedModules,
                 source: modulePath,
                 basePath: dirname(modulePath),
+                stack: _context.stack,
             };
 
             enableModule(moduleContext, encoding);

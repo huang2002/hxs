@@ -23,6 +23,7 @@ exports.exec = (filePath, options) => {
         resolvedModules: Object.create(null),
         source: filePath,
         basePath: dirname(filePath),
+        stack: [],
     };
 
     context.resolvedModules[filePath] = context.exports;
