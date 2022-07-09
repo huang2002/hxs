@@ -38,7 +38,7 @@
     "3h-test": "^0.6.0",
     "rollup": "^2.38.5",
     "terser": "^5.5.1",
-    "typescript": "^4.4.2"
+    "typescript": "^4.7.4"
   },
   "dependencies": {
     "3h-cli": "^3.0.0"

@@ -254,7 +254,7 @@ export const builtinArray = Utils.injectHelp(
                 if ((depth as number) <= 0 || depth !== depth) {
                     Utils.raise(RangeError, 'invalid depth', referrer, context);
                 }
-                return (array as ContextValue[]).flat(depth as number);
+                return (array as unknown[]).flat(depth as number) as ContextValue[];
             })
         ),
 
