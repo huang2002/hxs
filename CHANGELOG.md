@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.43.0
+
+- Add basic promise APIs
+- Add `String.startsWith/endsWith`
+- Add `Utils.filterValue`
+- Make `referrer` & `context` optional in `Utils.raise` & `createClass`
+- Fix some type issues
+
 ## 0.42.1
 
 - Fix babel config
