@@ -198,4 +198,148 @@ module.exports = (ctx) => {
         ctx.assert(flags.has('reject_8_2'));
     });
 
+    ctx.expectResolved(
+        evalCode(`
+            Promise.all([
+                Promise.resolve(0),
+                Promise.resolve(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_9',
+        (data) => {
+            ctx.assertDeepEqual(data, [0, 1]);
+        },
+    );
+    ctx.expectRejected(
+        evalCode(`
+            Promise.all([
+                Promise.reject(0),
+                Promise.resolve(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_10',
+        (reason) => {
+            ctx.assertStrictEqual(reason, 0);
+        },
+    );
+    ctx.expectRejected(
+        evalCode(`
+            Promise.all([
+                Promise.resolve(0),
+                Promise.reject(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_11',
+        (reason) => {
+            ctx.assertStrictEqual(reason, 1);
+        },
+    );
+    ctx.expectRejected(
+        evalCode(`
+            Promise.all([
+                Promise.reject(0),
+                Promise.reject(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_12',
+        (reason) => {
+            ctx.assertStrictEqual(reason, 0);
+        },
+    );
+
+    ctx.expectResolved(
+        evalCode(`
+            Promise.any([
+                Promise.resolve(0),
+                Promise.resolve(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_13',
+        (data) => {
+            ctx.assertStrictEqual(data, 0);
+        },
+    );
+    ctx.expectResolved(
+        evalCode(`
+            Promise.any([
+                Promise.reject(0),
+                Promise.resolve(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_14',
+        (data) => {
+            ctx.assertStrictEqual(data, 1);
+        },
+    );
+    ctx.expectResolved(
+        evalCode(`
+            Promise.any([
+                Promise.resolve(0),
+                Promise.reject(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_15',
+        (data) => {
+            ctx.assertStrictEqual(data, 0);
+        },
+    );
+    ctx.expectRejected(
+        evalCode(`
+            Promise.any([
+                Promise.reject(0),
+                Promise.reject(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_16',
+    );
+
+    ctx.expectResolved(
+        evalCode(`
+            Promise.race([
+                Promise.resolve(0),
+                Promise.resolve(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_17',
+        (data) => {
+            ctx.assertStrictEqual(data, 0);
+        },
+    );
+    ctx.expectRejected(
+        evalCode(`
+            Promise.race([
+                Promise.reject(0),
+                Promise.resolve(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_18',
+        (reason) => {
+            ctx.assertStrictEqual(reason, 0);
+        },
+    );
+    ctx.expectResolved(
+        evalCode(`
+            Promise.race([
+                Promise.resolve(0),
+                Promise.reject(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_19',
+        (data) => {
+            ctx.assertStrictEqual(data, 0);
+        },
+    );
+    ctx.expectRejected(
+        evalCode(`
+            Promise.race([
+                Promise.reject(0),
+                Promise.reject(1),
+            ])
+        `)[PROMISE_SYMBOL],
+        'promise_20',
+        (reason) => {
+            ctx.assertStrictEqual(reason, 0);
+        },
+    );
+
 };

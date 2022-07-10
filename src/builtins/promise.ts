@@ -271,3 +271,145 @@ Object.assign(builtinPromise, {
     ),
 
 });
+
+Object.assign(builtinPromise, {
+
+    all: Utils.injectHelp(
+        'Promise.all(promises)',
+        createFunctionHandler(
+            1,
+            1,
+            (args, referrer, context, thisArg) => {
+
+                const promises = args[0] as Dict[];
+                if (
+                    !Array.isArray(promises)
+                    || !promises.every((promise) => (
+                        Utils.isDict(promise)
+                        && isInstanceOf(builtinPromise, promise)
+                    ))
+                ) {
+                    Utils.raise(
+                        TypeError,
+                        'expect an array of promises',
+                        referrer,
+                        context,
+                    );
+                }
+
+                const resultPromise = invoke(
+                    builtinPromise,
+                    Utils.createRawArray(
+                        [() => null],
+                        referrer,
+                    ),
+                    referrer,
+                    context,
+                    null,
+                ) as Dict;
+
+                resultPromise[PROMISE_SYMBOL] = Promise.all(
+                    promises.map(
+                        (promise) => promise[PROMISE_SYMBOL]!
+                    )
+                );
+
+                return resultPromise;
+
+            },
+        ),
+    ),
+
+    any: Utils.injectHelp(
+        'Promise.any(promises)',
+        createFunctionHandler(
+            1,
+            1,
+            (args, referrer, context, thisArg) => {
+
+                const promises = args[0] as Dict[];
+                if (
+                    !Array.isArray(promises)
+                    || !promises.every((promise) => (
+                        Utils.isDict(promise)
+                        && isInstanceOf(builtinPromise, promise)
+                    ))
+                ) {
+                    Utils.raise(
+                        TypeError,
+                        'expect an array of promises',
+                        referrer,
+                        context,
+                    );
+                }
+
+                const resultPromise = invoke(
+                    builtinPromise,
+                    Utils.createRawArray(
+                        [() => null],
+                        referrer,
+                    ),
+                    referrer,
+                    context,
+                    null,
+                ) as Dict;
+
+                resultPromise[PROMISE_SYMBOL] = Promise.any(
+                    promises.map(
+                        (promise) => promise[PROMISE_SYMBOL]!
+                    )
+                );
+
+                return resultPromise;
+
+            },
+        ),
+    ),
+
+    race: Utils.injectHelp(
+        'Promise.race(promises)',
+        createFunctionHandler(
+            1,
+            1,
+            (args, referrer, context, thisArg) => {
+
+                const promises = args[0] as Dict[];
+                if (
+                    !Array.isArray(promises)
+                    || !promises.every((promise) => (
+                        Utils.isDict(promise)
+                        && isInstanceOf(builtinPromise, promise)
+                    ))
+                ) {
+                    Utils.raise(
+                        TypeError,
+                        'expect an array of promises',
+                        referrer,
+                        context,
+                    );
+                }
+
+                const resultPromise = invoke(
+                    builtinPromise,
+                    Utils.createRawArray(
+                        [() => null],
+                        referrer,
+                    ),
+                    referrer,
+                    context,
+                    null,
+                ) as Dict;
+
+                resultPromise[PROMISE_SYMBOL] = Promise.race(
+                    promises.map(
+                        (promise) => promise[PROMISE_SYMBOL]!
+                    )
+                );
+
+                return resultPromise;
+
+            },
+        ),
+    ),
+
+});
