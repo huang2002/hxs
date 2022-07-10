@@ -160,5 +160,35 @@ export const builtinString = Utils.injectHelp(
             })
         ),
 
+        startsWith: Utils.injectHelp(
+            `String.startsWith(string, substring)`,
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+                const string = args[0];
+                if (typeof string !== 'string') {
+                    Utils.raise(TypeError, `expect a string to search in`, referrer, context);
+                }
+                const substring = args[1];
+                if (typeof substring !== 'string') {
+                    Utils.raise(TypeError, `expect another string to search for`, referrer, context);
+                }
+                return (string as string).startsWith(substring as string);
+            })
+        ),
+
+        endsWith: Utils.injectHelp(
+            `String.endsWith(string, substring)`,
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+                const string = args[0];
+                if (typeof string !== 'string') {
+                    Utils.raise(TypeError, `expect a string to search in`, referrer, context);
+                }
+                const substring = args[1];
+                if (typeof substring !== 'string') {
+                    Utils.raise(TypeError, `expect another string to search for`, referrer, context);
+                }
+                return (string as string).endsWith(substring as string);
+            })
+        ),
+
     })
 );

@@ -78,4 +78,14 @@ module.exports = (ctx) => {
     ctx.expectThrow(RangeError, evalCode, [`String.codePointAt('abc', 3)`]);
     ctx.expectThrow(RangeError, evalCode, [`String.codePointAt('abc', -4)`]);
 
+    ctx.assertStrictEqual(evalCode(`String.startsWith('abcde', 'abc')`), true);
+    ctx.assertStrictEqual(evalCode(`String.startsWith('abcde', 'cde')`), false);
+    ctx.expectThrow(TypeError, evalCode, [`String.startsWith(['a', 'b', 'c'], 'a')`]);
+    ctx.expectThrow(TypeError, evalCode, [`String.startsWith('012', 0)`]);
+
+    ctx.assertStrictEqual(evalCode(`String.endsWith('abcde', 'cde')`), true);
+    ctx.assertStrictEqual(evalCode(`String.endsWith('abcde', 'abc')`), false);
+    ctx.expectThrow(TypeError, evalCode, [`String.endsWith(['a', 'b', 'c'], 'a')`]);
+    ctx.expectThrow(TypeError, evalCode, [`String.endsWith('012', 0)`]);
+
 };
