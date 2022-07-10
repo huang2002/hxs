@@ -246,6 +246,21 @@ module.exports = (ctx) => {
             ctx.assertStrictEqual(reason, 0);
         },
     );
+    ctx.expectThrow(
+        TypeError,
+        evalCode,
+        [`Promise.all('abc')`]
+    );
+    ctx.expectThrow(
+        TypeError,
+        evalCode,
+        [`Promise.all([0, Promise.resolve(1)])`]
+    );
+    ctx.expectThrow(
+        TypeError,
+        evalCode,
+        [`Promise.all([Promise.resolve(0), 1])`]
+    );
 
     ctx.expectResolved(
         evalCode(`
@@ -291,6 +306,21 @@ module.exports = (ctx) => {
             ])
         `)[PROMISE_SYMBOL],
         'promise_16',
+    );
+    ctx.expectThrow(
+        TypeError,
+        evalCode,
+        [`Promise.any('abc')`]
+    );
+    ctx.expectThrow(
+        TypeError,
+        evalCode,
+        [`Promise.any([0, Promise.resolve(1)])`]
+    );
+    ctx.expectThrow(
+        TypeError,
+        evalCode,
+        [`Promise.any([Promise.resolve(0), 1])`]
     );
 
     ctx.expectResolved(
@@ -340,6 +370,21 @@ module.exports = (ctx) => {
         (reason) => {
             ctx.assertStrictEqual(reason, 0);
         },
+    );
+    ctx.expectThrow(
+        TypeError,
+        evalCode,
+        [`Promise.race('abc')`]
+    );
+    ctx.expectThrow(
+        TypeError,
+        evalCode,
+        [`Promise.race([0, Promise.resolve(1)])`]
+    );
+    ctx.expectThrow(
+        TypeError,
+        evalCode,
+        [`Promise.race([Promise.resolve(0), 1])`]
     );
 
 };
