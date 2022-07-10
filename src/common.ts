@@ -3,6 +3,7 @@ import { ASTNode, ASTNodeTemplate, NumberNode, SymbolNode } from '3h-ast';
 export const HELP_SYMBOL = Symbol('hxs-help-symbol');
 export const CONSTRUCTOR_SYMBOL = Symbol('hxs-constructor-symbol');
 export const BASE_SYMBOL = Symbol('hxs-base-symbol');
+export const PROMISE_SYMBOL = Symbol('hxs-promise-symbol');
 
 export type ContextValue =
     | null
@@ -18,6 +19,7 @@ export interface Dict {
     [HELP_SYMBOL]?: string;
     [CONSTRUCTOR_SYMBOL]?: ContextValue;
     [BASE_SYMBOL]?: ContextValue;
+    [PROMISE_SYMBOL]?: Promise<ContextValue>;
 };
 
 export type ValueNode = ASTNodeTemplate<'value', {

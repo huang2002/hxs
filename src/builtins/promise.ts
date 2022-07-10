@@ -1,21 +1,273 @@
-import { ContextValue, Utils } from '../common';
+import { ContextValue, Dict, PROMISE_SYMBOL, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
 import { invoke, isInvocable } from '../function/common';
+import { createClass, isInstanceOf } from './common';
 
-export const builtinPromise = Utils.injectHelp(
+export const builtinPromise: Dict = Utils.injectHelp(
     'A dict providing APIs of promises.',
-    Utils.createDict({
+    createClass({
 
-        __invoke: Utils.injectHelp(
-            'Promise.__invoke(initializer)',
-            createFunctionHandler(
-                1,
-                1,
-                (args) => (
-                    args.slice()
-                )
-            )
+        __init: createFunctionHandler(
+            1,
+            1,
+            (args, referrer, context, thisArg) => {
+
+                const initializer = args[0];
+                if (!isInvocable(initializer)) {
+                    Utils.raise(
+                        TypeError,
+                        'expect an invocable as promise initializer',
+                        referrer,
+                        context,
+                    );
+                }
+
+                const promise = new Promise<ContextValue>((resolve, reject) => {
+
+                    const _resolve = createFunctionHandler(
+                        1,
+                        1,
+                        (_args, _referrer, _context, _thisArg) => {
+                            resolve(_args[0]);
+                            return null;
+                        }
+                    );
+
+                    const _reject = createFunctionHandler(
+                        1,
+                        1,
+                        (_args, _referrer, _context, _thisArg) => {
+                            reject(_args[0]);
+                            return null;
+                        }
+                    );
+
+                    invoke(
+                        initializer,
+                        Utils.createRawArray(
+                            [_resolve, _reject],
+                            referrer,
+                        ),
+                        referrer,
+                        context,
+                        null,
+                    );
+
+                });
+
+                (thisArg as Dict)[PROMISE_SYMBOL] = promise;
+
+                return null;
+
+            },
         ),
 
-    })
+        then: createFunctionHandler(
+            1,
+            2,
+            (args, referrer, context, thisArg) => {
+
+                const fulfillCallback = args[0];
+                if (!isInvocable(fulfillCallback)) {
+                    Utils.raise(
+                        TypeError,
+                        'expect an invocable as fulfill callback',
+                        referrer,
+                        context,
+                    );
+                }
+
+                const rejectCallback = args[1];
+                if ((args.length > 1) && !isInvocable(rejectCallback)) {
+                    Utils.raise(
+                        TypeError,
+                        'expect an invocable as reject callback',
+                        referrer,
+                        context,
+                    );
+                }
+
+                const _fulfillCallback = (data: ContextValue) => {
+                    const result = invoke(
+                        fulfillCallback,
+                        Utils.createRawArray(
+                            [data],
+                            referrer,
+                        ),
+                        referrer,
+                        context,
+                        null,
+                    );
+                    if (
+                        Utils.isDict(result)
+                        && isInstanceOf(builtinPromise, result)
+                    ) {
+                        return result[PROMISE_SYMBOL]!;
+                    } else {
+                        return result;
+                    }
+                };
+
+                const _rejectCallback = (reason: ContextValue) => {
+                    invoke(
+                        rejectCallback,
+                        Utils.createRawArray(
+                            [reason],
+                            referrer,
+                        ),
+                        referrer,
+                        context,
+                        null,
+                    );
+                };
+
+                const thisPromise = (thisArg as Dict)[PROMISE_SYMBOL]!;
+
+                const nextPromise = invoke(
+                    builtinPromise,
+                    Utils.createRawArray(
+                        [() => null],
+                        referrer,
+                    ),
+                    referrer,
+                    context,
+                    thisArg,
+                ) as Dict;
+
+                nextPromise[PROMISE_SYMBOL] = thisPromise.then(
+                    _fulfillCallback,
+                    _rejectCallback,
+                ) as Promise<ContextValue>;
+
+                return nextPromise;
+
+            },
+        ),
+
+        catch: createFunctionHandler(
+            1,
+            1,
+            (args, referrer, context, thisArg) => {
+
+                const rejectCallback = args[0];
+                if (!isInvocable(rejectCallback)) {
+                    Utils.raise(
+                        TypeError,
+                        'expect an invocable as reject callback',
+                        referrer,
+                        context,
+                    );
+                }
+
+                const _rejectCallback = (reason: ContextValue) => {
+                    invoke(
+                        rejectCallback,
+                        Utils.createRawArray(
+                            [reason],
+                            referrer,
+                        ),
+                        referrer,
+                        context,
+                        null,
+                    );
+                };
+
+                const thisPromise = (thisArg as Dict)[PROMISE_SYMBOL]!;
+
+                const nextPromise = invoke(
+                    builtinPromise,
+                    Utils.createRawArray(
+                        [() => null],
+                        referrer,
+                    ),
+                    referrer,
+                    context,
+                    thisArg,
+                ) as Dict;
+
+                nextPromise[PROMISE_SYMBOL] = thisPromise.catch(
+                    _rejectCallback,
+                ) as Promise<ContextValue>;
+
+                return nextPromise;
+
+            },
+        ),
+
+    },
+        null,
+        null,
+    )
 );
+
+Object.assign(builtinPromise, {
+
+    resolve: Utils.injectHelp(
+        'Promise.resolve(data)',
+        createFunctionHandler(
+            1,
+            1,
+            (args, referrer, context, thisArg) => {
+                const initializer = createFunctionHandler(
+                    2,
+                    2,
+                    (_args, _referrer, _context, _thisArg) => {
+                        invoke(
+                            _args[0], // resolve
+                            Utils.createRawArray(
+                                [args[0]],
+                                referrer,
+                            ),
+                            referrer,
+                            context,
+                            null,
+                        );
+                        return null;
+                    }
+                );
+                return invoke(
+                    builtinPromise,
+                    Utils.createRawArray([initializer], referrer),
+                    referrer,
+                    context,
+                    thisArg,
+                );
+            },
+        )
+    ),
+
+    reject: Utils.injectHelp(
+        'Promise.reject(reason)',
+        createFunctionHandler(
+            1,
+            1,
+            (args, referrer, context, thisArg) => {
+                const initializer = createFunctionHandler(
+                    2,
+                    2,
+                    (_args, _referrer, _context, _thisArg) => {
+                        invoke(
+                            _args[1], // reject
+                            Utils.createRawArray(
+                                [args[0]],
+                                referrer,
+                            ),
+                            referrer,
+                            context,
+                            null,
+                        );
+                        return null;
+                    }
+                );
+                return invoke(
+                    builtinPromise,
+                    Utils.createRawArray([initializer], referrer),
+                    referrer,
+                    context,
+                    thisArg,
+                );
+            },
+        )
+    ),
+
+});

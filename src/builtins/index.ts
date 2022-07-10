@@ -16,6 +16,7 @@ import { builtinRaise, builtinTry } from './error';
 import { builtinClass } from './class';
 import { export_, getExports } from './module';
 import { builtinJSON } from './json';
+import { builtinPromise } from './promise';
 
 export * from './common';
 
@@ -42,6 +43,7 @@ export const builtins = Utils.createDict({
     Number: builtinNumber,
     Math: builtinMath,
     JSON: builtinJSON,
+    Promise: builtinPromise,
 
     help,
     injectHelp,
