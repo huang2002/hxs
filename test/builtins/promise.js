@@ -48,13 +48,13 @@ module.exports = (ctx) => {
         });
         promise.then(@(data) {
             if (data !== 'foo') {
-                raise('wrong data');
+                raise('wrong data: ' + string(data));
             } (true) {
                 addFlag('resolve_1');
             };
         }, @(reason) {
             addFlag('reject_1');
-            raise(reason);
+            raise('unexpected reason: ' + string(reason));
         });
         `,
         createContextOption(),
@@ -72,10 +72,10 @@ module.exports = (ctx) => {
         });
         promise.then(@(data) {
             addFlag('resolve_2');
-            raise(data);
+            raise('unexpected data: ' + string(data));
         }, @(reason) {
             if (reason !== 'bar') {
-                raise('wrong reason');
+                raise('wrong reason: ' + string(reason));
             } (true) {
                 addFlag('reject_2');
             };
@@ -95,7 +95,7 @@ module.exports = (ctx) => {
         });
         promise.catch(@(reason) {
             if (reason !== 'baz') {
-                raise('wrong reason');
+                raise('wrong reason: ' + string(reason));
             } (true) {
                 addFlag('reject_3');
             };
@@ -128,7 +128,7 @@ module.exports = (ctx) => {
         Promise.reject('baz')
             .catch(@(reason) {
                 if (reason !== 'baz') {
-                    raise('wrong reason');
+                    raise('wrong reason: ' + string(reason));
                 } (true) {
                     addFlag('reject_6');
                 };
@@ -136,7 +136,7 @@ module.exports = (ctx) => {
             .then(@(data) {
                 addFlag('resolve_6');
                 if (data !== null) {
-                    raise('wrong data');
+                    raise('wrong data: ' + string(data));
                 };
             });
         `,
