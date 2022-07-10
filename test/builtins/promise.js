@@ -123,4 +123,28 @@ module.exports = (ctx) => {
         },
     );
 
+    evalCode(
+        `
+        Promise.reject('baz')
+            .catch(@(reason) {
+                if (reason !== 'baz') {
+                    raise('wrong reason');
+                } (true) {
+                    addFlag('reject_6');
+                };
+            })
+            .then(@(data) {
+                addFlag('resolve_6');
+                if (data !== null) {
+                    raise('wrong data');
+                };
+            });
+        `,
+        createContextOption(),
+    );
+    check('promise_6', () => {
+        ctx.assert(flags.has('reject_6'));
+        ctx.assert(flags.has('resolve_6'));
+    });
+
 };

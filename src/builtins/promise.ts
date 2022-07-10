@@ -91,7 +91,7 @@ export const builtinPromise: Dict = Utils.injectHelp(
                     const result = invoke(
                         resolveCallback,
                         Utils.createRawArray(
-                            [data],
+                            [Utils.filterValue(data)],
                             referrer,
                         ),
                         referrer,
@@ -112,7 +112,7 @@ export const builtinPromise: Dict = Utils.injectHelp(
                     invoke(
                         rejectCallback,
                         Utils.createRawArray(
-                            [reason],
+                            [Utils.filterValue(reason)],
                             referrer,
                         ),
                         referrer,
@@ -163,7 +163,7 @@ export const builtinPromise: Dict = Utils.injectHelp(
                     invoke(
                         rejectCallback,
                         Utils.createRawArray(
-                            [reason],
+                            [Utils.filterValue(reason)],
                             referrer,
                         ),
                         referrer,

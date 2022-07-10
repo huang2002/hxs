@@ -369,4 +369,12 @@ export namespace Utils {
         }
     };
 
+    export const filterValue = (value: unknown): ContextValue => {
+        if (value === undefined) {
+            return null;
+        } else {
+            return value as ContextValue;
+        }
+    };
+
 }
