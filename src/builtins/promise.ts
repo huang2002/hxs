@@ -67,11 +67,11 @@ export const builtinPromise: Dict = Utils.injectHelp(
             2,
             (args, referrer, context, thisArg) => {
 
-                const fulfillCallback = args[0];
-                if (!isInvocable(fulfillCallback)) {
+                const resolveCallback = args[0];
+                if (!isInvocable(resolveCallback)) {
                     Utils.raise(
                         TypeError,
-                        'expect an invocable as fulfill callback',
+                        'expect an invocable as resolve callback',
                         referrer,
                         context,
                     );
@@ -87,9 +87,9 @@ export const builtinPromise: Dict = Utils.injectHelp(
                     );
                 }
 
-                const _fulfillCallback = (data: ContextValue) => {
+                const _resolveCallback = (data: ContextValue) => {
                     const result = invoke(
-                        fulfillCallback,
+                        resolveCallback,
                         Utils.createRawArray(
                             [data],
                             referrer,
@@ -135,7 +135,7 @@ export const builtinPromise: Dict = Utils.injectHelp(
                 ) as Dict;
 
                 nextPromise[PROMISE_SYMBOL] = thisPromise.then(
-                    _fulfillCallback,
+                    _resolveCallback,
                     _rejectCallback,
                 ) as Promise<ContextValue>;
 
