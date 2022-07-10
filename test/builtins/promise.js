@@ -147,4 +147,55 @@ module.exports = (ctx) => {
         ctx.assert(flags.has('resolve_6'));
     });
 
+    evalCode(
+        `
+        Promise.resolve('blah')
+            .catch(@(reason) {
+                addFlag('reject_7');
+                raise(String('unexpected reason: ', string(reason)));
+            })
+            .then(@(data) {
+                addFlag('resolve_7');
+                if (data !== 'blah') {
+                    raise(String('wrong data: ', string(data)));
+                };
+            });
+        `,
+        createContextOption(),
+    );
+    check('promise_7', () => {
+        ctx.assert(!flags.has('reject_7'));
+        ctx.assert(flags.has('resolve_7'));
+    });
+
+    evalCode(
+        `
+        Promise.reject('a')
+            .catch(@(reason) {
+                if (reason !== 'a') {
+                    raise(String('wrong reason: ', string(reason)));
+                } (true) {
+                    addFlag('reject_8_1');
+                    raise('b')
+                };
+            })
+            .then(@(data) {
+                addFlag('resolve_8');
+                raise(String('unexpected data: ', string(data)));
+            }, @(reason) {
+                if (reason:indexOf('Error: b') !== 0) {
+                    raise(String('wrong reason: ', string(reason)));
+                } (true) {
+                    addFlag('reject_8_2');
+                };
+            });
+        `,
+        createContextOption(),
+    );
+    check('promise_8', () => {
+        ctx.assert(!flags.has('resolve_8'));
+        ctx.assert(flags.has('reject_8_1'));
+        ctx.assert(flags.has('reject_8_2'));
+    });
+
 };
