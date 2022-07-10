@@ -17,18 +17,18 @@ export const builtinString = Utils.injectHelp(
         ),
 
         sizeOf: Utils.injectHelp(
-            'String.sizeOf(string)',
+            'String.sizeOf(str)',
             createFunctionHandler(1, 1, (args, referrer, context) => {
-                const string = args[0];
-                if (typeof string !== 'string') {
+                const str = args[0];
+                if (typeof str !== 'string') {
                     Utils.raise(TypeError, 'expect a string', referrer, context);
                 }
-                return (string as string).length;
+                return (str as string).length;
             })
         ),
 
         toLowerCase: Utils.injectHelp(
-            `String.toLowerCase(string)`,
+            `String.toLowerCase(str)`,
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'string') {
                     Utils.raise(TypeError, `expect a string`, referrer, context);
@@ -38,7 +38,7 @@ export const builtinString = Utils.injectHelp(
         ),
 
         toUpperCase: Utils.injectHelp(
-            `String.toUpperCase(string)`,
+            `String.toUpperCase(str)`,
             createFunctionHandler(1, 1, (args, referrer, context) => {
                 if (typeof args[0] !== 'string') {
                     Utils.raise(TypeError, `expect a string`, referrer, context);
@@ -48,10 +48,10 @@ export const builtinString = Utils.injectHelp(
         ),
 
         slice: Utils.injectHelp(
-            `String.slice(string, start = 0, end = String.sizeOf(string))`,
+            `String.slice(str, start = 0, end = String.sizeOf(str))`,
             createFunctionHandler(1, 3, (args, referrer, context) => {
-                const string = args[0];
-                if (typeof string !== 'string') {
+                const str = args[0];
+                if (typeof str !== 'string') {
                     Utils.raise(TypeError, `expect a string as source`, referrer, context);
                 }
                 if (args.length > 1) {
@@ -64,7 +64,7 @@ export const builtinString = Utils.injectHelp(
                         }
                     }
                 }
-                return (string as string).slice(
+                return (str as string).slice(
                     args[1] as number | undefined,
                     args[2] as number | undefined,
                 );
@@ -72,55 +72,55 @@ export const builtinString = Utils.injectHelp(
         ),
 
         indexOf: Utils.injectHelp(
-            `String.indexOf(string, substring)`,
+            `String.indexOf(str, substring)`,
             createFunctionHandler(2, 2, (args, referrer, context) => {
-                const string = args[0];
-                if (typeof string !== 'string') {
+                const str = args[0];
+                if (typeof str !== 'string') {
                     Utils.raise(TypeError, `expect a string to search in`, referrer, context);
                 }
                 const substring = args[1];
                 if (typeof substring !== 'string') {
                     Utils.raise(TypeError, `expect another string to search for`, referrer, context);
                 }
-                return (string as string).indexOf(substring as string);
+                return (str as string).indexOf(substring as string);
             })
         ),
 
         lastIndexOf: Utils.injectHelp(
-            `String.lastIndexOf(string, substring)`,
+            `String.lastIndexOf(str, substring)`,
             createFunctionHandler(2, 2, (args, referrer, context) => {
-                const string = args[0];
-                if (typeof string !== 'string') {
+                const str = args[0];
+                if (typeof str !== 'string') {
                     Utils.raise(TypeError, `expect a string to search in`, referrer, context);
                 }
                 const substring = args[1];
                 if (typeof substring !== 'string') {
                     Utils.raise(TypeError, `expect another string to search for`, referrer, context);
                 }
-                return (string as string).lastIndexOf(substring as string);
+                return (str as string).lastIndexOf(substring as string);
             })
         ),
 
         includes: Utils.injectHelp(
-            `String.includes(string, substring)`,
+            `String.includes(str, substring)`,
             createFunctionHandler(2, 2, (args, referrer, context) => {
-                const string = args[0];
-                if (typeof string !== 'string') {
+                const str = args[0];
+                if (typeof str !== 'string') {
                     Utils.raise(TypeError, `expect a string to search in`, referrer, context);
                 }
                 const substring = args[1];
                 if (typeof substring !== 'string') {
                     Utils.raise(TypeError, `expect another string to search for`, referrer, context);
                 }
-                return (string as string).includes(substring as string);
+                return (str as string).includes(substring as string);
             })
         ),
 
         repeat: Utils.injectHelp(
-            `String.repeat(string, count)`,
+            `String.repeat(str, count)`,
             createFunctionHandler(2, 2, (args, referrer, context) => {
-                const string = args[0] as string;
-                if (typeof string !== 'string') {
+                const str = args[0] as string;
+                if (typeof str !== 'string') {
                     Utils.raise(TypeError, `expect a string to repeat`, referrer, context);
                 }
                 const count = args[1] as number;
@@ -130,15 +130,15 @@ export const builtinString = Utils.injectHelp(
                 if (!Number.isFinite(count) || count < 0) {
                     Utils.raise(RangeError, `invalid count`, referrer, context);
                 }
-                return string.repeat(count);
+                return str.repeat(count);
             })
         ),
 
         codePointAt: Utils.injectHelp(
-            `String.codePointAt(string, index)`,
+            `String.codePointAt(str, index)`,
             createFunctionHandler(2, 2, (args, referrer, context) => {
-                const string = args[0] as string;
-                if (typeof string !== 'string') {
+                const str = args[0] as string;
+                if (typeof str !== 'string') {
                     Utils.raise(TypeError, `expect a string`, referrer, context);
                 }
                 const index = args[1] as number;
@@ -147,11 +147,11 @@ export const builtinString = Utils.injectHelp(
                 }
                 const normalizedIndex = Utils.normalizeIndex(
                     index,
-                    string.length,
+                    str.length,
                     referrer,
                     context,
                 );
-                const result = string.codePointAt(normalizedIndex);
+                const result = str.codePointAt(normalizedIndex);
                 if (typeof result === 'number') {
                     return result;
                 } else {
@@ -161,32 +161,32 @@ export const builtinString = Utils.injectHelp(
         ),
 
         startsWith: Utils.injectHelp(
-            `String.startsWith(string, substring)`,
+            `String.startsWith(str, substring)`,
             createFunctionHandler(2, 2, (args, referrer, context) => {
-                const string = args[0];
-                if (typeof string !== 'string') {
+                const str = args[0];
+                if (typeof str !== 'string') {
                     Utils.raise(TypeError, `expect a string to search in`, referrer, context);
                 }
                 const substring = args[1];
                 if (typeof substring !== 'string') {
                     Utils.raise(TypeError, `expect another string to search for`, referrer, context);
                 }
-                return (string as string).startsWith(substring as string);
+                return (str as string).startsWith(substring as string);
             })
         ),
 
         endsWith: Utils.injectHelp(
-            `String.endsWith(string, substring)`,
+            `String.endsWith(str, substring)`,
             createFunctionHandler(2, 2, (args, referrer, context) => {
-                const string = args[0];
-                if (typeof string !== 'string') {
+                const str = args[0];
+                if (typeof str !== 'string') {
                     Utils.raise(TypeError, `expect a string to search in`, referrer, context);
                 }
                 const substring = args[1];
                 if (typeof substring !== 'string') {
                     Utils.raise(TypeError, `expect another string to search for`, referrer, context);
                 }
-                return (string as string).endsWith(substring as string);
+                return (str as string).endsWith(substring as string);
             })
         ),
 
