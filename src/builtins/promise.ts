@@ -131,7 +131,7 @@ export const builtinPromise: Dict = Utils.injectHelp(
                     ),
                     referrer,
                     context,
-                    thisArg,
+                    null,
                 ) as Dict;
 
                 nextPromise[PROMISE_SYMBOL] = thisPromise.then(
@@ -182,7 +182,7 @@ export const builtinPromise: Dict = Utils.injectHelp(
                     ),
                     referrer,
                     context,
-                    thisArg,
+                    null,
                 ) as Dict;
 
                 nextPromise[PROMISE_SYMBOL] = thisPromise.catch(
