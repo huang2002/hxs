@@ -108,7 +108,7 @@ export const builtinPromise: Dict = Utils.injectHelp(
                     }
                 };
 
-                const _rejectCallback = (reason: ContextValue) => {
+                const _rejectCallback = (reason: unknown) => {
                     invoke(
                         rejectCallback,
                         Utils.createRawArray(
@@ -159,7 +159,7 @@ export const builtinPromise: Dict = Utils.injectHelp(
                     );
                 }
 
-                const _rejectCallback = (reason: ContextValue) => {
+                const _rejectCallback = (reason: unknown) => {
                     invoke(
                         rejectCallback,
                         Utils.createRawArray(
