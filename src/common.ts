@@ -372,6 +372,12 @@ export namespace Utils {
     export const filterValue = (value: unknown): ContextValue => {
         if (value === undefined) {
             return null;
+        } else if (value && typeof value === 'object') {
+            if (isDict(value)) {
+                return value;
+            } else {
+                return String(value);
+            }
         } else {
             return value as ContextValue;
         }
