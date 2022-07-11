@@ -449,17 +449,79 @@ export const builtinArray = Utils.injectHelp(
                 }
 
                 return array.filter((element, index) => {
-                    const result = invoke(
+                    const indicator = invoke(
                         callback,
                         Utils.createRawArray([element, index, array], referrer),
                         referrer,
                         context,
                         null,
                     );
-                    if (typeof result !== 'boolean') {
+                    if (typeof indicator !== 'boolean') {
                         Utils.raise(TypeError, 'expect a boolean as indicator', referrer, context);
                     }
-                    return result;
+                    return indicator;
+                });
+
+            })
+        ),
+
+        every: Utils.injectHelp(
+            'Array.every(array, callback)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+
+                const array = args[0] as ContextValue[];
+                if (!Array.isArray(array)) {
+                    Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
+                }
+
+                const callback = args[1];
+                if (!isInvocable(callback)) {
+                    Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
+                }
+
+                return array.every((element, index) => {
+                    const indicator = invoke(
+                        callback,
+                        Utils.createRawArray([element, index, array], referrer),
+                        referrer,
+                        context,
+                        null,
+                    );
+                    if (typeof indicator !== 'boolean') {
+                        Utils.raise(TypeError, 'expect a boolean as indicator', referrer, context);
+                    }
+                    return indicator;
+                });
+
+            })
+        ),
+
+        some: Utils.injectHelp(
+            'Array.some(array, callback)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+
+                const array = args[0] as ContextValue[];
+                if (!Array.isArray(array)) {
+                    Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
+                }
+
+                const callback = args[1];
+                if (!isInvocable(callback)) {
+                    Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
+                }
+
+                return array.some((element, index) => {
+                    const indicator = invoke(
+                        callback,
+                        Utils.createRawArray([element, index, array], referrer),
+                        referrer,
+                        context,
+                        null,
+                    );
+                    if (typeof indicator !== 'boolean') {
+                        Utils.raise(TypeError, 'expect a boolean as indicator', referrer, context);
+                    }
+                    return indicator;
                 });
 
             })
