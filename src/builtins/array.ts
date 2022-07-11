@@ -258,6 +258,17 @@ export const builtinArray = Utils.injectHelp(
             })
         ),
 
+        reverse: Utils.injectHelp(
+            'Array.reverse(array)',
+            createFunctionHandler(1, 1, (args, referrer, context) => {
+                const array = args[0] as ContextValue[];
+                if (!Array.isArray(array)) {
+                    Utils.raise(TypeError, 'expect an array to reverse', referrer, context);
+                }
+                return array.reverse();
+            })
+        ),
+
         unpack: Utils.injectHelp(
             'Array.unpack(array, names, loose = false)',
             createFunctionHandler(2, 3, (args, referrer, context) => {

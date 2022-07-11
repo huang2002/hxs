@@ -104,6 +104,10 @@ module.exports = (ctx) => {
     ctx.expectThrow(RangeError, evalCode, [`Array.flat([0, 1, 2], 0)`]);
     ctx.expectThrow(RangeError, evalCode, [`Array.flat([0, 1, 2], -1)`]);
 
+    ctx.assertShallowEqual(evalCode('Array.reverse([])'), []);
+    ctx.assertShallowEqual(evalCode('Array.reverse([0, 1])'), [1, 0]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.reverse('abc')`]);
+
     ctx.assertStrictEqual(evalCode(`Array.unpack([0, 1], [#a]); a`), 0);
     ctx.assertShallowEqual(evalCode(`Array.unpack([0, 1], [#a, #b]); [a, b]`), [0, 1]);
     ctx.assertShallowEqual(evalCode(`Array.unpack([0], [#a, #b], true); [a, b]`), [0, null]);
