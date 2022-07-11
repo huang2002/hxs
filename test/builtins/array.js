@@ -144,10 +144,11 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`Array.map('abc', @() {})`]);
     ctx.expectThrow(TypeError, evalCode, [`Array.map([], null)`]);
 
-    ctx.assertShallowEqual(evalCode(`a = [1, 2, 3]; Array.filter(a, @(x, i) { return(x & 1) })`), [1, 3]);
-    ctx.assertShallowEqual(evalCode(`a = [1, 2, 3]; Array.filter(a, { @__invoke(x, i) { return(x & 1) } }); a`), [1, 2, 3]);
+    ctx.assertShallowEqual(evalCode(`a = [1, 2, 3]; Array.filter(a, @(x, i) { return((x & 1) === 1) })`), [1, 3]);
+    ctx.assertShallowEqual(evalCode(`a = [1, 2, 3]; Array.filter(a, { @__invoke(x, i) { return((x & 1) === 1) } }); a`), [1, 2, 3]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.filter([0, 1], @(x) { return(x & 1) })`]);
     ctx.expectThrow(TypeError, evalCode, [`Array.filter('abc', @() {})`]);
-    ctx.expectThrow(TypeError, evalCode, [`Array.filter([], null)`]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.filter([0, 1], null)`]);
 
     ctx.assertDeepEqual(evalCode(`[...[0, 1], 2, ...[[3]]]`), [0, 1, 2, [3]]);
     ctx.expectThrow(TypeError, evalCode, [`[...'abc']`]);

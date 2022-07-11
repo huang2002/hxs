@@ -448,15 +448,19 @@ export const builtinArray = Utils.injectHelp(
                     Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
                 }
 
-                return array.filter((element, index) => (
-                    invoke(
+                return array.filter((element, index) => {
+                    const result = invoke(
                         callback,
                         Utils.createRawArray([element, index, array], referrer),
                         referrer,
                         context,
                         null,
-                    )
-                ));
+                    );
+                    if (typeof result !== 'boolean') {
+                        Utils.raise(TypeError, 'expect a boolean as indicator', referrer, context);
+                    }
+                    return result;
+                });
 
             })
         ),
