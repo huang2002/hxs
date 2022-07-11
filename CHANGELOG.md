@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.44.0
+
+- Add `Promise.all/any/race`
+- Add `Array.reverse`
+- Add `Array.findIndex/find`
+- Add `Array.every/some`
+- Strict indicator type in `Array.filter`
+- Fix some internal issues
+
 ## 0.43.0
 
 - Add basic promise APIs
