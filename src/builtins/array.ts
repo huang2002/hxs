@@ -527,5 +527,79 @@ export const builtinArray = Utils.injectHelp(
             })
         ),
 
+        findIndex: Utils.injectHelp(
+            'Array.findIndex(array, callback)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+
+                const array = args[0] as ContextValue[];
+                if (!Array.isArray(array)) {
+                    Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
+                }
+
+                const callback = args[1];
+                if (!isInvocable(callback)) {
+                    Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
+                }
+
+                const resultIndex = array.findIndex((element, index) => {
+                    const indicator = invoke(
+                        callback,
+                        Utils.createRawArray([element, index, array], referrer),
+                        referrer,
+                        context,
+                        null,
+                    );
+                    if (typeof indicator !== 'boolean') {
+                        Utils.raise(TypeError, 'expect a boolean as indicator', referrer, context);
+                    }
+                    return indicator;
+                });
+
+                if (resultIndex === -1) {
+                    Utils.raise(Error, 'cannot find the wanted element index', referrer, context);
+                }
+
+                return resultIndex;
+
+            })
+        ),
+
+        find: Utils.injectHelp(
+            'Array.find(array, callback)',
+            createFunctionHandler(2, 2, (args, referrer, context) => {
+
+                const array = args[0] as ContextValue[];
+                if (!Array.isArray(array)) {
+                    Utils.raise(TypeError, 'expect an array as the first argument', referrer, context);
+                }
+
+                const callback = args[1];
+                if (!isInvocable(callback)) {
+                    Utils.raise(TypeError, 'expect an invocable as callback', referrer, context);
+                }
+
+                const resultIndex = array.findIndex((element, index) => {
+                    const indicator = invoke(
+                        callback,
+                        Utils.createRawArray([element, index, array], referrer),
+                        referrer,
+                        context,
+                        null,
+                    );
+                    if (typeof indicator !== 'boolean') {
+                        Utils.raise(TypeError, 'expect a boolean as indicator', referrer, context);
+                    }
+                    return indicator;
+                });
+
+                if (resultIndex === -1) {
+                    Utils.raise(Error, 'cannot find the wanted element index', referrer, context);
+                }
+
+                return array[resultIndex];
+
+            })
+        ),
+
     })
 );

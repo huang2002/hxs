@@ -164,6 +164,20 @@ module.exports = (ctx) => {
     ctx.expectThrow(TypeError, evalCode, [`Array.some('abc', @() {})`]);
     ctx.expectThrow(TypeError, evalCode, [`Array.some([0, 1], null)`]);
 
+    ctx.assertStrictEqual(evalCode(`a = [1, 2, 3]; Array.findIndex(a, @(x, i) { return((x & 1) === 1) })`), 0);
+    ctx.assertStrictEqual(evalCode(`a = [1, 2, 3]; Array.findIndex(a, @(x, i) { return((x & 1) === 0) })`), 1);
+    ctx.expectThrow(Error, evalCode, [`Array.findIndex([0, 1], @(x) { return(x < 0) })`]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.findIndex([0, 1], @(x) { return(x & 1) })`]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.findIndex('abc', @() {})`]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.findIndex([0, 1], null)`]);
+
+    ctx.assertStrictEqual(evalCode(`a = [1, 2, 3]; Array.find(a, @(x, i) { return((x & 1) === 1) })`), 1);
+    ctx.assertStrictEqual(evalCode(`a = [1, 2, 3]; Array.find(a, @(x, i) { return((x & 1) === 0) })`), 2);
+    ctx.expectThrow(Error, evalCode, [`Array.find([0, 1], @(x) { return(x < 0) })`]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.find([0, 1], @(x) { return(x & 1) })`]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.find('abc', @() {})`]);
+    ctx.expectThrow(TypeError, evalCode, [`Array.find([0, 1], null)`]);
+
     ctx.assertDeepEqual(evalCode(`[...[0, 1], 2, ...[[3]]]`), [0, 1, 2, [3]]);
     ctx.expectThrow(TypeError, evalCode, [`[...'abc']`]);
 
