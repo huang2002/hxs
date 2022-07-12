@@ -1,7 +1,7 @@
 import { ContextValue, Dict, PROMISE_SYMBOL, Utils } from '../common';
 import { createFunctionHandler } from "../function/createFunctionHandler";
 import { invoke, isInvocable } from '../function/common';
-import { createClass, isInstanceOf } from './common';
+import { createClass, isInstanceOf, wrapPromise } from './common';
 
 export const builtinPromise: Dict = Utils.injectHelp(
     'A dict providing APIs of promises.',
@@ -131,23 +131,15 @@ export const builtinPromise: Dict = Utils.injectHelp(
 
                 const thisPromise = (thisArg as Dict)[PROMISE_SYMBOL]!;
 
-                const nextPromise = invoke(
+                return wrapPromise(
                     builtinPromise,
-                    Utils.createRawArray(
-                        [() => null],
-                        referrer,
+                    thisPromise.then(
+                        _resolveCallback,
+                        _rejectCallback,
                     ),
                     referrer,
                     context,
-                    null,
-                ) as Dict;
-
-                nextPromise[PROMISE_SYMBOL] = thisPromise.then(
-                    _resolveCallback,
-                    _rejectCallback,
-                ) as Promise<ContextValue>;
-
-                return nextPromise;
+                );
 
             },
         ),
@@ -190,22 +182,14 @@ export const builtinPromise: Dict = Utils.injectHelp(
 
                 const thisPromise = (thisArg as Dict)[PROMISE_SYMBOL]!;
 
-                const nextPromise = invoke(
+                return wrapPromise(
                     builtinPromise,
-                    Utils.createRawArray(
-                        [() => null],
-                        referrer,
+                    thisPromise.catch(
+                        _rejectCallback,
                     ),
                     referrer,
                     context,
-                    null,
-                ) as Dict;
-
-                nextPromise[PROMISE_SYMBOL] = thisPromise.catch(
-                    _rejectCallback,
-                ) as Promise<ContextValue>;
-
-                return nextPromise;
+                );
 
             },
         ),
@@ -245,22 +229,14 @@ export const builtinPromise: Dict = Utils.injectHelp(
 
                 const thisPromise = (thisArg as Dict)[PROMISE_SYMBOL]!;
 
-                const nextPromise = invoke(
+                return wrapPromise(
                     builtinPromise,
-                    Utils.createRawArray(
-                        [() => null],
-                        referrer,
+                    thisPromise.finally(
+                        _finallyCallback,
                     ),
                     referrer,
                     context,
-                    null,
-                ) as Dict;
-
-                nextPromise[PROMISE_SYMBOL] = thisPromise.finally(
-                    _finallyCallback,
-                ) as Promise<ContextValue>;
-
-                return nextPromise;
+                );
 
             },
         ),
@@ -368,24 +344,16 @@ Object.assign(builtinPromise, {
                     );
                 }
 
-                const resultPromise = invoke(
+                return wrapPromise(
                     builtinPromise,
-                    Utils.createRawArray(
-                        [() => null],
-                        referrer,
+                    Promise.all(
+                        promises.map(
+                            (promise) => promise[PROMISE_SYMBOL]!
+                        )
                     ),
                     referrer,
                     context,
-                    null,
-                ) as Dict;
-
-                resultPromise[PROMISE_SYMBOL] = Promise.all(
-                    promises.map(
-                        (promise) => promise[PROMISE_SYMBOL]!
-                    )
                 );
-
-                return resultPromise;
 
             },
         ),
@@ -414,24 +382,16 @@ Object.assign(builtinPromise, {
                     );
                 }
 
-                const resultPromise = invoke(
+                return wrapPromise(
                     builtinPromise,
-                    Utils.createRawArray(
-                        [() => null],
-                        referrer,
+                    Promise.any(
+                        promises.map(
+                            (promise) => promise[PROMISE_SYMBOL]!
+                        )
                     ),
                     referrer,
                     context,
-                    null,
-                ) as Dict;
-
-                resultPromise[PROMISE_SYMBOL] = Promise.any(
-                    promises.map(
-                        (promise) => promise[PROMISE_SYMBOL]!
-                    )
                 );
-
-                return resultPromise;
 
             },
         ),
@@ -460,24 +420,16 @@ Object.assign(builtinPromise, {
                     );
                 }
 
-                const resultPromise = invoke(
+                return wrapPromise(
                     builtinPromise,
-                    Utils.createRawArray(
-                        [() => null],
-                        referrer,
+                    Promise.race(
+                        promises.map(
+                            (promise) => promise[PROMISE_SYMBOL]!
+                        )
                     ),
                     referrer,
                     context,
-                    null,
-                ) as Dict;
-
-                resultPromise[PROMISE_SYMBOL] = Promise.race(
-                    promises.map(
-                        (promise) => promise[PROMISE_SYMBOL]!
-                    )
                 );
-
-                return resultPromise;
 
             },
         ),

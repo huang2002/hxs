@@ -1,4 +1,4 @@
-import { BASE_SYMBOL, CONSTRUCTOR_SYMBOL, ContextValue, Dict, ScriptContext, SyntaxNode, Utils } from '../common';
+import { BASE_SYMBOL, CONSTRUCTOR_SYMBOL, ContextValue, Dict, PROMISE_SYMBOL, ScriptContext, SyntaxNode, Utils } from '../common';
 import { invoke, isInvocable } from '../function/common';
 
 export const getKeysOf = (
@@ -253,4 +253,24 @@ export const isInstanceOf = (constructor: ContextValue, dict: Dict) => {
         }
     }
     return false;
+};
+
+export const wrapPromise = (
+    builtinPromise: Dict,
+    promise: Promise<ContextValue>,
+    referrer: SyntaxNode,
+    context: ScriptContext,
+) => {
+    const resultPromise = invoke(
+        builtinPromise,
+        Utils.createRawArray(
+            [() => null],
+            referrer,
+        ),
+        referrer,
+        context,
+        null,
+    ) as Dict;
+    resultPromise[PROMISE_SYMBOL] = promise;
+    return resultPromise;
 };
