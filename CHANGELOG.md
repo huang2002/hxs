@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.45.0
+
+- Add `Promise.finally`
+- Fix return value handling of reject callback
+
 ## 0.44.0
 
 - Add `Promise.all/any/race`
