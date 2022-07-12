@@ -115,11 +115,33 @@ module.exports = (ctx) => {
         },
     );
 
+    ctx.expectResolved(
+        evalCode(`
+            Promise.resolve('foo')
+                .then(() => (Promise.resolve('bar')))
+        `)[PROMISE_SYMBOL],
+        'promise_4.5',
+        (data) => {
+            ctx.assertStrictEqual(data, 'bar');
+        },
+    );
+
     ctx.expectRejected(
         evalCode(`Promise.reject('reason')`)[PROMISE_SYMBOL],
         'promise_5',
         (reason) => {
             ctx.assertStrictEqual(reason, 'reason');
+        },
+    );
+
+    ctx.expectResolved(
+        evalCode(`
+            Promise.reject('foo')
+                .catch(() => (Promise.resolve('bar')))
+        `)[PROMISE_SYMBOL],
+        'promise_5.5',
+        (data) => {
+            ctx.assertStrictEqual(data, 'bar');
         },
     );
 
@@ -131,11 +153,12 @@ module.exports = (ctx) => {
                     raise(String('wrong reason: ', string(reason)));
                 } (true) {
                     addFlag('reject_6');
+                    return('zab');
                 };
             })
             .then(@(data) {
                 addFlag('resolve_6');
-                if (data !== null) {
+                if (data !== 'zab') {
                     raise(String('wrong data: ', string(data)));
                 };
             });

@@ -109,7 +109,7 @@ export const builtinPromise: Dict = Utils.injectHelp(
                 };
 
                 const _rejectCallback = (reason: unknown) => {
-                    invoke(
+                    const result = invoke(
                         rejectCallback,
                         Utils.createRawArray(
                             [Utils.filterValue(reason)],
@@ -119,6 +119,14 @@ export const builtinPromise: Dict = Utils.injectHelp(
                         context,
                         null,
                     );
+                    if (
+                        Utils.isDict(result)
+                        && isInstanceOf(builtinPromise, result)
+                    ) {
+                        return result[PROMISE_SYMBOL]!;
+                    } else {
+                        return result;
+                    }
                 };
 
                 const thisPromise = (thisArg as Dict)[PROMISE_SYMBOL]!;
@@ -160,7 +168,7 @@ export const builtinPromise: Dict = Utils.injectHelp(
                 }
 
                 const _rejectCallback = (reason: unknown) => {
-                    invoke(
+                    const result = invoke(
                         rejectCallback,
                         Utils.createRawArray(
                             [Utils.filterValue(reason)],
@@ -170,6 +178,14 @@ export const builtinPromise: Dict = Utils.injectHelp(
                         context,
                         null,
                     );
+                    if (
+                        Utils.isDict(result)
+                        && isInstanceOf(builtinPromise, result)
+                    ) {
+                        return result[PROMISE_SYMBOL]!;
+                    } else {
+                        return result;
+                    }
                 };
 
                 const thisPromise = (thisArg as Dict)[PROMISE_SYMBOL]!;
