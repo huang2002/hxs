@@ -1,5 +1,5 @@
 // @ts-check
-const { evalCode, builtins, createFunctionHandler, PROMISE_SYMBOL } = require('../../dist/hxs.umd.js');
+const { evalCode, builtins, createFunctionHandler, PROMISE_SYMBOL, Utils } = require('../../dist/hxs.umd.js');
 
 /**
  * @type {import('3h-test').TestCaseCallback}
@@ -29,7 +29,7 @@ module.exports = (ctx) => {
      * @returns {Partial<import('../..').ScriptContext>}
      */
     const createContextOption = () => ({
-        store: {
+        store: Utils.createDict({
             ...builtins,
             addFlag: createFunctionHandler(
                 1,
@@ -38,7 +38,7 @@ module.exports = (ctx) => {
                     flags.add(args[0]);
                 },
             ),
-        },
+        }),
     });
 
     evalCode(
