@@ -221,6 +221,93 @@ module.exports = (ctx) => {
         ctx.assert(flags.has('reject_8_2'));
     });
 
+    evalCode(
+        `
+        Promise.resolve('a')
+            .finally(@() {
+                if (arguments:sizeOf() > 0) {
+                    raise('unexpected arguments');
+                } (true) {
+                    addFlag('finally_8.25');
+                    return('b');
+                };
+            })
+            .then(@(data) {
+                addFlag('resolve_8.25');
+                if (data !== 'a') {
+                    raise(String('wrong data: ', string(data)));
+                };
+            }, @(reason) {
+                addFlag('reject_8.25');
+                raise(String('unexpected reason: ', string(reason)));
+            });
+        `,
+        createContextOption(),
+    );
+    check('promise_8.25', () => {
+        ctx.assert(flags.has('finally_8.25'));
+        ctx.assert(flags.has('resolve_8.25'));
+        ctx.assert(!flags.has('reject_8.25'));
+    });
+
+    evalCode(
+        `
+        Promise.reject('a')
+            .finally(@() {
+                if (arguments:sizeOf() > 0) {
+                    raise('unexpected arguments');
+                } (true) {
+                    addFlag('finally_8.5');
+                    return('b');
+                };
+            })
+            .then(@(data) {
+                addFlag('resolve_8.5');
+                raise(String('unexpected data: ', string(data)));
+            }, @(reason) {
+                addFlag('reject_8.5');
+                if (reason !== 'a') {
+                    raise(String('wrong reason: ', string(reason)));
+                };
+            });
+        `,
+        createContextOption(),
+    );
+    check('promise_8.5', () => {
+        ctx.assert(flags.has('finally_8.5'));
+        ctx.assert(!flags.has('resolve_8.5'));
+        ctx.assert(flags.has('reject_8.5'));
+    });
+
+    evalCode(
+        `
+        Promise.resolve('a')
+            .finally(@() {
+                if (arguments:sizeOf() > 0) {
+                    raise('unexpected arguments');
+                } (true) {
+                    addFlag('finally_8.75');
+                    raise('b');
+                };
+            })
+            .then(@(data) {
+                addFlag('resolve_8.75');
+                raise(String('unexpected data: ', string(data)));
+            }, @(reason) {
+                addFlag('reject_8.75');
+                if (!reason:includes('Error: b')) {
+                    raise(String('wrong reason: ', string(reason)));
+                };
+            });
+        `,
+        createContextOption(),
+    );
+    check('promise_8.75', () => {
+        ctx.assert(flags.has('finally_8.75'));
+        ctx.assert(!flags.has('resolve_8.75'));
+        ctx.assert(flags.has('reject_8.75'));
+    });
+
     ctx.expectResolved(
         evalCode(`
             Promise.all([

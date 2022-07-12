@@ -210,6 +210,61 @@ export const builtinPromise: Dict = Utils.injectHelp(
             },
         ),
 
+        finally: createFunctionHandler(
+            1,
+            1,
+            (args, referrer, context, thisArg) => {
+
+                const finallyCallback = args[0];
+                if (!isInvocable(finallyCallback)) {
+                    Utils.raise(
+                        TypeError,
+                        'expect an invocable as finally callback',
+                        referrer,
+                        context,
+                    );
+                }
+
+                const _finallyCallback = () => {
+                    const result = invoke(
+                        finallyCallback,
+                        [],
+                        referrer,
+                        context,
+                        null,
+                    );
+                    if (
+                        Utils.isDict(result)
+                        && isInstanceOf(builtinPromise, result)
+                    ) {
+                        return result[PROMISE_SYMBOL]!;
+                    } else {
+                        return result;
+                    }
+                };
+
+                const thisPromise = (thisArg as Dict)[PROMISE_SYMBOL]!;
+
+                const nextPromise = invoke(
+                    builtinPromise,
+                    Utils.createRawArray(
+                        [() => null],
+                        referrer,
+                    ),
+                    referrer,
+                    context,
+                    null,
+                ) as Dict;
+
+                nextPromise[PROMISE_SYMBOL] = thisPromise.finally(
+                    _finallyCallback,
+                ) as Promise<ContextValue>;
+
+                return nextPromise;
+
+            },
+        ),
+
     },
         null,
         null,
