@@ -497,4 +497,24 @@ module.exports = (ctx) => {
         [`Promise.race([Promise.resolve(0), 1])`]
     );
 
+    const timeoutFlag = evalCode(`
+        timeoutFlag = { #resolved -> false };
+        Promise.timeout(${(CHECK_TIMEOUT / 2).toFixed()})
+            .then(@(data) {
+                if (data !== null) {
+                    raise(String('unexpected data: ', string(data)));
+                } (true) {
+                    timeoutFlag.resolved = true;
+                };
+            })
+            .catch(@(reason) {
+                raise(String('unexpected reason: ', string(reason)));
+            });
+        timeoutFlag
+    `);
+    ctx.assertDeepEqual(timeoutFlag, { resolved: false });
+    check('Promise.timeout', () => {
+        ctx.assertDeepEqual(timeoutFlag, { resolved: true });
+    });
+
 };

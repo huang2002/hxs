@@ -435,4 +435,33 @@ Object.assign(builtinPromise, {
         ),
     ),
 
+    timeout: Utils.injectHelp(
+        `Promise.timeout(milliseconds)`,
+        createFunctionHandler(
+            1,
+            1,
+            (args, referrer, context, thisArg) => {
+                const milliseconds = args[0] as number;
+                if (typeof milliseconds !== 'number') {
+                    Utils.raise(
+                        TypeError,
+                        'expect a number as timeout',
+                        referrer,
+                        context,
+                    );
+                }
+                return wrapPromise(
+                    builtinPromise,
+                    new Promise<null>((resolve, reject) => {
+                        setTimeout(() => {
+                            resolve(null);
+                        }, milliseconds);
+                    }),
+                    referrer,
+                    context,
+                );
+            },
+        )
+    ),
+
 });
