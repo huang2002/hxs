@@ -81,7 +81,7 @@ export const builtinTime = Utils.injectHelp(
                     if (typeof milliseconds !== 'number') {
                         Utils.raise(
                             TypeError,
-                            'expect a number as timeout',
+                            'expect a number as interval',
                             referrer,
                             context,
                         );
