@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.46.0
+
+- Add `Time`
+- Add `Promise.timeout`
+- Add `wrapPromise` helper
+- Fix some internal issues
+
 ## 0.45.0
 
 - Add `Promise.finally`
