@@ -17,6 +17,7 @@ import { builtinClass } from './class';
 import { export_, getExports } from './module';
 import { builtinJSON } from './json';
 import { builtinPromise } from './promise';
+import { builtinTime } from './time';
 
 export * from './common';
 
@@ -44,6 +45,7 @@ export const builtins = Utils.createDict({
     Math: builtinMath,
     JSON: builtinJSON,
     Promise: builtinPromise,
+    Time: builtinTime,
 
     help,
     injectHelp,

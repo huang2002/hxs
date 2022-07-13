@@ -14,6 +14,7 @@ test(null, {
     dict: require('./builtins/dict.js'),
     json: require('./builtins/json.js'),
     promise: require('./builtins/promise.js'),
+    time: require('./builtins/time.js'),
     if: require('./builtins/if.js'),
     loop: require('./builtins/loop.js'),
     error: require('./builtins/error.js'),
