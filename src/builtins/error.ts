@@ -4,7 +4,7 @@ import { createFunctionHandler } from '../function/createFunctionHandler';
 import { invoke, isInvocable } from '../function/common';
 
 export const builtinRaise = Utils.injectHelp(
-    'raise(error_message)',
+    'raise(errorMessage)',
     createFunctionHandler(1, 1, (args, referrer, context) => {
         const message = args[0] as string;
         if (typeof message !== 'string') {
