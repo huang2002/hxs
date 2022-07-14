@@ -159,6 +159,12 @@ module.exports = (ctx) => {
     ctx.assertStrictEqual(evalCode(`bind`), evalCode(`Function.bind`));
     ctx.assertStrictEqual(evalCode(`isNaN`), evalCode(`Number.isNaN`));
 
+    ctx.assertStrictEqual(evalCode(`assert(true)`), null);
+    ctx.expectThrow(Error, evalCode, [`assert(false)`]);
+    ctx.expectThrow(TypeError, evalCode, [`assert(0)`]);
+    ctx.expectThrow(TypeError, evalCode, [`assert(false, 0)`]);
+    ctx.expectThrow(TypeError, evalCode, [`assert(true, 0)`]);
+
     ctx.assertStrictEqual(Utils.toDisplay(evalCode(`'abc'`)), "'abc'");
     ctx.assertStrictEqual(Utils.toDisplay(evalCode(`'"'`)), `'"'`);
     ctx.assertStrictEqual(Utils.toDisplay(evalCode(`"abc"`)), "'abc'");

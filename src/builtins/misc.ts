@@ -139,3 +139,47 @@ export const includes = Utils.injectHelp(
         return target.includes(args[1] as string);
     })
 );
+
+export const assert = Utils.injectHelp(
+    `assert(condition, errorMessage = 'assertion failed')`,
+    createFunctionHandler(
+        1,
+        2,
+        (args, referrer, context, thisArg) => {
+
+            const condition = args[0] as boolean;
+            if (typeof condition !== 'boolean') {
+                Utils.raise(
+                    TypeError,
+                    'expect a boolean as condition',
+                    referrer,
+                    context,
+                );
+            }
+
+            const errorMessage = (args.length > 1)
+                ? args[1] as string
+                : 'assertion failed';
+            if (typeof errorMessage !== 'string') {
+                Utils.raise(
+                    TypeError,
+                    'expect a string as error message',
+                    referrer,
+                    context,
+                );
+            }
+
+            if (!condition) {
+                Utils.raise(
+                    Error,
+                    errorMessage,
+                    referrer,
+                    context,
+                );
+            }
+
+            return null;
+
+        },
+    )
+);
