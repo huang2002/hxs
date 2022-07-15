@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.47.0
+
+- Add `assert`
+- Fix variable naming in help info
+
 ## 0.46.0
 
 - Add `Time`
