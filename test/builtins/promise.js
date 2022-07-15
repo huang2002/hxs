@@ -8,21 +8,6 @@ module.exports = (ctx) => {
 
     const CHECK_TIMEOUT = 100; // ms
 
-    /**
-     * @param {string} label
-     * @param {() => void} callback
-     */
-    const check = (label, callback) => {
-        ctx.addPendingLabel(label);
-        setTimeout(() => {
-            try {
-                callback();
-            } finally {
-                ctx.deletePendingLabel(label);
-            }
-        }, CHECK_TIMEOUT);
-    };
-
     const flags = new Set();
 
     /**
@@ -59,10 +44,10 @@ module.exports = (ctx) => {
         `,
         createContextOption(),
     );
-    check('promise_1', () => {
+    ctx.setTimeout(() => {
         ctx.assert(flags.has('resolve_1'));
         ctx.assert(!flags.has('reject_1'));
-    });
+    }, CHECK_TIMEOUT, 'promise_1');
     ctx.expectResolved;
 
     evalCode(
@@ -83,10 +68,10 @@ module.exports = (ctx) => {
         `,
         createContextOption(),
     );
-    check('promise_2', () => {
+    ctx.setTimeout(() => {
         ctx.assert(!flags.has('resolve_2'));
         ctx.assert(flags.has('reject_2'));
-    });
+    }, CHECK_TIMEOUT, 'promise_2');
 
     evalCode(
         `
@@ -103,9 +88,9 @@ module.exports = (ctx) => {
         `,
         createContextOption(),
     );
-    check('promise_3', () => {
+    ctx.setTimeout(() => {
         ctx.assert(flags.has('reject_3'));
-    });
+    }, CHECK_TIMEOUT, 'promise_3');
 
     ctx.expectResolved(
         evalCode(`Promise.resolve('data')`)[PROMISE_SYMBOL],
@@ -165,10 +150,10 @@ module.exports = (ctx) => {
         `,
         createContextOption(),
     );
-    check('promise_6', () => {
+    ctx.setTimeout(() => {
         ctx.assert(flags.has('reject_6'));
         ctx.assert(flags.has('resolve_6'));
-    });
+    }, CHECK_TIMEOUT, 'promise_6');
 
     evalCode(
         `
@@ -186,10 +171,10 @@ module.exports = (ctx) => {
         `,
         createContextOption(),
     );
-    check('promise_7', () => {
+    ctx.setTimeout(() => {
         ctx.assert(!flags.has('reject_7'));
         ctx.assert(flags.has('resolve_7'));
-    });
+    }, CHECK_TIMEOUT, 'promise_7');
 
     evalCode(
         `
@@ -215,11 +200,11 @@ module.exports = (ctx) => {
         `,
         createContextOption(),
     );
-    check('promise_8', () => {
+    ctx.setTimeout(() => {
         ctx.assert(!flags.has('resolve_8'));
         ctx.assert(flags.has('reject_8_1'));
         ctx.assert(flags.has('reject_8_2'));
-    });
+    }, CHECK_TIMEOUT, 'promise_8');
 
     evalCode(
         `
@@ -244,11 +229,11 @@ module.exports = (ctx) => {
         `,
         createContextOption(),
     );
-    check('promise_8.25', () => {
+    ctx.setTimeout(() => {
         ctx.assert(flags.has('finally_8.25'));
         ctx.assert(flags.has('resolve_8.25'));
         ctx.assert(!flags.has('reject_8.25'));
-    });
+    }, CHECK_TIMEOUT, 'promise_8.25');
 
     evalCode(
         `
@@ -273,11 +258,11 @@ module.exports = (ctx) => {
         `,
         createContextOption(),
     );
-    check('promise_8.5', () => {
+    ctx.setTimeout(() => {
         ctx.assert(flags.has('finally_8.5'));
         ctx.assert(!flags.has('resolve_8.5'));
         ctx.assert(flags.has('reject_8.5'));
-    });
+    }, CHECK_TIMEOUT, 'promise_8.5');
 
     evalCode(
         `
@@ -302,11 +287,11 @@ module.exports = (ctx) => {
         `,
         createContextOption(),
     );
-    check('promise_8.75', () => {
+    ctx.setTimeout(() => {
         ctx.assert(flags.has('finally_8.75'));
         ctx.assert(!flags.has('resolve_8.75'));
         ctx.assert(flags.has('reject_8.75'));
-    });
+    }, CHECK_TIMEOUT, 'promise_8.75');
 
     ctx.expectResolved(
         evalCode(`
@@ -513,8 +498,8 @@ module.exports = (ctx) => {
         timeoutFlag
     `);
     ctx.assertDeepEqual(timeoutFlag, { resolved: false });
-    check('Promise.timeout', () => {
+    ctx.setTimeout(() => {
         ctx.assertDeepEqual(timeoutFlag, { resolved: true });
-    });
+    }, CHECK_TIMEOUT, 'Promise.timeout');
 
 };

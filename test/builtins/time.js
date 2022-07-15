@@ -17,22 +17,6 @@ module.exports = (ctx) => {
         );
     };
 
-    /**
-     * @param {string} label
-     * @param {number} milliseconds
-     * @param {() => void} callback
-     */
-    const checkTimeout = (label, milliseconds, callback) => {
-        ctx.addPendingLabel(label);
-        setTimeout(() => {
-            try {
-                callback();
-            } finally {
-                ctx.deletePendingLabel(label);
-            }
-        }, milliseconds);
-    };
-
     assertApproximate(
         evalCode(`Time.now()`),
         Date.now(),
@@ -54,18 +38,18 @@ module.exports = (ctx) => {
         });
         flags
     `);
-    checkTimeout('timeout_1_25', 25, () => {
+    ctx.setTimeout(() => {
         ctx.assertDeepEqual(flags_1, []);
-    });
-    checkTimeout('timeout_1_75', 75, () => {
+    }, 25, 'timeout_1_25');
+    ctx.setTimeout(() => {
         ctx.assertDeepEqual(flags_1, [50]);
-    });
-    checkTimeout('timeout_1_125', 125, () => {
+    }, 75, 'timeout_1_75');
+    ctx.setTimeout(() => {
         ctx.assertDeepEqual(flags_1, [50]);
-    });
-    checkTimeout('timeout_1_175', 175, () => {
+    }, 125, 'timeout_1_125');
+    ctx.setTimeout(() => {
         ctx.assertDeepEqual(flags_1, [50, 150]);
-    });
+    }, 175, 'timeout_1_175');
 
     const flags_2 = evalCode(`
         flags = [];
@@ -80,8 +64,8 @@ module.exports = (ctx) => {
         });
         flags
     `);
-    checkTimeout('interval', 200, () => {
+    ctx.setTimeout(() => {
         ctx.assertDeepEqual(flags_2, [0, 1, 2]);
-    });
+    }, 200, 'interval');
 
 };
