@@ -38,7 +38,7 @@ export const evalBinaryOperation = <
                 Utils.createRawArray([b, false], buffer[index]),
                 buffer[index],
                 context,
-                null,
+                a,
             );
         } else if (Utils.isDict(b) && (magicName in b)) {
             const magicMethod = b[magicName];
@@ -50,7 +50,7 @@ export const evalBinaryOperation = <
                 Utils.createRawArray([a, true], buffer[index]),
                 buffer[index],
                 context,
-                null,
+                b,
             );
         }
     }
@@ -86,7 +86,7 @@ export const evalUnaryOperation = <
             [Utils.createValueNode(value, buffer[index])],
             buffer[index],
             context,
-            null,
+            value,
         );
     } else {
         if (type && typeof value !== type) {

@@ -288,9 +288,28 @@ module.exports = (ctx) => {
             b:unpack([#foo]);
             assert(foo === 'bar');
 
-            666
+            'nice'
         `),
-        666
+        'nice'
+    );
+
+    ctx.assertStrictEqual(
+        evalCode(`
+            o = {
+                @__not() {
+                    assert(this === o);
+                    return(false);
+                },
+                @__plus(x, right) {
+                    assert(this === o);
+                    return(x);
+                },
+            };
+            !o;
+            o + 1;
+            'ok'
+        `),
+        'ok'
     );
 
 };
