@@ -153,7 +153,7 @@ export const invoke = (
         context.stack.pop();
         return returnValue;
     } else {
-        Utils.raise(TypeError, 'expect a function or dict with proper `__invoke`', referrer, context);
+        Utils.raise(TypeError, 'expect a function or a dict with proper `__invoke`', referrer, context);
         return null; // for type checking
     }
 };
