@@ -208,7 +208,13 @@ module.exports = (ctx) => {
             assert((V(2) !== 6) === true);
             assert((V(2) !== V(2)) === true);
             assert((2 !== V(6)) === true);
+            'nice'
+        `),
+        'nice',
+    );
 
+    ctx.assertStrictEqual(
+        evalCode(`
             Map = Class({
                 @__init() {
                     this.keys = [];
@@ -288,9 +294,9 @@ module.exports = (ctx) => {
             b:unpack([#foo]);
             assert(foo === 'bar');
 
-            'nice'
+            200
         `),
-        'nice'
+        200,
     );
 
     ctx.assertStrictEqual(
@@ -309,7 +315,7 @@ module.exports = (ctx) => {
             o + 1;
             'ok'
         `),
-        'ok'
+        'ok',
     );
 
 };
