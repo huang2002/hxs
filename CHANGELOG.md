@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.48.0
+
+- Modify `this` in magic methods
+- Improve docs
+
 ## 0.47.0
 
 - Add `assert`
