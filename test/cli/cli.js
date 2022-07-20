@@ -46,7 +46,7 @@ module.exports = (ctx) => {
     );
 
     ctx.assertDeepEqual(
-        execFile('./header0.hxs', '-m').trim().split(/\r?\n/g),
+        execFile('./header/header0.hxs', '-m').trim().split(/\r?\n/g),
         [
             'header0 start',
             'header1 start',

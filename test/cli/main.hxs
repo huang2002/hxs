@@ -1,6 +1,6 @@
 print('main start');
 
-header0 = import('./header0.hxs');
+header0 = import('./header/header0.hxs');
 print('main imported header0');
 header0.callback();
 
@@ -9,7 +9,7 @@ print(header0.get());
 header0.set(1);
 print(header0.get());
 
-header1 = import('./header1.hxs');
+header1 = import('./header/header1.hxs');
 print('main imported header1');
 header1.callback();
 
