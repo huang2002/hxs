@@ -4,10 +4,10 @@ const { execSync } = require('child_process');
 const CLI_PATH = '../../cli/index.js';
 
 /**
- * @param {string} path
+ * @param {string} argString
  */
-const execFile = (path, args = '') => (
-    execSync(`node ${CLI_PATH} exec ${path} ${args}`, { encoding: 'utf8' })
+const execCLI = (argString) => (
+    execSync(`node ${CLI_PATH} ${argString}`, { encoding: 'utf8' })
 );
 
 /**
@@ -17,13 +17,9 @@ module.exports = (ctx) => {
 
     process.chdir(__dirname);
 
-    ctx.assertStrictEqual(
-        execFile('./hello_world.hxs').trim(),
-        'hello world'
-    );
-
     ctx.assertDeepEqual(
-        execFile('./main.hxs', '-m').trim().split(/\r?\n/g),
+        execCLI('exec ./main.hxs -m')
+            .trim().split(/\r?\n/g),
         [
             'main start',
             'header0 start',
@@ -46,8 +42,10 @@ module.exports = (ctx) => {
     );
 
     ctx.assertDeepEqual(
-        execFile('./header/header0.hxs', '-m').trim().split(/\r?\n/g),
+        execCLI('exec ./hello_world.hxs ./header/header0.hxs -m')
+            .trim().split(/\r?\n/g),
         [
+            'hello world',
             'header0 start',
             'header1 start',
             'header1 imported header0',
